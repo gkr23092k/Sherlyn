@@ -1,0 +1,12 @@
+<div class="d-flex justify-content-center my-2">
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='SDAY'">DAY SPENDS</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='SMONTH'">MONTH SPENDS</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='GROUP'">GROUP</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IDAY'">DAY INVEST</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IMONTH'">MONTH INVEST</button>
+</div>
+<donut-chart *ngIf="ischart=='GROUP'" [Spendlist]="groupeddata"></donut-chart>
+<line-chart *ngIf="ischart=='SDAY'" [colorcode]="'red'" [Idtoken]="1" [Spendlist]="data"></line-chart>
+<line-chart *ngIf="ischart=='SMONTH'" [colorcode]="'red'"[Idtoken]="2" [Spendlist]="groupeddatamonthly"></line-chart>
+<line-chart *ngIf="ischart=='IDAY'" [colorcode]="'green'" [Idtoken]="3"[Spendlist]="investdata"></line-chart>
+<line-chart *ngIf="ischart=='IMONTH'" [colorcode]="'green'" [Idtoken]="4"[Spendlist]="groupeddatamonthlyinv"></line-chart>

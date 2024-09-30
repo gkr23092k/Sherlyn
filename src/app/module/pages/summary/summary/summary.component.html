@@ -1,0 +1,32 @@
+<div class="d-flex justify-content-center my-2">
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='MARGIN'">OVERVIEW</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='GRID'">GRID LIST</button>
+</div>
+
+<div *ngIf="iscard=='MARGIN'">
+    <h1 class="text-center">Spend Margin</h1>
+
+    <div class="d-flex flex-wrap justify-content-center card-container">
+        <div *ngFor="let card of Spendreport">
+            <app-summarycard [carddetails]="card"></app-summarycard>
+        </div>
+    </div>
+
+    <h1 class="text-center">Invest Margin</h1>
+    <div class="d-flex flex-wrap justify-content-center card-container">
+        <div *ngFor="let card of Investreport">
+            <app-summarycard [carddetails]="card"></app-summarycard>
+        </div>
+    </div>
+
+    <h1 class="text-center">Total Margin</h1>
+    <div class="d-flex flex-wrap justify-content-center card-container">
+        <div *ngFor="let card of totalreport">
+            <app-summarycard [carddetails]="card"></app-summarycard>
+        </div>
+    </div>
+
+    
+</div>
+
+<app-grid [Spendlist]="griddata" *ngIf="iscard=='GRID'"></app-grid>

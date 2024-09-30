@@ -1,0 +1,17 @@
+<div class="d-flex justify-content-center align-items-center vh-100">
+  <div class="d-flex flex-column ">
+    <mat-form-field class="example-full-width">
+      <mat-label>User Name</mat-label>
+      <input matInput placeholder="Ex. GORA80" #username type="text">
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width">
+      <mat-label>Password</mat-label>
+      <input matInput placeholder="Ex. 2303" #password type="password">
+    </mat-form-field>
+
+    <button mat-raised-button color="accent" (click)="login()">
+      Login
+    </button>
+  </div>
+<!-- </div> -->
