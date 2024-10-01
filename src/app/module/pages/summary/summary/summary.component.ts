@@ -24,6 +24,8 @@ export class SummaryComponent {
   totalreport: any = [];
   investdata: any;
   griddata: any;
+  TotalSpendreport: any = [];
+  TotalInvestreport: any=[];
   constructor(private fb: FirebaseService) { }
   ngOnInit() {
     this.fb.getAllspendItems().subscribe((res: any) => {
@@ -38,22 +40,23 @@ export class SummaryComponent {
       this.griddata = res
       // this.summarizespend(this.griddata)
     })
-    
+
   }
 
 
 
   summarizespend(data: any) {
 
-    let last1DaysDatainv:any =[]
-    let last7DaysDatainv:any =[]
-    let last30DaysDatainv:any =[]
+    let last1DaysDatainv: any = []
+    let last7DaysDatainv: any = []
+    let last30DaysDatainv: any = []
 
     this.filterDataByDate(data, 1, last1DaysDatainv);
     if (last1DaysDatainv.length == 0) {
       last1DaysDatainv = [{ "matprice": "Nil" }]
     }
     this.Spendreport.push({ ..._.maxBy(last1DaysDatainv, 'matprice'), heading: 'MaxofToday' })
+    this.TotalSpendreport.push({ matprice: _.sumBy(last1DaysDatainv, 'matprice'), heading: 'Totalof1day' })
 
 
     this.filterDataByDate(data, 7, last7DaysDatainv);
@@ -61,6 +64,7 @@ export class SummaryComponent {
       last7DaysDatainv = [{ "matprice": "Nil" }]
     }
     this.Spendreport.push({ ..._.maxBy(last7DaysDatainv, 'matprice'), heading: 'Maxof7days' })
+    this.TotalSpendreport.push({ matprice: _.sumBy(last7DaysDatainv, 'matprice'), heading: 'Totalof7days' })
 
 
     this.filterDataByDate(data, 30, last30DaysDatainv);
@@ -68,6 +72,7 @@ export class SummaryComponent {
       last30DaysDatainv = [{ "matprice": "Nil" }]
     }
     this.Spendreport.push({ ..._.maxBy(last30DaysDatainv, 'matprice'), heading: 'Maxof30days' })
+    this.TotalSpendreport.push({ matprice: _.sumBy(last30DaysDatainv, 'matprice'), heading: 'Totalof30days' })
 
     if (this.Spendreport.length == 0) {
       this.Spendreport = [{ "matprice": 0 }]
@@ -75,7 +80,7 @@ export class SummaryComponent {
 
     this.Spendreport.push({ ..._.maxBy(data, 'matprice'), heading: 'MaxofAlltime' })
 
-    this.totalreport.push({ matprice:_.sumBy(data, 'matprice'), heading: 'Total Spend' })
+    this.totalreport.push({ matprice: _.sumBy(data, 'matprice'), heading: 'Total Spend' })
 
 
 
@@ -89,15 +94,16 @@ export class SummaryComponent {
   }
 
   summarizeinvest(data: any) {
-    let last1DaysDatainv:any =[]
-    let last7DaysDatainv:any =[]
-    let last30DaysDatainv:any =[]
+    let last1DaysDatainv: any = []
+    let last7DaysDatainv: any = []
+    let last30DaysDatainv: any = []
 
     this.filterDataByDate(data, 1, last1DaysDatainv);
     if (last1DaysDatainv.length == 0) {
-     last1DaysDatainv = [{ "matprice": "Nil" }]
+      last1DaysDatainv = [{ "matprice": "Nil" }]
     }
     this.Investreport.push({ ..._.maxBy(last1DaysDatainv, 'matprice'), heading: 'MaxofToday' })
+    this.TotalInvestreport.push({ matprice: _.sumBy(last1DaysDatainv, 'matprice'), heading: 'Totalof1day' })
 
 
     this.filterDataByDate(data, 7, last7DaysDatainv);
@@ -105,6 +111,7 @@ export class SummaryComponent {
       last7DaysDatainv = [{ "matprice": "Nil" }]
     }
     this.Investreport.push({ ..._.maxBy(last7DaysDatainv, 'matprice'), heading: 'Maxof7days' })
+    this.TotalInvestreport.push({ matprice: _.sumBy(last7DaysDatainv, 'matprice'), heading: 'Totalof7days' })
 
 
     this.filterDataByDate(data, 30, last30DaysDatainv);
@@ -112,6 +119,7 @@ export class SummaryComponent {
       last30DaysDatainv = [{ "matprice": "Nil" }]
     }
     this.Investreport.push({ ..._.maxBy(last30DaysDatainv, 'matprice'), heading: 'Maxof30days' })
+    this.TotalInvestreport.push({ matprice: _.sumBy(last30DaysDatainv, 'matprice'), heading: 'Totalof30days' })
 
     if (this.Investreport.length == 0) {
       this.Investreport = [{ "matprice": 0 }]
@@ -120,7 +128,7 @@ export class SummaryComponent {
     this.Investreport.push({ ..._.maxBy(data, 'matprice'), heading: 'MaxofAlltime' })
 
     // this.totalinvest = _.maxBy(this.Investreport, 'matprice');
-    this.totalreport.push({ matprice:_.sumBy(data, 'matprice'), heading: 'Total Invest' })
+    this.totalreport.push({ matprice: _.sumBy(data, 'matprice'), heading: 'Total Invest' })
 
     console.log(this.Investreport);
 

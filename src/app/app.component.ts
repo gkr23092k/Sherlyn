@@ -33,11 +33,13 @@ export class AppComponent {
       // console.log(data.value);
       this.fb.creditdataentry(result)
       // }
+      // this.fb.getBalance()
     });
   }
   logout() {
     localStorage.removeItem('name')
     localStorage.removeItem('key')
+    localStorage.removeItem('usercode')
     // localStorage.setItem('key',userdetails.key) 
     this.canAccess = false
     this.router.navigate(['../user'])

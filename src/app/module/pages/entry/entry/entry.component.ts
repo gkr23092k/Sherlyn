@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgForm } from '@angular/forms';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-entry',
@@ -76,14 +77,20 @@ export class EntryComponent implements OnInit {
     this.spinner.show()
     this.entry.form.patchValue({
       ...data,
+      matname: this.material,
       balance: this.balance
     });
+    const enteredvalues = {
+      ...data.value,
+      matname: (typeof this.material == 'string') ? this.material : this.material[0].item_text,
+      balance: this.balance
+    }
 
-
-    console.log(data.value, this.entry.form.value);
-    this.fb.dataentry(data.value).finally(() => {
+    console.log(data.value, enteredvalues);
+    this.fb.dataentry(enteredvalues).finally(() => {
       this.keepbalancelive()
       this.entry.resetForm()
+      this.dateentry = new Date()
       this.spinner.hide()
 
     })
@@ -106,16 +113,26 @@ export class EntryComponent implements OnInit {
 
   }
 
-  onInputChange(event:any) {
+  onInputChange(event: any) {
     console.log(event);
-    
+
     this.materialdropdown = []
     this.fb.getAllpreviousentries(event).subscribe((val: any) => {
-      this.materialdropdown =  val; // Store the original balance
 
-      console.log(val,'materialdropdown');
+      this.materialdropdown = this.getUniqueRecords(val);
+
+      console.log(this.materialdropdown, 'materialdropdown');
     })
 
   }
-
+  getUniqueRecords(arr: any) {
+    const seen = new Set();
+    return arr.filter((item: any) => {
+      if (!seen.has(item.item_text)) {
+        seen.add(item.item_text);
+        return true; // Keep the item
+      }
+      return false; // Filter out duplicates
+    });
+  };
 }

@@ -58,7 +58,27 @@ export class FirebaseService {
       ref)
       .snapshotChanges();
   }
-
+  getAllAllocation(): Observable<any[]> {
+      const citiesRef = collection(this.db, "AllocationList");
+      const q = query(
+        citiesRef,
+        // where("matgroup", "!=", "Investment"),
+        // where("matgroup", "!=", "Liability Give"),
+        // where("matgroup", "!=", "Liability Get"),
+        // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
+        // where("usercode", "==", this.usercode),
+        // orderBy("dateentry", "asc")
+      );
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return { id, ...data };
+          });
+        })
+      );
+  }
 
   dataentry(data: any) {
     return this.firestore.collection('SpendList').add({ ...data, datecr: new Date(), usercode: this.usercode });
@@ -410,6 +430,44 @@ export class FirebaseService {
         return Object.keys(groupedData).map(key => ({
           matgroup: key,
           totalPrice: groupedData[key] // Sum of prices for this matgroup
+        }));
+      })
+    );
+  }
+
+
+
+  getmatgroupAllItems(): Observable<any[]> {
+    const citiesRef = collection(this.db, "SpendList");
+
+    const q = query(
+      citiesRef,
+      // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]), // Exclude these groups
+      where("usercode", "==", this.usercode),
+      orderBy("dateentry", "asc")
+    );
+
+    return from(getDocs(q)).pipe(
+      map((querySnapshot) => {
+        const groupedData: GroupedData = {}; // Initialize an object to hold grouped data
+
+        querySnapshot.docs.forEach(doc => {
+          const data: any = doc.data();
+          const matgroup = data.matgroup; // Field to group by
+          const price = data.matprice || 0; // Field to sum, default to 0 if undefined
+
+          // Initialize the group if not present
+          if (!groupedData[matgroup]) {
+            groupedData[matgroup] = 0;
+          }
+          // Sum the amount for the matgroup
+          groupedData[matgroup] += price;
+        });
+
+        // Convert groupedData object to an array
+        return Object.keys(groupedData).map(key => ({
+          category: key,
+          second: groupedData[key] // Sum of prices for this matgroup
         }));
       })
     );

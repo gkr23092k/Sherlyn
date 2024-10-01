@@ -6,6 +6,7 @@ const routes: Routes = [
   {
     path: 'main', component: SummaryComponent
   },
+  
   {
     path: '**', redirectTo: 'main'
   }

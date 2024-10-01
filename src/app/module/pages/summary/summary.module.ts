@@ -12,20 +12,23 @@ import { AgGridAngular } from 'ag-grid-angular'; // Angular Data Grid Component
 
 import { EntryModule } from '../entry/entry.module';
 import {MatDialogModule} from '@angular/material/dialog';
+import { ChartModule } from 'angular-highcharts';
+import { AllocateChartComponent } from './summary/allocatechart/allocatechart.component';
 
 
 @NgModule({
   declarations: [
     SummaryComponent,
     SummarycardComponent,
-    GridComponent
+    GridComponent,
+    AllocateChartComponent
   ],
   imports: [
     CommonModule,
     SummaryRoutingModule,AgGridAngular,
 
     //material
-    MatCardModule, AgGridModule, EntryModule,MatDialogModule
+    MatCardModule, AgGridModule, EntryModule,MatDialogModule,ChartModule 
   ], providers: [dataservice]
 })
 export class SummaryModule { }

@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import * as _ from 'lodash';
 import { NgxSpinnerService } from 'ngx-spinner';
 import * as XLSX from 'xlsx';
-import { GridOptions } from 'ag-grid-community';
+import { ColDef, GridOptions } from 'ag-grid-community';
 @Component({
   selector: 'app-grid',
   templateUrl: './grid.component.html',
@@ -45,15 +45,15 @@ export class GridComponent {
   ngOnInit() {
 
     this.columnDefs = [
-      { headerName: 'Id', field: 'id', filter: true, initialWidth: 100, maxWidth: 300 },
-      { headerName: 'Id', field: 'id', filter: true, initialWidth: 100, minWidth: 160, maxWidth: 300 },
+      // { headerName: 'Id', field: 'id', filter:'agTextColumnFilter', initialWidth: 100,minWidth: 160, maxWidth: 300 },
+      { headerName: 'Id', field: 'id', filter:'agTextColumnFilter', initialWidth: 100, minWidth: 160, maxWidth: 300 },
       {
         headerName: 'Material', cellStyle: (params: { value: string; }) => {
           if (params.value == 'Credit') {
             return { color: 'white', backgroundColor: 'green', fontWeight: 'bold' };
           }
           return null;
-        }, field: 'matname', filter: true, initialWidth: 100, minWidth: 200, maxWidth: 300
+        }, field: 'matname', filter:'agTextColumnFilter', initialWidth: 100, minWidth: 200, maxWidth: 300
       },
       {
         headerName: 'Materialgroup', field: 'matgroup', cellStyle: (params: { value: string; }) => {
@@ -66,10 +66,10 @@ export class GridComponent {
             return { color: 'white', backgroundColor: 'lightgreen', fontWeight: 'bold' };
           } else if (params.value == 'Liability Get') {
             return { color: 'white', backgroundColor: 'orange', fontWeight: 'bold' };
-          } 
+          }
           return null
         },
-        filter: true, initialWidth: 100, minWidth: 150, maxWidth: 300
+        filter:'agTextColumnFilter', initialWidth: 100, minWidth: 150, maxWidth: 300
       },
       {
         headerName: 'Price', field: 'matprice',
@@ -78,7 +78,7 @@ export class GridComponent {
             return { color: 'white', backgroundColor: 'red', fontWeight: 'bold' };
           }
           return null;
-        }, filter: true, initialWidth: 150, minWidth: 50, maxWidth: 300
+        },  filter:'agNumberColumnFilter', initialWidth: 150, minWidth: 50, maxWidth: 300
       },
       {
         headerName: 'Balance', field: 'matbalance', cellStyle: (params: { value: number; }) => {
@@ -86,7 +86,7 @@ export class GridComponent {
             return { color: 'white', backgroundColor: 'orange', fontWeight: 'bold' };
           }
           return null;
-        }, filter: true, initialWidth: 150, minWidth: 100, maxWidth: 300
+        },  filter:'agNumberColumnFilter', initialWidth: 150, minWidth: 100, maxWidth: 300
       },
       // {
       //   headerName: 'Liablestatus'
@@ -101,10 +101,10 @@ export class GridComponent {
       //     return null;
       //   }, field: 'Liabilitystatus', filter: true, initialWidth: 150, minWidth: 150, maxWidth: 300
       // },
-      { headerName: 'Date', field: 'date', filter: true, initialWidth: 200, minWidth: 30, maxWidth: 300 },
+      { headerName: 'Date', field: 'date',  filter:'agDateColumnFilter', initialWidth: 200, minWidth: 50, maxWidth: 300 },
       // { headerName: 'Favourities', field: 'Favourities', filter: true, initialWidth: 150, minWidth: 100, maxWidth: 300 },
       // { headerName: 'Offer', field: 'Offer', filter: true, initialWidth: 100, minWidth: 100, maxWidth: 300 },
-      { headerName: 'Comment', field: 'comments', filter: true }
+      { headerName: 'Comment', field: 'comments', filter:'agTextColumnFilter'}
     ];
 
     this.startdate = new Date()
@@ -117,9 +117,23 @@ export class GridComponent {
 
   }
 
+  public rowGroupPanelShow: 'always' | 'onlyWhenGrouping' | 'never' = 'always'
 
+  public autoGroupColumnDef: ColDef = {
+    minWidth: 200
+  }
 
-
+public defaultColDef:ColDef={
+  flex:1,
+  minWidth:300,
+  sortable:true,
+  resizable:true,
+  maxWidth:500,
+  editable:false,
+  enableRowGroup:true,
+  floatingFilter:true,
+ 
+}
 
 
   xlsxwriter() {

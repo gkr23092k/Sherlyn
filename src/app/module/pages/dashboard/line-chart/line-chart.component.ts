@@ -4,6 +4,7 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { dataservice } from 'src/app/shared/data.service';
 import { FirebaseService } from 'src/app/shared/firebase.service';
+import * as _ from 'lodash';
 
 am4core.useTheme(am4themes_animated);
 
@@ -39,7 +40,15 @@ export class LineChartComponent implements OnChanges, OnDestroy {
       if (document.getElementById(this.chartdiv)) {
         this.chart = am4core.create(this.chartdiv, am4charts.XYChart);
 
-        // Set the chart data
+        const groupedData = _.groupBy(this.dataarrayobj, 'date');
+
+         this.dataarrayobj= _.map(groupedData, (items, date) => {
+          return {
+            date: date,
+            matprice: _.sumBy(items, 'matprice'),
+          };
+        });console.log(this.dataarrayobj,'chart loader');
+
         this.chart.data = this.dataarrayobj;
 
         // Create date axis

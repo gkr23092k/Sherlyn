@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center align-items-center vh-100">
-  <div class="d-flex flex-column ">
+  <div class="d-flex flex-column  bg-secondary rounded p-5">
     <mat-form-field class="example-full-width">
-      <mat-label>User Name</mat-label>
+      <mat-label>Username</mat-label>
       <input matInput placeholder="Ex. GORA80" #username type="text">
     </mat-form-field>
 
@@ -10,7 +10,7 @@
       <input matInput placeholder="Ex. 2303" #password type="password">
     </mat-form-field>
 
-    <button mat-raised-button color="accent" (click)="login()">
+    <button mat-raised-button color="primary" (click)="login()">
       Login
     </button>
   </div>

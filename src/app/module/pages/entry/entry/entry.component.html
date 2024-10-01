@@ -32,36 +32,36 @@
 
 
 
-  <ng-multiselect-dropdown *ngIf="ismaterialdropdown" style="margin-bottom: 10vh !important;" [placeholder]="'Material'"
+  <ng-multiselect-dropdown required *ngIf="ismaterialdropdown" style="margin-bottom: 10vh !important;" [placeholder]="'Material'"
     [settings]="dropdownSettings" [data]="materialdropdown" ngModel name="matname" [(ngModel)]="material"
     (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
   </ng-multiselect-dropdown>
 
   <mat-form-field *ngIf="!ismaterialdropdown" class="example-full-width inputbox ">
     <mat-label>Material</mat-label>
-    <input matInput placeholder="spent on" ngModel name="matname" [(ngModel)]="material">
+    <input matInput required placeholder="spent on" ngModel name="matname" [(ngModel)]="material">
   </mat-form-field>
 
   <mat-form-field class="example-full-width mt-1">
     <mat-label>Price</mat-label>
-    <input matInput placeholder="Price" ngModel name="matprice" type="number" (ngModelChange)="onPriceChange($event)">
+    <input matInput required placeholder="Price" ngModel name="matprice" type="number" (ngModelChange)="onPriceChange($event)">
   </mat-form-field>
 
 
   <mat-form-field class="example-full-width ">
     <mat-label>Balance</mat-label>
-    <input matInput placeholder="Balance" [(ngModel)]="balance" disabled ngModel name="balance" type="number">
+    <input matInput required placeholder="Balance" [(ngModel)]="balance" disabled ngModel name="balance" type="number">
   </mat-form-field>
 
   <mat-form-field class="example-full-width mt-1 d-none">
     <mat-label>Price</mat-label>
-    <input matInput placeholder="Price" ngModel name="matbalance" type="number" [(ngModel)]="balance">
+    <input matInput required placeholder="Price" ngModel name="matbalance" type="number" [(ngModel)]="balance">
   </mat-form-field>
 
 
   <mat-form-field class="example-full-width">
     <mat-label>Date creation</mat-label>
-    <input matInput [matDatepicker]="picker" [(ngModel)]="dateentry" ngModel name="dateentry"
+    <input matInput required [matDatepicker]="picker" [(ngModel)]="dateentry" ngModel name="dateentry"
       class="example-full-width">
     <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
     <mat-datepicker-toggle matIconSuffix [for]="picker" class="example-full-width"></mat-datepicker-toggle>
@@ -74,11 +74,10 @@
   </mat-form-field>
 
   <div class="d-flex justify-content-center align-items-center">
-    <input class="btn btn-success mx-1" type="submit">
+    <input class="btn btn-success mx-1" type="submit" [disabled]="entry.invalid">
     <!-- <input class="btn btn-success mx-1" type="submit" value="Submit clear"> -->
-    <button class="btn  btn-danger mx-1" (click)="entry.resetForm()">clear</button>
+    <button class="btn  btn-danger mx-1"  (click)="entry.resetForm()">clear</button>
   </div>
 </form>
 
-<ngx-spinner bdColor="rgba(0.5, 0.9, 0.7, 0.7)"
-    template="<img src='../../../../../assets/images/output-onlinegiftools.gif' style='width: 15rem; height: 15rem'/>"></ngx-spinner>
+<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "ball-clip-rotate-multiple" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>

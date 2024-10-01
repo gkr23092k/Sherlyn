@@ -1,10 +1,11 @@
 <div class="d-flex justify-content-center my-2">
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='MARGIN'">OVERVIEW</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='GRID'">GRID LIST</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='ALLOCATION'">ALLOCATION</button>
 </div>
 
 <div *ngIf="iscard=='MARGIN'">
-    <h1 class="text-center">Spend Margin</h1>
+    <h1 class="text-center mt-4">Spend Margin</h1>
 
     <div class="d-flex flex-wrap justify-content-center card-container">
         <div *ngFor="let card of Spendreport">
@@ -12,14 +13,29 @@
         </div>
     </div>
 
-    <h1 class="text-center">Invest Margin</h1>
+    <h1 class="text-center mt-4">Invest Margin</h1>
     <div class="d-flex flex-wrap justify-content-center card-container">
         <div *ngFor="let card of Investreport">
             <app-summarycard [carddetails]="card"></app-summarycard>
         </div>
     </div>
 
-    <h1 class="text-center">Total Margin</h1>
+    
+    <h1 class="text-center mt-4">Total Spend Margin</h1>
+    <div class="d-flex flex-wrap justify-content-center card-container">
+        <div *ngFor="let card of TotalSpendreport">
+            <app-summarycard [carddetails]="card"></app-summarycard>
+        </div>
+    </div>
+
+    <h1 class="text-center mt-4">Total Invest Margin</h1>
+    <div class="d-flex flex-wrap justify-content-center card-container">
+        <div *ngFor="let card of TotalInvestreport">
+            <app-summarycard [carddetails]="card"></app-summarycard>
+        </div>
+    </div>
+    
+    <h1 class="text-center mt-4">Full Margin</h1>
     <div class="d-flex flex-wrap justify-content-center card-container">
         <div *ngFor="let card of totalreport">
             <app-summarycard [carddetails]="card"></app-summarycard>
@@ -30,3 +46,5 @@
 </div>
 
 <app-grid [Spendlist]="griddata" *ngIf="iscard=='GRID'"></app-grid>
+
+    <app-allocate-chart *ngIf="iscard=='ALLOCATION'"></app-allocate-chart>
