@@ -181,6 +181,9 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
 
+angular-highcharts
+MIT
+
 bootstrap
 MIT
 The MIT License (MIT)
@@ -242,6 +245,9 @@ firebase/compat/firestore
 firebase/firestore
 
 firebase/storage
+
+highcharts
+https://www.highcharts.com/license
 
 idb
 ISC
