@@ -18,7 +18,7 @@ export class EntryComponent implements OnInit {
   materialgroup: any
   materialdropdown: any
   originalBalance: number = 0;
-
+  isoncard: boolean = false;
   ismaterialdropdown: boolean = false
   selectedChip: string | null = 'New Material';
   dateentry = new Date()
@@ -83,17 +83,30 @@ export class EntryComponent implements OnInit {
     const enteredvalues = {
       ...data.value,
       matname: (typeof this.material == 'string') ? this.material : this.material[0].item_text,
-      balance: this.balance
+      balance: this.balance,
+      iscreditcard: this.isoncard
     }
 
     console.log(data.value, enteredvalues);
-    this.fb.dataentry(enteredvalues).finally(() => {
-      this.keepbalancelive()
-      this.entry.resetForm()
-      this.dateentry = new Date()
-      this.spinner.hide()
+    if (!this.isoncard) {
+      this.fb.dataentry(enteredvalues).finally(() => {
+        this.keepbalancelive()
+        this.entry.resetForm()
+        this.dateentry = new Date()
+        this.spinner.hide()
 
-    })
+      })
+    }
+    else {
+      this.fb.Loandataentry(enteredvalues).finally(() => {
+        this.keepbalancelive()
+        this.entry.resetForm()
+        this.dateentry = new Date()
+        this.spinner.hide()
+
+      })
+
+    }
   }
 
   onItemSelect(item: any) {

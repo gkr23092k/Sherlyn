@@ -78,7 +78,7 @@ export class GridComponent {
             return { color: 'white', backgroundColor: 'red', fontWeight: 'bold' };
           }
           return null;
-        },  filter:'agNumberColumnFilter', initialWidth: 150, minWidth: 50, maxWidth: 300
+        },  filter:'agNumberColumnFilter', initialWidth: 150, minWidth: 100, maxWidth: 300
       },
       {
         headerName: 'Balance', field: 'matbalance', cellStyle: (params: { value: number; }) => {
@@ -101,7 +101,7 @@ export class GridComponent {
       //     return null;
       //   }, field: 'Liabilitystatus', filter: true, initialWidth: 150, minWidth: 150, maxWidth: 300
       // },
-      { headerName: 'Date', field: 'date',  filter:'agDateColumnFilter', initialWidth: 200, minWidth: 50, maxWidth: 300 },
+      { headerName: 'Date', field: 'date',  filter:'agDateColumnFilter', initialWidth: 200, minWidth: 150, maxWidth: 300 },
       // { headerName: 'Favourities', field: 'Favourities', filter: true, initialWidth: 150, minWidth: 100, maxWidth: 300 },
       // { headerName: 'Offer', field: 'Offer', filter: true, initialWidth: 100, minWidth: 100, maxWidth: 300 },
       { headerName: 'Comment', field: 'comments', filter:'agTextColumnFilter'}

@@ -23,18 +23,23 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-chip-listbox aria-label="Material selection">
-    <mat-chip-option [selected]="selectedChip == 'New Material'" (selectionChange)="chipSelectionChange($event)">New
-      Material</mat-chip-option>
-    <mat-chip-option [selected]="selectedChip === 'Existing Material'"
-      (selectionChange)="chipSelectionChange($event)">Existing Material</mat-chip-option>
-  </mat-chip-listbox>
+  <div class="d-flex">
+
+    <mat-chip-listbox aria-label="Material selection">
+      <mat-chip-option [selected]="selectedChip == 'New Material'" (selectionChange)="chipSelectionChange($event)">New
+        Material</mat-chip-option>
+      <mat-chip-option [selected]="selectedChip === 'Existing Material'"
+        (selectionChange)="chipSelectionChange($event)">Existing Material</mat-chip-option>
+    </mat-chip-listbox>
+    <mat-chip-listbox aria-label="Material selection" class="mx-2">
+      <mat-chip-option (selectionChange)="isoncard =!isoncard">Credit Card</mat-chip-option>
+    </mat-chip-listbox>
+  </div>
 
 
-
-  <ng-multiselect-dropdown required *ngIf="ismaterialdropdown" style="margin-bottom: 10vh !important;" [placeholder]="'Material'"
-    [settings]="dropdownSettings" [data]="materialdropdown" ngModel name="matname" [(ngModel)]="material"
-    (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
+  <ng-multiselect-dropdown required *ngIf="ismaterialdropdown" style="margin-bottom: 10vh !important;"
+    [placeholder]="'Material'" [settings]="dropdownSettings" [data]="materialdropdown" ngModel name="matname"
+    [(ngModel)]="material" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
   </ng-multiselect-dropdown>
 
   <mat-form-field *ngIf="!ismaterialdropdown" class="example-full-width inputbox ">
@@ -44,7 +49,8 @@
 
   <mat-form-field class="example-full-width mt-1">
     <mat-label>Price</mat-label>
-    <input matInput required placeholder="Price" ngModel name="matprice" type="number" (ngModelChange)="onPriceChange($event)">
+    <input matInput required placeholder="Price" ngModel name="matprice" type="number"
+      (ngModelChange)="onPriceChange($event)">
   </mat-form-field>
 
 
@@ -76,8 +82,11 @@
   <div class="d-flex justify-content-center align-items-center">
     <input class="btn btn-success mx-1" type="submit" [disabled]="entry.invalid">
     <!-- <input class="btn btn-success mx-1" type="submit" value="Submit clear"> -->
-    <button class="btn  btn-danger mx-1"  (click)="entry.resetForm()">clear</button>
+    <button class="btn  btn-danger mx-1" (click)="entry.resetForm()">clear</button>
   </div>
 </form>
 
-<ngx-spinner bdColor = "rgba(0, 0, 0, 0.8)" size = "large" color = "#fff" type = "ball-clip-rotate-multiple" [fullScreen] = "true"><p style="color: white" > Loading... </p></ngx-spinner>
+<ngx-spinner bdColor="rgba(0, 0, 0, 0.8)" size="large" color="#fff" type="ball-clip-rotate-multiple"
+  [fullScreen]="true">
+  <p style="color: white"> Loading... </p>
+</ngx-spinner>

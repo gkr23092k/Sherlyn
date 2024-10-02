@@ -84,7 +84,10 @@ export class FirebaseService {
     return this.firestore.collection('SpendList').add({ ...data, datecr: new Date(), usercode: this.usercode });
 
   }
+  Loandataentry(data: any) {
+    return this.firestore.collection('CCLoanList').add({ ...data, datecr: new Date(), usercode: this.usercode });
 
+  }
 
   creditdataentry(data: any) {
     return this.firestore.collection('CreditList').add({ ...data, datecr: new Date(), usercode: this.usercode });
