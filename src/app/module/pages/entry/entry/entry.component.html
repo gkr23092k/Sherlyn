@@ -31,8 +31,11 @@
       <mat-chip-option [selected]="selectedChip === 'Existing Material'"
         (selectionChange)="chipSelectionChange($event)">Existing Material</mat-chip-option>
     </mat-chip-listbox>
-    <mat-chip-listbox aria-label="Material selection" class="mx-2">
-      <mat-chip-option (selectionChange)="isoncard =!isoncard">Credit Card</mat-chip-option>
+    <mat-chip-listbox aria-label="Material selection" class="ms-2">
+      <mat-chip-option (selectionChange)="isbilloncard =!isbilloncard">Credit Card</mat-chip-option>
+    </mat-chip-listbox>
+    <mat-chip-listbox aria-label="Material selection" class="ms-2">
+      <mat-chip-option (selectionChange)="isoncard =!isoncard">CC Repay</mat-chip-option>
     </mat-chip-listbox>
   </div>
 

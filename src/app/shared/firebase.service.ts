@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
-import { BehaviorSubject, combineLatest, from, map, Observable } from 'rxjs';
+import { BehaviorSubject, combineLatest, forkJoin, from, map, Observable } from 'rxjs';
 import { collection, Firestore, getDocs, orderBy, query, where } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore'; // If you're using the modular SDK
 import * as _ from 'lodash';
@@ -59,25 +59,25 @@ export class FirebaseService {
       .snapshotChanges();
   }
   getAllAllocation(): Observable<any[]> {
-      const citiesRef = collection(this.db, "AllocationList");
-      const q = query(
-        citiesRef,
-        // where("matgroup", "!=", "Investment"),
-        // where("matgroup", "!=", "Liability Give"),
-        // where("matgroup", "!=", "Liability Get"),
-        // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
-        // where("usercode", "==", this.usercode),
-        // orderBy("dateentry", "asc")
-      );
-      return from(getDocs(q)).pipe(
-        map((querySnapshot) => {
-          return querySnapshot.docs.map(doc => {
-            const data: any = doc.data();
-            const id = doc.id;
-            return { id, ...data };
-          });
-        })
-      );
+    const citiesRef = collection(this.db, "AllocationList");
+    const q = query(
+      citiesRef,
+      // where("matgroup", "!=", "Investment"),
+      // where("matgroup", "!=", "Liability Give"),
+      // where("matgroup", "!=", "Liability Get"),
+      // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
+      // where("usercode", "==", this.usercode),
+      // orderBy("dateentry", "asc")
+    );
+    return from(getDocs(q)).pipe(
+      map((querySnapshot) => {
+        return querySnapshot.docs.map(doc => {
+          const data: any = doc.data();
+          const id = doc.id;
+          return { id, ...data };
+        });
+      })
+    );
   }
 
   dataentry(data: any) {
@@ -85,7 +85,12 @@ export class FirebaseService {
 
   }
   Loandataentry(data: any) {
-    return this.firestore.collection('CCLoanList').add({ ...data, datecr: new Date(), usercode: this.usercode });
+    return this.firestore.collection('CCRepayList').add({ ...data, datecr: new Date(), usercode: this.usercode });
+
+  }
+
+  LendDataentry(data: any) {
+    return this.firestore.collection('CCLendList').add({ ...data, datecr: new Date(), usercode: this.usercode });
 
   }
 
@@ -280,22 +285,31 @@ export class FirebaseService {
     );
   }
 
-  getAllpreviousentries(groupname:string): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      where("matgroup", "==", groupname),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        return querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return { id, item_id:id, item_text: data.matname,  };
-        });
-      })
+
+  getAllpreviousentries(groupname: string): Observable<any[]> {
+    const collections = ['SpendList', 'CCLendList']; 
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "==", groupname),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
+  
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return { id, item_id: id, item_text: data.matname };
+          });
+        })
+      );
+    });
+  
+    return forkJoin(observables).pipe(
+      map(results => results.flat()) // Flatten the array of results
     );
   }
 

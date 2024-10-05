@@ -19,6 +19,7 @@ export class EntryComponent implements OnInit {
   materialdropdown: any
   originalBalance: number = 0;
   isoncard: boolean = false;
+  isbilloncard: boolean = false;
   ismaterialdropdown: boolean = false
   selectedChip: string | null = 'New Material';
   dateentry = new Date()
@@ -61,16 +62,18 @@ export class EntryComponent implements OnInit {
   }
   onPriceChange(newPrice: number): void {
     // Check if the new price is 0
-    if (newPrice === 0) {
-      this.balance = this.originalBalance; // Reset to original balance
-      console.log('Balance reset to original:', this.balance);
-    } else if (newPrice > 0) {
-      this.balance = this.originalBalance - newPrice; // Subtract from original balance
-      console.log('New Price:', newPrice);
-      console.log('Updated Balance:', this.balance);
-    } else {
-      this.balance = this.originalBalance;
-      console.warn('Price cannot be negative');
+    if (!this.isbilloncard) {
+      if (newPrice === 0) {
+        this.balance = this.originalBalance; // Reset to original balance
+        console.log('Balance reset to original:', this.balance);
+      } else if (newPrice > 0) {
+        this.balance = this.originalBalance - newPrice; // Subtract from original balance
+        console.log('New Price:', newPrice);
+        console.log('Updated Balance:', this.balance);
+      } else {
+        this.balance = this.originalBalance;
+        console.warn('Price cannot be negative');
+      }
     }
   }
   addentry(data: any) {
@@ -87,8 +90,26 @@ export class EntryComponent implements OnInit {
       iscreditcard: this.isoncard
     }
 
-    console.log(data.value, enteredvalues);
-    if (!this.isoncard) {
+    console.log(data.value, enteredvalues, this.isbilloncard);
+    if (this.isoncard) {
+     this.fb.Loandataentry(enteredvalues).finally(() => {
+        this.keepbalancelive()
+        this.entry.resetForm()
+        this.dateentry = new Date()
+        this.spinner.hide()
+      })
+    }
+
+    else if (this.isbilloncard) {
+      this.fb.LendDataentry(enteredvalues).finally(() => {
+        this.keepbalancelive()
+        this.entry.resetForm()
+        this.dateentry = new Date()
+        this.spinner.hide()
+      })
+      console.log('enterisbilloncard');
+    }
+    else {
       this.fb.dataentry(enteredvalues).finally(() => {
         this.keepbalancelive()
         this.entry.resetForm()
@@ -96,16 +117,6 @@ export class EntryComponent implements OnInit {
         this.spinner.hide()
 
       })
-    }
-    else {
-      this.fb.Loandataentry(enteredvalues).finally(() => {
-        this.keepbalancelive()
-        this.entry.resetForm()
-        this.dateentry = new Date()
-        this.spinner.hide()
-
-      })
-
     }
   }
 
