@@ -102,7 +102,7 @@ export class GridComponent {
       //   }, field: 'Liabilitystatus', filter: true, initialWidth: 150, minWidth: 150, maxWidth: 300
       // },
       { headerName: 'Date', field: 'date',  filter:'agDateColumnFilter', initialWidth: 200, minWidth: 150, maxWidth: 300 },
-      // { headerName: 'Favourities', field: 'Favourities', filter: true, initialWidth: 150, minWidth: 100, maxWidth: 300 },
+      { headerName: 'Oncard', field: 'iscreditcard', filter:'agTextColumnFilter', initialWidth: 150, minWidth: 100, maxWidth: 300 },
       // { headerName: 'Offer', field: 'Offer', filter: true, initialWidth: 100, minWidth: 100, maxWidth: 300 },
       { headerName: 'Comment', field: 'comments', filter:'agTextColumnFilter'}
     ];

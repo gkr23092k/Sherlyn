@@ -57,8 +57,12 @@ export class EntryComponent implements OnInit {
     this.material = ''
   }
   ngOnInit() {
-    console.log('startted')
+    // console.log('startted')
     this.keepbalancelive()
+    this.fb.emitbalance().subscribe((val)=>{
+      // console.log('emitted new balance',val)
+      this.keepbalancelive()
+    })
   }
   onPriceChange(newPrice: number): void {
     // Check if the new price is 0
@@ -87,12 +91,12 @@ export class EntryComponent implements OnInit {
       ...data.value,
       matname: (typeof this.material == 'string') ? this.material : this.material[0].item_text,
       balance: this.balance,
-      iscreditcard: this.isoncard
+      iscreditcard: this.isbilloncard
     }
 
     console.log(data.value, enteredvalues, this.isbilloncard);
     if (this.isoncard) {
-     this.fb.Loandataentry(enteredvalues).finally(() => {
+      this.fb.Loandataentry(enteredvalues).finally(() => {
         this.keepbalancelive()
         this.entry.resetForm()
         this.dateentry = new Date()
@@ -125,6 +129,13 @@ export class EntryComponent implements OnInit {
   }
   onSelectAll(items: any) {
     console.log(items);
+  }
+
+  billoncard() {
+    this.isbilloncard = !this.isbilloncard
+  }
+  oncard() {
+    this.isoncard = !this.isoncard
   }
 
   keepbalancelive() {

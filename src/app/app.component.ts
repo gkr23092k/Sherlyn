@@ -18,24 +18,42 @@ export class AppComponent {
 
   }
 
-
   openDialog(): void {
-
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { name: this.addbalance },
       height: '310px',
       width: '400px'
     });
-
+  
     dialogRef.afterClosed().subscribe(result => {
-      result = { ...result, matprice: parseInt(result.newaccbalance), matname: 'credit', matgroup: 'credit' }
-      console.log('The dialog was closed', result);
-      // console.log(data.value);
-      this.fb.creditdataentry(result)
-      // }
-      // this.fb.getBalance()
+      if (result) {
+        result = { 
+          ...result, 
+          matprice: parseInt(result.newaccbalance), 
+          matname: 'credit', 
+          matgroup: 'credit' 
+        };
+        
+        console.log('The dialog was closed', result);
+        
+        // Call creditdataentry and handle the observable
+        this.fb.creditdataentry(result).subscribe({
+          next: () => {
+            console.log('Credit entry added');
+            this.fb.updatebalance(); // Update balance
+          },
+          error: (err) => {
+            console.error('Error adding credit entry:', err);
+          }
+        });
+      } else {
+        console.log('Dialog was closed with no result');
+      }
     });
   }
+  
+
+
   logout() {
     localStorage.removeItem('name')
     localStorage.removeItem('key')

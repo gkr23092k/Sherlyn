@@ -27,12 +27,12 @@ export class DashboardmainComponent {
     })
     this.fb.getAllSpendItemsMonthly().subscribe((res: any) => {
       this.groupeddatamonthly = res
-      // console.log(res);
+      // console.log(res,'monthly');
 
     })
     this.fb.getAllinvestItems().subscribe((res: any) => {
       this.investdata = res
-      // console.log(this.data, 'ssl')
+      console.log(this.data, 'ssl')
     })
 
     this.fb.getAllInvestItemsMonthly().subscribe((res: any) => {

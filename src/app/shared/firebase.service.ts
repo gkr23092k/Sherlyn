@@ -4,6 +4,7 @@ import { BehaviorSubject, combineLatest, forkJoin, from, map, Observable } from 
 import { collection, Firestore, getDocs, orderBy, query, where } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore'; // If you're using the modular SDK
 import * as _ from 'lodash';
+import { groupBy, sumBy } from 'lodash';
 
 
 
@@ -19,9 +20,29 @@ export class FirebaseService {
   usercode: string | null;
 
   public canaccess: BehaviorSubject<boolean> = new BehaviorSubject(false)
-
+  
   emitcanaccess() {
     return this.canaccess
+  }
+  public getcurrentbalance: BehaviorSubject<any> = new BehaviorSubject('')
+
+
+  emitbalance() {
+    return this.getcurrentbalance.asObservable(); // Return an observable for subscriptions
+  }
+  
+  // Fetch the balance and update the BehaviorSubject
+  updatebalance() {
+    // console.log('Updating balance in service');
+  
+    this.getBalance().subscribe({
+      next: (val: any) => {
+        this.getcurrentbalance.next(val); // Update the BehaviorSubject value
+      },
+      error: (err) => {
+        console.error('Error getting balance:', err);
+      }
+    });
   }
 
   constructor(private firestore: AngularFirestore) {
@@ -95,18 +116,16 @@ export class FirebaseService {
   }
 
   creditdataentry(data: any) {
-    return this.firestore.collection('CreditList').add({ ...data, datecr: new Date(), usercode: this.usercode });
+    return from(this.firestore.collection('CreditList').add({ ...data, datecr: new Date(), usercode: this.usercode }));
   }
-
-
-  getAllspendItems(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
+  getAllCCrepayItems(): Observable<any[]> {
+    const citiesRef = collection(this.db, "CCRepayList");
     const q = query(
       citiesRef,
       // where("matgroup", "!=", "Investment"),
       // where("matgroup", "!=", "Liability Give"),
       // where("matgroup", "!=", "Liability Get"),
-      where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
+      // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
       where("usercode", "==", this.usercode),
       orderBy("dateentry", "asc")
     );
@@ -120,91 +139,223 @@ export class FirebaseService {
       })
     );
   }
+
+  getAllspendItems(): Observable<any[]> {
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ['Liability Give', 'Liability Get', 'Investment']),
+        where("usercode", "==", this.usercode)
+      );
+  
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return {
+              id,
+              ...data,
+              date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) // Store as Date object
+            };
+          });
+        })
+      );
+    });
+  
+    return forkJoin(observables).pipe(
+      map(results => {
+        const combinedResults = results.flat(); // Flatten the array of results
+  
+        // Group by date (only keep the date part)
+        const groupedByDate = groupBy(combinedResults, item => item.date);
+  
+        // Sum matprice for each group
+        const summedResults = Object.entries(groupedByDate).map(([date, items]) => {
+          return {
+            date,
+            matprice: sumBy(items, 'matprice') // Sum matprice for the grouped items
+          };
+        });
+  
+        // Sort by date
+        summedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+        return summedResults;
+      })
+    );
+  }
+  
+  
+  getAllspendItemsforbalance(): Observable<any[]> {
+    const collections = ['SpendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ['Liability Give', 'Liability Get', 'Investment']),
+        where("usercode", "==", this.usercode)
+      );
+  
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return {
+              id,
+              ...data,
+              date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) // Store as Date object
+            };
+          });
+        })
+      );
+    });
+  
+    return forkJoin(observables).pipe(
+      map(results => {
+        const combinedResults = results.flat(); // Flatten the array of results
+  
+        // Group by date (only keep the date part)
+        const groupedByDate = groupBy(combinedResults, item => item.date);
+  
+        // Sum matprice for each group
+        const summedResults = Object.entries(groupedByDate).map(([date, items]) => {
+          return {
+            date,
+            matprice: sumBy(items, 'matprice') // Sum matprice for the grouped items
+          };
+        });
+  
+        // Sort by date
+        summedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+        return summedResults;
+      })
+    );
+  }
+
 
 
 
   getAllspendItemsgrid(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      // where("matgroup", "!=", "Investment"),
-      // where("matgroup", "!=", "Liability Give"),
-      // where("matgroup", "!=", "Liability Get"),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        return querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
-        });
-      })
+    const collections = ['SpendList', 'CCLendList','CreditList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        // where("matgroup", "==", groupname),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
+
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return { id, ...data, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+          });
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+        map(results => {
+          let combinedResults = results.flat(); // Flatten the array of results
+    
+          // Group by date (only keep the date part)
+        
+    
+          // Sort by date
+          combinedResults=  combinedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+    
+          return combinedResults;
+        })
     );
   }
 
 
   getAllliabilitygive(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      // where("matgroup", "!=", "Investment"),
-      where("matgroup", "==", "Liability Give"),
-      // where("matgroup", "!=", "Liability Get"),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        return querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
-        });
-      })
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "==", "Liability Give"),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
+
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return { id, ...data, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+          });
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => results.flat()) // Flatten the array of results
     );
   }
 
   getAllliabilityget(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      // where("matgroup", "!=", "Investment"),
-      // where("matgroup", "==", "Liability Give"),
-      where("matgroup", "==", "Liability Get"),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        return querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
-        });
-      })
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "==", "Liability Get"),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
+
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return { id, ...data, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+          });
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => results.flat()) // Flatten the array of results
     );
   }
 
   getAlllinvestment(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      where("matgroup", "==", "Investment"),
-      // where("matgroup", "==", "Liability Give"),
-      // where("matgroup", "==", "Liability Get"),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        return querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
-        });
-      })
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "==", "Investment"),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
+
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return { id, ...data, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+          });
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => results.flat()) // Flatten the array of results
     );
   }
 
@@ -232,7 +383,7 @@ export class FirebaseService {
   }
   getBalance(): Observable<number> {
     return combineLatest([
-      this.getAllspendItems().pipe(
+      this.getAllspendItemsforbalance().pipe(
         map(res => _.sumBy(res, 'matprice')) // Calculate total spend
       ),
       this.getAllcreditItems().pipe(
@@ -246,10 +397,13 @@ export class FirebaseService {
       ),
       this.getAlllinvestment().pipe(
         map(res => _.sumBy(res, 'matprice')) // Calculate total credit
+      ),
+      this.getAllCCrepayItems().pipe(
+        map(res => _.sumBy(res, 'matprice')) // Calculate total credit
       )
     ]).pipe(
-      map(([totalSpend, totalCredit, totalliablegive, totalliableget, totalinvestment]) => {
-        const balance = (totalCredit + totalliableget) - (totalSpend + totalliablegive + totalinvestment); // Calculate the balance
+      map(([totalSpend, totalCredit, totalliablegive, totalliableget, totalinvestment, totalrepaid]) => {
+        const balance = (totalCredit + totalliableget) - (totalSpend + totalliablegive + totalinvestment + totalrepaid); // Calculate the balance
         console.log(balance, 'total balance');
         return balance; // Return the calculated balance
       })
@@ -267,27 +421,58 @@ export class FirebaseService {
 
 
   getAllinvestItems(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      where("matgroup", "==", "Investment"),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        return querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "==", "Investment"),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+
+      );
+  
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return {
+              id,
+              ...data,
+              date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) // Store as Date object
+            };
+          });
+        })
+      );
+    });
+  
+    return forkJoin(observables).pipe(
+      map(results => {
+        const combinedResults = results.flat(); // Flatten the array of results
+  
+        // Group by date (only keep the date part)
+        const groupedByDate = groupBy(combinedResults, item => item.date);
+  
+        // Sum matprice for each group
+        const summedResults = Object.entries(groupedByDate).map(([date, items]) => {
+          return {
+            date,
+            matprice: sumBy(items, 'matprice') // Sum matprice for the grouped items
+          };
         });
+  
+        // Sort by date
+        summedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  
+        return summedResults;
       })
     );
   }
 
 
   getAllpreviousentries(groupname: string): Observable<any[]> {
-    const collections = ['SpendList', 'CCLendList']; 
+    const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
@@ -296,7 +481,7 @@ export class FirebaseService {
         where("usercode", "==", this.usercode),
         orderBy("dateentry", "asc")
       );
-  
+
       return from(getDocs(q)).pipe(
         map(querySnapshot => {
           return querySnapshot.docs.map(doc => {
@@ -307,7 +492,7 @@ export class FirebaseService {
         })
       );
     });
-  
+
     return forkJoin(observables).pipe(
       map(results => results.flat()) // Flatten the array of results
     );
@@ -316,142 +501,166 @@ export class FirebaseService {
 
 
   getAllSpendItemsMonthly(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      // where("matgroup", "!=", "Investment"),
-      // where("matgroup", "!=", "Liability Give"),
-      // where("matgroup", "!=", "Liability Get"),
-      where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const ref = collection(this.db, collectionName);
+      const q = query(
+        ref,
+        where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
 
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        const items = querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return {
-            id,
-            ...data,
-            date: new Date(data.dateentry?.seconds * 1000)
-          };
-        });
-        const groupedData: { month: string, year: string, totalMatPrice: string }[] = items.reduce((acc, item) => {
-          const monthYear = `${item.date.getFullYear()}-${item.date.getMonth() + 1}`;
-
-          if (!acc[monthYear]) {
-            acc[monthYear] = {
-              totalMatPrice: 0,
-              month: item.date.getMonth() + 1,
-              year: item.date.getFullYear()
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return {
+              id,
+              ...data,
+              date: new Date(data.dateentry?.seconds * 1000)
             };
+          });
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => {
+        const allItems = results.flat();
+        const groupedData: { [key: string]: { totalMatPrice: number; month: number; year: number } } = allItems.reduce((acc, item) => {
+          const monthYear = `${item.date.getFullYear()}-${item.date.getMonth() + 1}`;
+          if (!acc[monthYear]) {
+            acc[monthYear] = { totalMatPrice: 0, month: item.date.getMonth() + 1, year: item.date.getFullYear() };
           }
-
           acc[monthYear].totalMatPrice += item.matprice;
-
           return acc;
-        }, {});
+        }, {} as { [key: string]: { totalMatPrice: number; month: number; year: number } });
 
-        return Object.entries(groupedData).map(([key, value]) => ({
-          date: `${(parseInt(value.month) < 10) ? `0${value.month}` : value.month}-01-${value.year}`,
-          matprice: value.totalMatPrice
+        return Object.values(groupedData).map(({ month, year, totalMatPrice }) => ({
+          date: `${month < 10 ? `0${month}` : month}-01-${year}`,
+          matprice: totalMatPrice
         }));
       })
     );
   }
+
 
 
 
   getAllInvestItemsMonthly(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-    const q = query(
-      citiesRef,
-      // where("matgroup", "!=", "Investment"),
-      // where("matgroup", "!=", "Liability Give"),
-      // where("matgroup", "!=", "Liability Get"),
-      where("matgroup", "in", ["Investment"]),
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const ref = collection(this.db, collectionName);
+      const q = query(
+        ref,
+        where("matgroup", "==", "Investment"),
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
 
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        const items = querySnapshot.docs.map(doc => {
-          const data: any = doc.data();
-          const id = doc.id;
-          return {
-            id,
-            ...data,
-            date: new Date(data.dateentry?.seconds * 1000)
-          };
-        });
-        const groupedData: { month: string, year: string, totalMatPrice: string }[] = items.reduce((acc, item) => {
-          const monthYear = `${item.date.getFullYear()}-${item.date.getMonth() + 1}`;
-
-          if (!acc[monthYear]) {
-            acc[monthYear] = {
-              totalMatPrice: 0,
-              month: item.date.getMonth() + 1,
-              year: item.date.getFullYear()
+      return from(getDocs(q)).pipe(
+        map(querySnapshot => {
+          return querySnapshot.docs.map(doc => {
+            const data: any = doc.data();
+            const id = doc.id;
+            return {
+              id,
+              ...data,
+              date: new Date(data.dateentry?.seconds * 1000)
             };
+          });
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => {
+        const allItems = results.flat();
+        const groupedData: { [key: string]: { totalMatPrice: number; month: number; year: number } } = allItems.reduce((acc, item) => {
+          const monthYear = `${item.date.getFullYear()}-${item.date.getMonth() + 1}`;
+          if (!acc[monthYear]) {
+            acc[monthYear] = { totalMatPrice: 0, month: item.date.getMonth() + 1, year: item.date.getFullYear() };
           }
-
           acc[monthYear].totalMatPrice += item.matprice;
-
           return acc;
-        }, {});
+        }, {} as { [key: string]: { totalMatPrice: number; month: number; year: number } });
 
-        return Object.entries(groupedData).map(([key, value]) => ({
-          date: `${(parseInt(value.month) < 10) ? `0${value.month}` : value.month}-01-${value.year}`,
-          matprice: value.totalMatPrice
+        return Object.values(groupedData).map(({ month, year, totalMatPrice }) => ({
+          date: `${month < 10 ? `0${month}` : month}-01-${year}`,
+          matprice: totalMatPrice
         }));
       })
     );
   }
-
-
-
 
 
 
   getmatgroupspendItems(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-
-    const q = query(
-      citiesRef,
-      where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]), // Exclude these groups
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        const groupedData: GroupedData = {}; // Initialize an object to hold grouped data
-
-        querySnapshot.docs.forEach(doc => {
-          const data: any = doc.data();
-          const matgroup = data.matgroup; // Field to group by
-          const price = data.matprice || 0; // Field to sum, default to 0 if undefined
-
-          // Initialize the group if not present
-          if (!groupedData[matgroup]) {
-            groupedData[matgroup] = 0;
-          }
-          // Sum the amount for the matgroup
-          groupedData[matgroup] += price;
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]), // Exclude these groups
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc")
+      );
+  
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          const groupedData: { [key: string]: number } = {}; // Initialize an object to hold grouped data
+  
+          querySnapshot.docs.forEach(doc => {
+            const data: any = doc.data();
+            const matgroup = data.matgroup; // Field to group by
+            const price = data.matprice || 0; // Field to sum, default to 0 if undefined
+  
+            // Initialize the group if not present
+            if (!groupedData[matgroup]) {
+              groupedData[matgroup] = 0;
+            }
+            // Sum the amount for the matgroup
+            groupedData[matgroup] += price;
+          });
+  
+          // Convert groupedData object to an array
+          return Object.keys(groupedData).map(key => ({
+            matgroup: key,
+            totalPrice: groupedData[key] // Sum of prices for this matgroup
+          }));
+        })
+      );
+    });
+  
+    return forkJoin(observables).pipe(
+      map(results => {
+        const finalGroupedData: { [key: string]: number } = {};
+  
+        // Combine the results from each collection
+        results.forEach(groupedArray => {
+          groupedArray.forEach(item => {
+            const { matgroup, totalPrice } = item;
+  
+            // Initialize the group if not present
+            if (!finalGroupedData[matgroup]) {
+              finalGroupedData[matgroup] = 0;
+            }
+            // Sum the amounts for this matgroup
+            finalGroupedData[matgroup] += totalPrice;
+          });
         });
-
-        // Convert groupedData object to an array
-        return Object.keys(groupedData).map(key => ({
+  
+        // Convert finalGroupedData object to an array
+        return Object.keys(finalGroupedData).map(key => ({
           matgroup: key,
-          totalPrice: groupedData[key] // Sum of prices for this matgroup
+          totalPrice: finalGroupedData[key] // Total sum of prices for this matgroup across collections
         }));
       })
     );
   }
-
+  
 
 
   getmatgroupAllItems(): Observable<any[]> {
