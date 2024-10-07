@@ -51,7 +51,7 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
     this.chart.colors.step = 2;
 
     this.chart.legend = new am4charts.Legend();
-    this.chart.legend.position = 'top';
+    this.chart.legend.position = 'bottom';
     this.chart.legend.paddingBottom = 20;
     this.chart.legend.labels.template.maxWidth = 95;
 
@@ -83,9 +83,9 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
 
     const bullet = series.bullets.push(new am4charts.LabelBullet());
     bullet.interactionsEnabled = false;
-    bullet.dy = 30;
+    bullet.dy = -8;
     bullet.label.text = '{valueY}';
-    bullet.label.fill = am4core.color('#ffffff');
+    bullet.label.fill = am4core.color('#000000');
   }
 
   private arrangeColumns() {
