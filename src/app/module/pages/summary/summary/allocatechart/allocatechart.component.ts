@@ -4,6 +4,7 @@ import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { forkJoin } from 'rxjs';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-allocate-chart',
@@ -25,8 +26,10 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
       allocations: this.fb.getAllAllocation(),
       materials: this.fb.getmatgroupAllItems()
     }).subscribe(({ allocations, materials }) => {
-      this.data1 = allocations;
+      // this.data1 = allocations;
+      this.data1  = _.sortBy(allocations, 'category');
       this.data2 = materials;
+// console.log(materials,'from allocation');
 
       this.mergeData();
       this.createChart();

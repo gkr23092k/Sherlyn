@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
 import { BehaviorSubject, combineLatest, forkJoin, from, map, Observable } from 'rxjs';
-import { collection, Firestore, getDocs, orderBy, query, where } from "firebase/firestore";
+import { collection, Firestore, getDocs, orderBy, query, Timestamp, where } from "firebase/firestore";
 import { getFirestore } from 'firebase/firestore'; // If you're using the modular SDK
 import * as _ from 'lodash';
 import { groupBy, sumBy } from 'lodash';
+import { subDays } from 'date-fns';
 
 
 
@@ -20,7 +21,7 @@ export class FirebaseService {
   usercode: string | null;
 
   public canaccess: BehaviorSubject<boolean> = new BehaviorSubject(false)
-  
+
   emitcanaccess() {
     return this.canaccess
   }
@@ -30,11 +31,11 @@ export class FirebaseService {
   emitbalance() {
     return this.getcurrentbalance.asObservable(); // Return an observable for subscriptions
   }
-  
+
   // Fetch the balance and update the BehaviorSubject
   updatebalance() {
     // console.log('Updating balance in service');
-  
+
     this.getBalance().subscribe({
       next: (val: any) => {
         this.getcurrentbalance.next(val); // Update the BehaviorSubject value
@@ -149,7 +150,7 @@ export class FirebaseService {
         where("matgroup", "not-in", ['Liability Give', 'Liability Get', 'Investment']),
         where("usercode", "==", this.usercode)
       );
-  
+
       return from(getDocs(q)).pipe(
         map(querySnapshot => {
           return querySnapshot.docs.map(doc => {
@@ -164,14 +165,14 @@ export class FirebaseService {
         })
       );
     });
-  
+
     return forkJoin(observables).pipe(
       map(results => {
         const combinedResults = results.flat(); // Flatten the array of results
-  
+
         // Group by date (only keep the date part)
         const groupedByDate = groupBy(combinedResults, item => item.date);
-  
+
         // Sum matprice for each group
         const summedResults = Object.entries(groupedByDate).map(([date, items]) => {
           return {
@@ -179,16 +180,16 @@ export class FirebaseService {
             matprice: sumBy(items, 'matprice') // Sum matprice for the grouped items
           };
         });
-  
+
         // Sort by date
         summedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
+
         return summedResults;
       })
     );
   }
-  
-  
+
+
   getAllspendItemsforbalance(): Observable<any[]> {
     const collections = ['SpendList'];
     const observables = collections.map(collectionName => {
@@ -198,7 +199,7 @@ export class FirebaseService {
         where("matgroup", "not-in", ['Liability Give', 'Liability Get', 'Investment']),
         where("usercode", "==", this.usercode)
       );
-  
+
       return from(getDocs(q)).pipe(
         map(querySnapshot => {
           return querySnapshot.docs.map(doc => {
@@ -213,14 +214,14 @@ export class FirebaseService {
         })
       );
     });
-  
+
     return forkJoin(observables).pipe(
       map(results => {
         const combinedResults = results.flat(); // Flatten the array of results
-  
+
         // Group by date (only keep the date part)
         const groupedByDate = groupBy(combinedResults, item => item.date);
-  
+
         // Sum matprice for each group
         const summedResults = Object.entries(groupedByDate).map(([date, items]) => {
           return {
@@ -228,10 +229,10 @@ export class FirebaseService {
             matprice: sumBy(items, 'matprice') // Sum matprice for the grouped items
           };
         });
-  
+
         // Sort by date
         summedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
+
         return summedResults;
       })
     );
@@ -241,7 +242,7 @@ export class FirebaseService {
 
 
   getAllspendItemsgrid(): Observable<any[]> {
-    const collections = ['SpendList', 'CCLendList','CreditList'];
+    const collections = ['SpendList', 'CCLendList', 'CreditList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
@@ -263,17 +264,17 @@ export class FirebaseService {
     });
 
     return forkJoin(observables).pipe(
-        map(results => {
-          let combinedResults = results.flat(); // Flatten the array of results
-    
-          // Group by date (only keep the date part)
-        
-    
-          // Sort by date
-          combinedResults=  combinedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-    
-          return combinedResults;
-        })
+      map(results => {
+        let combinedResults = results.flat(); // Flatten the array of results
+
+        // Group by date (only keep the date part)
+
+
+        // Sort by date
+        combinedResults = combinedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+
+        return combinedResults;
+      })
     );
   }
 
@@ -431,7 +432,7 @@ export class FirebaseService {
         orderBy("dateentry", "asc")
 
       );
-  
+
       return from(getDocs(q)).pipe(
         map(querySnapshot => {
           return querySnapshot.docs.map(doc => {
@@ -446,14 +447,14 @@ export class FirebaseService {
         })
       );
     });
-  
+
     return forkJoin(observables).pipe(
       map(results => {
         const combinedResults = results.flat(); // Flatten the array of results
-  
+
         // Group by date (only keep the date part)
         const groupedByDate = groupBy(combinedResults, item => item.date);
-  
+
         // Sum matprice for each group
         const summedResults = Object.entries(groupedByDate).map(([date, items]) => {
           return {
@@ -461,10 +462,10 @@ export class FirebaseService {
             matprice: sumBy(items, 'matprice') // Sum matprice for the grouped items
           };
         });
-  
+
         // Sort by date
         summedResults.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
-  
+
         return summedResults;
       })
     );
@@ -596,27 +597,33 @@ export class FirebaseService {
   }
 
 
+  getmatgroupspendItems(startdate: Date = subDays(new Date(), 30) , enddate: Date = new Date()): Observable<any[]> {
+    // Convert startdate and enddate to Firestore Timestamps
+    const startTimestamp = Timestamp.fromDate(startdate);
+    const endTimestamp = Timestamp.fromDate(enddate);
+// console.log(startTimestamp,endTimestamp);
 
-  getmatgroupspendItems(): Observable<any[]> {
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
-        where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]), // Exclude these groups
+        where("matgroup", "not-in", [ "Liability Give", "Liability Get"]),
         where("usercode", "==", this.usercode),
+        where("dateentry", ">", startTimestamp), // Use Timestamp for start date
+        where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
         orderBy("dateentry", "asc")
       );
-  
+
       return from(getDocs(q)).pipe(
         map((querySnapshot) => {
-          const groupedData: { [key: string]: number } = {}; // Initialize an object to hold grouped data
-  
+          const groupedData: { [key: string]: number } = {};
+
           querySnapshot.docs.forEach(doc => {
             const data: any = doc.data();
-            const matgroup = data.matgroup; // Field to group by
-            const price = data.matprice || 0; // Field to sum, default to 0 if undefined
-  
+            const matgroup = data.matgroup;
+            const price = data.matprice || 0;
+
             // Initialize the group if not present
             if (!groupedData[matgroup]) {
               groupedData[matgroup] = 0;
@@ -624,7 +631,70 @@ export class FirebaseService {
             // Sum the amount for the matgroup
             groupedData[matgroup] += price;
           });
-  
+
+          return Object.keys(groupedData).map(key => ({
+            matgroup: key,
+            totalPrice: groupedData[key]
+          }));
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => {
+        const finalGroupedData: { [key: string]: number } = {};
+
+        results.forEach(groupedArray => {
+          groupedArray.forEach(item => {
+            const { matgroup, totalPrice } = item;
+
+            if (!finalGroupedData[matgroup]) {
+              finalGroupedData[matgroup] = 0;
+            }
+            finalGroupedData[matgroup] += totalPrice;
+          });
+        });
+
+        return Object.keys(finalGroupedData).map(key => ({
+          matgroup: key,
+          totalPrice: finalGroupedData[key]
+        }));
+      })
+    );
+  }
+
+
+
+
+
+  getmatgroupAllItems(): Observable<any[]> {
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ["Liability Give", "Liability Get"]), // Exclude these groups
+        where("usercode", "==", this.usercode),
+        orderBy("dateentry", "asc"),
+      );
+
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          const groupedData: { [key: string]: number } = {}; // Initialize an object to hold grouped data
+
+          querySnapshot.docs.forEach(doc => {
+            const data: any = doc.data();
+            const matgroup = data.matgroup; // Field to group by
+            const price = data.matprice || 0; // Field to sum, default to 0 if undefined
+
+            // Initialize the group if not present
+            if (!groupedData[matgroup]) {
+              groupedData[matgroup] = 0;
+            }
+            // Sum the amount for the matgroup
+            groupedData[matgroup] += price;
+          });
+
           // Convert groupedData object to an array
           return Object.keys(groupedData).map(key => ({
             matgroup: key,
@@ -633,16 +703,16 @@ export class FirebaseService {
         })
       );
     });
-  
+
     return forkJoin(observables).pipe(
       map(results => {
         const finalGroupedData: { [key: string]: number } = {};
-  
+
         // Combine the results from each collection
         results.forEach(groupedArray => {
           groupedArray.forEach(item => {
             const { matgroup, totalPrice } = item;
-  
+
             // Initialize the group if not present
             if (!finalGroupedData[matgroup]) {
               finalGroupedData[matgroup] = 0;
@@ -651,49 +721,11 @@ export class FirebaseService {
             finalGroupedData[matgroup] += totalPrice;
           });
         });
-  
+
         // Convert finalGroupedData object to an array
         return Object.keys(finalGroupedData).map(key => ({
-          matgroup: key,
-          totalPrice: finalGroupedData[key] // Total sum of prices for this matgroup across collections
-        }));
-      })
-    );
-  }
-  
-
-
-  getmatgroupAllItems(): Observable<any[]> {
-    const citiesRef = collection(this.db, "SpendList");
-
-    const q = query(
-      citiesRef,
-      // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]), // Exclude these groups
-      where("usercode", "==", this.usercode),
-      orderBy("dateentry", "asc")
-    );
-
-    return from(getDocs(q)).pipe(
-      map((querySnapshot) => {
-        const groupedData: GroupedData = {}; // Initialize an object to hold grouped data
-
-        querySnapshot.docs.forEach(doc => {
-          const data: any = doc.data();
-          const matgroup = data.matgroup; // Field to group by
-          const price = data.matprice || 0; // Field to sum, default to 0 if undefined
-
-          // Initialize the group if not present
-          if (!groupedData[matgroup]) {
-            groupedData[matgroup] = 0;
-          }
-          // Sum the amount for the matgroup
-          groupedData[matgroup] += price;
-        });
-
-        // Convert groupedData object to an array
-        return Object.keys(groupedData).map(key => ({
           category: key,
-          second: groupedData[key] // Sum of prices for this matgroup
+          second: finalGroupedData[key] // Total sum of prices for this matgroup across collections
         }));
       })
     );

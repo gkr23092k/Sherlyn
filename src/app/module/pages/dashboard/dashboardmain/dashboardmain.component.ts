@@ -22,7 +22,7 @@ export class DashboardmainComponent {
     this.fb.getmatgroupspendItems().subscribe((res: any) => {
       this.groupeddata = res
 
-      // console.log(res);
+      console.log(res,'group spend items');
 
     })
     this.fb.getAllSpendItemsMonthly().subscribe((res: any) => {
@@ -40,5 +40,17 @@ export class DashboardmainComponent {
       // console.log(res);
 
     })
+  }
+
+
+  receiveData(selecteddaterange:any){
+    console.log(selecteddaterange);
+    this.fb.getmatgroupspendItems(selecteddaterange.startdate,selecteddaterange.enddate).subscribe((res: any) => {
+      this.groupeddata = res
+
+      // console.log(res);
+
+    })
+
   }
 }

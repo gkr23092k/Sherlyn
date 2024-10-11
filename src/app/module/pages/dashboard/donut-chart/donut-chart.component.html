@@ -1,6 +1,21 @@
 
     <!-- <div id="donut-chartdiv" class="shadow-lg  border border-dark border-1 p-2 m-2" style="width: 99%; height: 80vh;"></div> -->
-    <div id="donut-chartdiv" class="shadow-lg p-2 m-2" style="width: 99%; height: 80vh;"></div>
+    <div class="d-flex justify-content-center">
 
+        <mat-form-field>
+            <mat-label>Selected date range MM/DD/YYYY</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start date" [(ngModel)]="startdaterange">
+              <input matEndDate placeholder="End date" [(ngModel)]="enddaterange" (ngModelChange)="onDateRangeChanged()">
+            </mat-date-range-input>
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+          
+          
+        
+    </div>
+        <div id="donut-chartdiv" class="shadow-lg p-2 mx-1" style="width: 99%; height: 70vh;"></div>
+        
   
   

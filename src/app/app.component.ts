@@ -13,6 +13,7 @@ export class AppComponent {
   title = 'Sherlyn';
   addbalance: any;
   canAccess: boolean = false;
+  loggeduser: string | null|undefined;
 
   constructor(public dialog: MatDialog, private fb: FirebaseService, private router: Router) {
 
@@ -68,6 +69,7 @@ export class AppComponent {
 
     this.fb.emitcanaccess().subscribe((res: boolean) => {
       this.canAccess = res
+     this.loggeduser=localStorage.getItem('usercode');
     })
   }
 

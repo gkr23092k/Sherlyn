@@ -35,7 +35,7 @@
       <mat-chip-option color="warn" (selectionChange)="billoncard()">Credit Card</mat-chip-option>
     </mat-chip-listbox>
     <mat-chip-listbox aria-label="Material selection" class="ms-2">
-      <mat-chip-option  (selectionChange)="oncard()">CC Repay</mat-chip-option>
+      <mat-chip-option (selectionChange)="oncard()">CC Repay</mat-chip-option>
     </mat-chip-listbox>
   </div>
 
@@ -45,30 +45,30 @@
     [(ngModel)]="material" (onSelect)="onItemSelect($event)" (onSelectAll)="onSelectAll($event)">
   </ng-multiselect-dropdown>
 
-  <mat-form-field *ngIf="!ismaterialdropdown" class="example-full-width inputbox ">
+  <mat-form-field *ngIf="!ismaterialdropdown" appearance="fill" class="example-full-width inputbox ">
     <mat-label>Material</mat-label>
     <input matInput required placeholder="spent on" ngModel name="matname" [(ngModel)]="material">
   </mat-form-field>
 
-  <mat-form-field class="example-full-width mt-1">
+  <mat-form-field class="example-full-width mt-1" appearance="fill">
     <mat-label>Price</mat-label>
     <input matInput required placeholder="Price" ngModel name="matprice" type="number"
       (ngModelChange)="onPriceChange($event)">
   </mat-form-field>
 
 
-  <mat-form-field class="example-full-width ">
+  <mat-form-field class="example-full-width " appearance="fill">
     <mat-label>Balance</mat-label>
     <input matInput required placeholder="Balance" [(ngModel)]="balance" disabled ngModel name="balance" type="number">
   </mat-form-field>
 
-  <mat-form-field class="example-full-width mt-1 d-none">
+  <mat-form-field class="example-full-width mt-1 d-none" appearance="fill">
     <mat-label>Price</mat-label>
     <input matInput required placeholder="Price" ngModel name="matbalance" type="number" [(ngModel)]="balance">
   </mat-form-field>
 
 
-  <mat-form-field class="example-full-width">
+  <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>Date creation</mat-label>
     <input matInput required [matDatepicker]="picker" [(ngModel)]="dateentry" ngModel name="dateentry"
       class="example-full-width">
@@ -77,7 +77,7 @@
     <mat-datepicker #picker class="example-full-width"></mat-datepicker>
   </mat-form-field>
 
-  <mat-form-field class="example-full-width ">
+  <mat-form-field class="example-full-width " appearance="fill">
     <mat-label>Leave a comment</mat-label>
     <textarea matInput ngModel name="comments" placeholder="Ex. surprise gift..."></textarea>
   </mat-form-field>

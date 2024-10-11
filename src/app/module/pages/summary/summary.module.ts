@@ -14,7 +14,9 @@ import { EntryModule } from '../entry/entry.module';
 import {MatDialogModule} from '@angular/material/dialog';
 import { ChartModule } from 'angular-highcharts';
 import { AllocateChartComponent } from './summary/allocatechart/allocatechart.component';
-
+import {MatNativeDateModule} from '@angular/material/core';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatFormFieldModule} from '@angular/material/form-field';
 
 @NgModule({
   declarations: [
@@ -28,7 +30,9 @@ import { AllocateChartComponent } from './summary/allocatechart/allocatechart.co
     SummaryRoutingModule,AgGridAngular,
 
     //material
-    MatCardModule, AgGridModule, EntryModule,MatDialogModule,ChartModule 
+    MatCardModule, AgGridModule, EntryModule,MatDialogModule,ChartModule ,MatNativeDateModule,MatDatepickerModule,
+    MatFormFieldModule
+    
   ], providers: [dataservice]
 })
 export class SummaryModule { }

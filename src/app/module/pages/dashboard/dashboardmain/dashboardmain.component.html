@@ -5,7 +5,7 @@
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IDAY'">DAY INVEST</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IMONTH'">MONTH INVEST</button>
 </div>
-<donut-chart *ngIf="ischart=='GROUP'" [Spendlist]="groupeddata"></donut-chart>
+<donut-chart (dataEmitter)="receiveData($event)" *ngIf="ischart=='GROUP'" [Spendlist]="groupeddata"></donut-chart>
 <line-chart *ngIf="ischart=='SDAY'" [colorcode]="'red'" [Idtoken]="1" [Spendlist]="data"></line-chart>
 <line-chart *ngIf="ischart=='SMONTH'" [colorcode]="'red'"[Idtoken]="2" [Spendlist]="groupeddatamonthly"></line-chart>
 <line-chart *ngIf="ischart=='IDAY'" [colorcode]="'green'" [Idtoken]="3"[Spendlist]="investdata"></line-chart>
