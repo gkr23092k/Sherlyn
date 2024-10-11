@@ -8,8 +8,10 @@
       <mat-option [value]="'Clothes'">Clothes</mat-option>
       <mat-option [value]="'Investment'">Investment</mat-option>
       <mat-option [value]="'Education'">Education</mat-option>
+      <mat-option [value]="'Entertainment'">Entertainment</mat-option>
       <mat-option [value]="'Family'">Family</mat-option>
       <mat-option [value]="'Food'">Food</mat-option>
+      <mat-option [value]="'Groceries'">Groceries</mat-option>
       <mat-option [value]="'Liability Get'">Liability Get</mat-option>
       <mat-option [value]="'Liability Give'">Liability Give</mat-option>
       <mat-option [value]="'Loan'">Loan</mat-option>
@@ -19,11 +21,12 @@
       <mat-option [value]="'Selfcare'">Selfcare</mat-option>
       <mat-option [value]="'Sports'">Sports</mat-option>
       <mat-option [value]="'Travel'">Travel</mat-option>
-      <mat-option [value]="'Utilities'">Utility</mat-option>
+      <mat-option [value]="'Utilities'">Utilities</mat-option>
     </mat-select>
   </mat-form-field>
 
   <div class="d-flex">
+
 
     <mat-chip-listbox aria-label="Material selection">
       <mat-chip-option [selected]="selectedChip == 'New Material'" (selectionChange)="chipSelectionChange($event)">New
@@ -35,7 +38,7 @@
       <mat-chip-option color="warn" (selectionChange)="billoncard()">Credit Card</mat-chip-option>
     </mat-chip-listbox>
     <mat-chip-listbox aria-label="Material selection" class="ms-2">
-      <mat-chip-option (selectionChange)="oncard()">CC Repay</mat-chip-option>
+      <mat-chip-option  (selectionChange)="oncard()">CC Repay</mat-chip-option>
     </mat-chip-listbox>
   </div>
 

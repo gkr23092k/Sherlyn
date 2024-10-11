@@ -8,6 +8,7 @@ const routes: Routes = [
   {
     path: 'main', component: DashboardmainComponent
   },
+
   {
     path: '**', redirectTo: 'main'
   }

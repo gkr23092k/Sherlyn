@@ -17,6 +17,8 @@ import { AllocateChartComponent } from './summary/allocatechart/allocatechart.co
 import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatTabsModule} from '@angular/material/tabs';
+
 
 @NgModule({
   declarations: [
@@ -30,7 +32,8 @@ import {MatFormFieldModule} from '@angular/material/form-field';
     SummaryRoutingModule,AgGridAngular,
 
     //material
-    MatCardModule, AgGridModule, EntryModule,MatDialogModule,ChartModule ,MatNativeDateModule,MatDatepickerModule,
+    MatCardModule, AgGridModule, EntryModule,MatDialogModule,ChartModule
+     ,MatNativeDateModule,MatDatepickerModule,MatTabsModule,
     MatFormFieldModule
     
   ], providers: [dataservice]

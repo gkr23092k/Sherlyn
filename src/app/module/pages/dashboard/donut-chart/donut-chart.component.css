@@ -1,0 +1,12 @@
+.subheader{
+    position: absolute;
+    top: 30%;
+    left:52%
+}
+.closersub{
+    position: absolute;
+    top: 30%;
+    right:2%;
+    z-index: 5;
+    opacity: 0.5;
+}

@@ -143,7 +143,7 @@ export class EntryComponent implements OnInit {
       this.balance = val
       this.originalBalance = val; // Store the original balance
 
-      console.log(val);
+      // console.log(val);
     })
 
   }

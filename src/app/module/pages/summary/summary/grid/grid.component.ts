@@ -32,7 +32,7 @@ export class GridComponent {
   @Input('Spendlist') spendlist: any
   ngOnChanges() {
     this.rowData = this.spendlist
-    console.log(this.rowData);
+    // console.log(this.rowData);
 
     // let coldef = this.columnDefs
     // this.columnDefs = []

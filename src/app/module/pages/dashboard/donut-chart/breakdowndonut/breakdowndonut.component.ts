@@ -1,3 +1,5 @@
+
+
 import { Component, OnInit, OnDestroy, Input, OnChanges, EventEmitter, Output } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
@@ -8,13 +10,12 @@ import { FirebaseService } from 'src/app/shared/firebase.service';
 import { subDays } from 'date-fns';
 
 am4core.useTheme(am4themes_animated);
-
 @Component({
-  selector: 'donut-chart',
-  templateUrl: './donut-chart.component.html',
-  styleUrls: ['./donut-chart.component.css']
+  selector: 'app-breakdowndonut',
+  templateUrl: './breakdowndonut.component.html',
+  styleUrls: ['./breakdowndonut.component.scss']
 })
-export class DonutChartComponent implements OnChanges, OnInit {
+export class BreakdowndonutComponent implements OnChanges {
   private chart!: am4charts.PieChart3D;
   dataarrayobj: any = [];
   content: string = '';
@@ -25,28 +26,18 @@ export class DonutChartComponent implements OnChanges, OnInit {
   colorlist: any = [];
   enddaterange: Date = new Date()
   startdaterange: Date = subDays(new Date(), 30);
-  groupeddata: any;
-  matnamedata: any;
-  selectedgroup: any;
-  showFiller = false;
-
   // daterange: MatDateRange<Date> | null = null;
   constructor(private data: dataservice, private fb: FirebaseService) { }
 
   @Input('Spendlist') spendlist: any
+  @Input('Chosengroup') selectedgroup: any
   @Output() dataEmitter = new EventEmitter<any>();
   ngOnChanges() {
     this.groupedData = this.spendlist
     console.log(this.spendlist)
     this.initializeChart()
   }
-  ngOnInit() {
-    this.fb.getmatnamespendItems('Investment').subscribe((res: any) => {
-      this.matnamedata = res
-      console.log(res, 'group spend items');
 
-    })
-  }
 
 
   onDateRangeChanged() {
@@ -59,7 +50,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
 
   private initializeChart() {
     // Check if the chart is already initialized
-    this.chart = am4core.create('donut-chartdiv', am4charts.PieChart3D); // Unique container ID
+    this.chart = am4core.create('subdonut-chartdiv', am4charts.PieChart3D); // Unique container ID
     this.chart.innerRadius = am4core.percent(55);
 
     // Add data (replace this with your actual data)
@@ -79,21 +70,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
     this.chart.legend = new am4charts.Legend();
 
     series.slices.template.events.on("hit", (ev: any) => {
-      const clickedSlice = ev.target;
-
-      // Deselect all slices
-      series.slices.each((slice) => {
-        slice.isActive = false; // Deselect
-      });
-
-      // Select the clicked slice
-      // clickedSlice.isActive = true;
       console.log(ev.target.dataItem.category)
-      this.selectedgroup = ev.target.dataItem.category
-      this.fb.getmatnamespendItems(ev.target.dataItem.category, this.startdaterange, this.enddaterange).subscribe((res: any) => {
-        this.matnamedata = res
-        console.log(res, 'group spend items');
-      })
     });
 
   }
@@ -108,3 +85,4 @@ export class DonutChartComponent implements OnChanges, OnInit {
     }
   }
 }
+

@@ -1,4 +1,22 @@
+<div class="d-flex justify-content-center">
 
+    <mat-form-field class="example-full-width inputbox mx-1">
+        <mat-label>Select Month</mat-label>
+        <mat-select required (ngModelChange)="selectMonth($event)" [(ngModel)]="selectedMonthval">
+            <mat-option *ngFor="let month of monthNames" [value]="month">{{ month
+                }}</mat-option>
+        </mat-select>
+    </mat-form-field>
 
-<div class="shadow-lg p-2 m-2" #chartdiv style="width: 99%; height:80vh;"></div>
-<!-- <div class="shadow-lg p-2 m-2" [id]="chartdiv" style="width: 99%; height:80vh;"></div> -->
+    <mat-form-field class="example-full-width inputbox mx-1">
+        <mat-label>Select Year</mat-label>
+        <mat-select required (ngModelChange)="setYear($event)" [(ngModel)]="selectedYear">
+            <mat-option *ngFor="let year of [].constructor(10); let i = index" [value]="currentYear - i">
+                {{ currentYear - i }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+
+</div>
+
+<div class="shadow-lg p-2 mx-2" #chartdiv style="width: 99%; height:70vh;"></div>

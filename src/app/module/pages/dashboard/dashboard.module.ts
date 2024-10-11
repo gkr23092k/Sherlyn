@@ -10,16 +10,21 @@ import {MatNativeDateModule} from '@angular/material/core';
 import { DonutChartComponent } from './donut-chart/donut-chart.component';
 import { LineChartComponent } from './line-chart/line-chart.component';
 import { FormsModule } from '@angular/forms';
+import { BreakdowndonutComponent } from './donut-chart/breakdowndonut/breakdowndonut.component';
+import {MatSidenavModule} from '@angular/material/sidenav';
+
+
 @NgModule({
   declarations: [
-    DashboardmainComponent,DonutChartComponent,LineChartComponent
+    DashboardmainComponent,DonutChartComponent,LineChartComponent, BreakdowndonutComponent, 
   ],
   imports: [
     CommonModule,
     DashboardRoutingModule,
     
     //material
-    MatFormFieldModule,MatInputModule,MatDatepickerModule,MatNativeDateModule,FormsModule
+    MatFormFieldModule,MatInputModule,MatDatepickerModule,MatNativeDateModule,FormsModule,
+    MatSidenavModule
   ]
 })
 export class DashboardModule { }

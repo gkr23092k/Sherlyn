@@ -405,7 +405,7 @@ export class FirebaseService {
     ]).pipe(
       map(([totalSpend, totalCredit, totalliablegive, totalliableget, totalinvestment, totalrepaid]) => {
         const balance = (totalCredit + totalliableget) - (totalSpend + totalliablegive + totalinvestment + totalrepaid); // Calculate the balance
-        console.log(balance, 'total balance');
+        // console.log(balance, 'total balance');
         return balance; // Return the calculated balance
       })
     );
@@ -597,18 +597,18 @@ export class FirebaseService {
   }
 
 
-  getmatgroupspendItems(startdate: Date = subDays(new Date(), 30) , enddate: Date = new Date()): Observable<any[]> {
+  getmatgroupspendItems(startdate: Date = subDays(new Date(), 30), enddate: Date = new Date()): Observable<any[]> {
     // Convert startdate and enddate to Firestore Timestamps
     const startTimestamp = Timestamp.fromDate(startdate);
     const endTimestamp = Timestamp.fromDate(enddate);
-// console.log(startTimestamp,endTimestamp);
+    // console.log(startTimestamp,endTimestamp);
 
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
-        where("matgroup", "not-in", [ "Liability Give", "Liability Get"]),
+        where("matgroup", "not-in", ["Liability Give", "Liability Get"]),
         where("usercode", "==", this.usercode),
         where("dateentry", ">", startTimestamp), // Use Timestamp for start date
         where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
@@ -663,20 +663,92 @@ export class FirebaseService {
     );
   }
 
+  getmatnamespendItems(matgroup:string,startdate: Date = subDays(new Date(), 30), enddate: Date = new Date()): Observable<any[]> {
+    // Convert startdate and enddate to Firestore Timestamps
+    const startTimestamp = Timestamp.fromDate(startdate);
+    const endTimestamp = Timestamp.fromDate(enddate);
+    // console.log(startTimestamp,endTimestamp);
 
-
-
-
-  getmatgroupAllItems(): Observable<any[]> {
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
-        where("matgroup", "not-in", ["Liability Give", "Liability Get"]), // Exclude these groups
+        where("matgroup", "==", matgroup),
         where("usercode", "==", this.usercode),
-        orderBy("dateentry", "asc"),
+        where("dateentry", ">", startTimestamp), // Use Timestamp for start date
+        where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
+        orderBy("dateentry", "asc")
       );
+
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          const groupedData: { [key: string]: number } = {};
+
+          querySnapshot.docs.forEach(doc => {
+            const data: any = doc.data();
+            const matgroup = data.matname;
+            const price = data.matprice || 0;
+
+            // Initialize the group if not present
+            if (!groupedData[matgroup]) {
+              groupedData[matgroup] = 0;
+            }
+            // Sum the amount for the matgroup
+            groupedData[matgroup] += price;
+          });
+
+          return Object.keys(groupedData).map(key => ({
+            matgroup: key,
+            totalPrice: groupedData[key]
+          }));
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => {
+        const finalGroupedData: { [key: string]: number } = {};
+
+        results.forEach(groupedArray => {
+          groupedArray.forEach(item => {
+            const { matgroup, totalPrice } = item;
+
+            if (!finalGroupedData[matgroup]) {
+              finalGroupedData[matgroup] = 0;
+            }
+            finalGroupedData[matgroup] += totalPrice;
+          });
+        });
+
+        return Object.keys(finalGroupedData).map(key => ({
+          matgroup: key,
+          totalPrice: finalGroupedData[key]
+        }));
+      })
+    );
+  }
+
+
+
+
+  getmatgroupAllItems(startdate: Date = subDays(new Date(), 10), enddate: Date = new Date()): Observable<any[]> {
+    const startTimestamp = Timestamp.fromDate(startdate);
+    const endTimestamp = Timestamp.fromDate(enddate);
+    console.log(startTimestamp,endTimestamp);
+
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ["Liability Give", "Liability Get"]),
+        where("usercode", "==", this.usercode),
+        where("dateentry", ">", startTimestamp), // Use Timestamp for start date
+        where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
+        orderBy("dateentry", "asc")
+      );
+
 
       return from(getDocs(q)).pipe(
         map((querySnapshot) => {

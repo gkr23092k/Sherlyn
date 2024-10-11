@@ -1,7 +1,17 @@
-.card-conatiner{
+.card-conatiner {
     display: flex;
     flex-wrap: wrap;
     gap: 0px;
     justify-content: center;
     width: 100%;
+}
+
+::ng-deep .mdc-tab__text-label {
+    color: rgb(236, 235, 235) !important;
+}
+
+::ng-deep .mdc-tab {
+    background-color: rgb(175, 222, 154) !important;
+    border: 2px solid  rgb(254, 237, 215) !important;
+    border-radius: 10px !important;
 }

@@ -14,7 +14,7 @@ const routes: Routes = [
 })
 export class EntryRoutingModule {
   constructor() {
-    console.log('reached routing');
+    // console.log('reached routing');
 
   }
 }

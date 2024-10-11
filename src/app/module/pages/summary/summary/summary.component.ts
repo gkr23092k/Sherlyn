@@ -88,7 +88,7 @@ export class SummaryComponent {
     // this.totalinvest = _.sumBy(this.investdata, 'Price');
 
 
-    console.log(this.Spendreport);
+    // console.log(this.Spendreport);
 
 
   }
@@ -130,7 +130,7 @@ export class SummaryComponent {
     // this.totalinvest = _.maxBy(this.Investreport, 'matprice');
     this.totalreport.push({ matprice: _.sumBy(data, 'matprice'), heading: 'Total Invest' })
 
-    console.log(this.Investreport);
+    // console.log(this.Investreport);
 
 
   }
@@ -139,7 +139,7 @@ export class SummaryComponent {
     const currentDate = new Date();
     const startDate = new Date();
     startDate.setDate(currentDate.getDate() - daysAgo);
-    console.log(startDate);
+    // console.log(startDate);
 
     data.forEach(item => {
       const itemDate = new Date(item.date);

@@ -5,31 +5,82 @@ import am4themes_animated from '@amcharts/amcharts4/themes/animated';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { forkJoin } from 'rxjs';
 import * as _ from 'lodash';
+import * as _moment from 'moment';
+const moment = _moment;
 
 @Component({
   selector: 'app-allocate-chart',
   templateUrl: './allocatechart.component.html',
   styleUrls: ['./allocatechart.component.scss']
 })
+
 export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy {
   @ViewChild('chartdiv', { static: true }) chartDiv!: ElementRef;
 
   private chart!: am4charts.XYChart;
   data1: any[] = [];
   data2: any[] = [];
-
+  formattedDate: any;
+  lastDateOfMonth: any;
+  startdateofmonth: any;
   constructor(private fb: FirebaseService) { }
 
+  monthNames: string[] = moment.monthsShort();
+  currentYear: any = moment().year();
+  selectedMonthval: any = moment().month();
+  selectedMonth: any;
+  selectedYear: any = this.currentYear;
+
+  selectMonth(event: any) {
+    this.selectedMonth = this.monthNames.indexOf(event);
+    this.emitDate();
+  }
+
+  setYear(event: any) {
+    // console.log(event, 'year changed', this.selectedMonth);
+    this.selectedYear = Number(event);
+    this.emitDate();
+  }
+
+  emitDate() {
+    // Get the last date of the month
+    const lastDate = moment().year(this.selectedYear).month(this.selectedMonth).endOf('month');
+    this.lastDateOfMonth = lastDate.toDate();
+    this.startdateofmonth = new Date(this.selectedYear, this.selectedMonth, 1)
+    // console.log('Selected Date:', 'pass', this.startdateofmonth, this.lastDateOfMonth);
+
+    forkJoin({
+      allocations: this.fb.getAllAllocation(),
+      materials: this.fb.getmatgroupAllItems(this.startdateofmonth, this.lastDateOfMonth)
+    }).subscribe(({ allocations, materials }) => {
+      // this.data1 = allocations;
+      this.data1 = _.sortBy(allocations, 'category');
+      this.data2 = materials;
+      // console.log(materials,'from allocation');
+
+      this.mergeData();
+      this.createChart();
+    });
+  }
+
   ngOnInit(): void {
-    // Use forkJoin to wait for both data fetching operations to complete
+    const now = moment(); // Get current date and time
+    this.selectedMonthval = this.monthNames[Number(now.month())]
+
+    this.selectedYear = now.year(); // Current year
+    const date = moment().month(Number(now.month() + 1) - 1).year(this.selectedYear).startOf('month');
+    let finalperiod = date.format('MMMM YYYY'); // Format the date as "January 2024"
+    // console.log(finalperiod, 'selectedmonth');
+
+
     forkJoin({
       allocations: this.fb.getAllAllocation(),
       materials: this.fb.getmatgroupAllItems()
     }).subscribe(({ allocations, materials }) => {
       // this.data1 = allocations;
-      this.data1  = _.sortBy(allocations, 'category');
+      this.data1 = _.sortBy(allocations, 'category');
       this.data2 = materials;
-// console.log(materials,'from allocation');
+      // console.log(materials,'from allocation');
 
       this.mergeData();
       this.createChart();
@@ -49,7 +100,7 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
 
   private createChart() {
     am4core.useTheme(am4themes_animated);
-    
+
     this.chart = am4core.create(this.chartDiv.nativeElement, am4charts.XYChart);
     this.chart.colors.step = 2;
 
