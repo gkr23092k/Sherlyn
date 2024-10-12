@@ -17,9 +17,9 @@
                 [ngClass]="(carddetails.utilised / carddetails.totallimit) * 100 < 30 ? 'text-success' : 'text-danger'">
                 {{ (carddetails.utilised / carddetails.totallimit) * 100 | number: '1.2-2' }}%
             </span>
-            <img style="height:5vh; width: 9vh;" [src]="'../../../../../assets/images/'+carddetails.type+'.png'"
+            <img style="height:5vh; width: 9vh;" [src]="'assets/images/'+carddetails.type+'.png'"
                 alt="type.logo">
-                <img style="height:5vh; width: 9vh;" [src]="'../../../assets/images/'+carddetails.type+'.png'" alt="">
+                <!-- <img style="height:5vh; width: 9vh;" [src]="'assets/images/'+carddetails.type+'.png'" alt=""> -->
         </div>
     </div>
 </div>
