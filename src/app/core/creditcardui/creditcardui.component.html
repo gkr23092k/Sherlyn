@@ -1,0 +1,24 @@
+<div class="credit-card">
+    <div class="card-header">
+        <h1>{{carddetails.cardname}}</h1>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between">
+            <p>{{carddetails.cardholder}}</p>
+            <p>**** **** **** {{ carddetails.cardnumber }}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p> VD {{ carddetails.expirydate }}</p>
+            <p class="me-5"> CVV {{ carddetails.cvv }}</p>
+        </div>
+        <div class="d-flex justify-content-between">
+            <p class="my-auto"> {{carddetails.utilised}}/{{carddetails.totallimit}}</p>
+            <span class="my-auto fs-6 fw-bold p-1"
+                [ngClass]="(carddetails.utilised / carddetails.totallimit) * 100 < 30 ? 'text-success' : 'text-danger'">
+                {{ (carddetails.utilised / carddetails.totallimit) * 100 | number: '1.2-2' }}%
+            </span>
+            <img style="height:5vh; width: 9vh;" [src]="'../../../../../assets/images/'+carddetails.type+'.png'"
+                alt="type.logo">
+        </div>
+    </div>
+</div>

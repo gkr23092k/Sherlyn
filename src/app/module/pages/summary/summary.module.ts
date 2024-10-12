@@ -25,7 +25,8 @@ import {MatTabsModule} from '@angular/material/tabs';
     SummaryComponent,
     SummarycardComponent,
     GridComponent,
-    AllocateChartComponent
+    AllocateChartComponent,
+    
   ],
   imports: [
     CommonModule,

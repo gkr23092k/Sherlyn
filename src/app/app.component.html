@@ -2,13 +2,13 @@
     style="background-color: #003153; color: aliceblue;">
     <h1 class="mx-auto my-auto">GORA 80-80 </h1>
     <!-- <button mat-icon-button class="me-2 mb-1" ><img src='./assets/images/logout.png' style='width: 2rem; height: 2rem' /></button> -->
-
+    <span class="my-auto px-2 bg-warning rounded rounded-4" >
+        {{loggeduser}}
+    </span>
     <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
         <mat-icon>menu</mat-icon> </button>
     <mat-menu class="text-center" #menu="matMenu" #beforeMenu="matMenu" xPosition="before">
-        <span class="mt-2 p-2 bg-warning rounded rounded-4" >
-            {{loggeduser}}
-        </span>
+
         <button mat-menu-item [routerLink]="'../entry'">
             <mat-icon>fiber_new</mat-icon>
             <span>New Entry</span>
@@ -20,6 +20,10 @@
         <button mat-menu-item [routerLink]="'../summary'">
             <mat-icon> notes</mat-icon>
             <span>Summary</span>
+        </button>
+        <button mat-menu-item [routerLink]="'../credit'">
+            <mat-icon>credit_card</mat-icon>
+            <span>Credit Card</span>
         </button>
         <button mat-menu-item (click)="openDialog()">
             <mat-icon> monetization_on</mat-icon>

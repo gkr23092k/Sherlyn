@@ -21,6 +21,10 @@ const routes: Routes = [
     path: 'dashboard', loadChildren: () => import('./module/pages/dashboard/dashboard.module').then(m => m.DashboardModule),
     canActivate: [guardGuard]
   },
+  {
+    path: 'credit', loadChildren: () => import('./module/pages/creditcard/creditcard/creditcard.module').then(m => m.CreditcardModule),
+    canActivate: [guardGuard]
+  },
   { path: '**', redirectTo: 'user' }  // Redirect to 'dashboard' path for any unknown routes
 ];
 

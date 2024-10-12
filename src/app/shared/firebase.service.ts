@@ -101,11 +101,104 @@ export class FirebaseService {
       })
     );
   }
+  getAllLenditems(startdate: Date = subDays(new Date(), 100), enddate: Date = new Date()): Observable<any[]> {
+    // Convert startdate and enddate to Firestore Timestamps
+    const startTimestamp = Timestamp.fromDate(startdate);
+    const endTimestamp = Timestamp.fromDate(enddate);
+    // console.log(startTimestamp,endTimestamp);
+
+    const collections = ['SpendList', 'CCLendList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ["Liability Give", "Liability Get"]),
+        where("usercode", "==", this.usercode),
+        where("dateentry", ">", startTimestamp), // Use Timestamp for start date
+        where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
+        orderBy("dateentry", "asc")
+      );
+
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          const groupedData: { [key: string]: number } = {};
+
+          querySnapshot.docs.forEach(doc => {
+            const data: any = doc.data();
+            const matgroup = data.cardname;
+            const price = data.matprice || 0;
+
+            // Initialize the group if not present
+            if (!groupedData[matgroup]) {
+              groupedData[matgroup] = 0;
+            }
+            // Sum the amount for the matgroup
+            groupedData[matgroup] += price;
+          });
+
+          return Object.keys(groupedData).map(key => ({
+            cardname: key,
+            totalPrice: groupedData[key]
+          }));
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => {
+        const finalGroupedData: { [key: string]: number } = {};
+
+        results.forEach(groupedArray => {
+          groupedArray.forEach(item => {
+            const { cardname, totalPrice } = item;
+
+            if (!finalGroupedData[cardname]) {
+              finalGroupedData[cardname] = 0;
+            }
+            finalGroupedData[cardname] += totalPrice;
+          });
+        });
+
+        return Object.keys(finalGroupedData).map(key => ({
+          cardname: key,
+          utilised: finalGroupedData[key]
+        }));
+      })
+    );
+  }
+
+  getAllCreditcards(): Observable<any[]> {
+    const citiesRef = collection(this.db, "CreditCards");
+    const q = query(
+      citiesRef,
+      // where("matgroup", "!=", "Investment"),
+      // where("matgroup", "!=", "Liability Give"),
+      // where("matgroup", "!=", "Liability Get"),
+      // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
+      // where("usercode", "==", this.usercode),
+      // orderBy("dateentry", "asc")
+    );
+    return from(getDocs(q)).pipe(
+      map((querySnapshot) => {
+        return querySnapshot.docs.map(doc => {
+          const data: any = doc.data();
+          const id = doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
 
   dataentry(data: any) {
     return this.firestore.collection('SpendList').add({ ...data, datecr: new Date(), usercode: this.usercode });
 
   }
+  CreditCards(data: any) {
+    return this.firestore.collection('CreditCards').add({ ...data, datecr: new Date(), usercode: this.usercode });
+  }
+
+
+
   Loandataentry(data: any) {
     return this.firestore.collection('CCRepayList').add({ ...data, datecr: new Date(), usercode: this.usercode });
 
@@ -257,7 +350,7 @@ export class FirebaseService {
           return querySnapshot.docs.map(doc => {
             const data: any = doc.data();
             const id = doc.id;
-            return { id, ...data, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+            return { id, ...data, iscreditcard: data.iscreditcard ? data.cardname : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
           });
         })
       );
@@ -663,7 +756,7 @@ export class FirebaseService {
     );
   }
 
-  getmatnamespendItems(matgroup:string,startdate: Date = subDays(new Date(), 30), enddate: Date = new Date()): Observable<any[]> {
+  getmatnamespendItems(matgroup: string, startdate: Date = subDays(new Date(), 30), enddate: Date = new Date()): Observable<any[]> {
     // Convert startdate and enddate to Firestore Timestamps
     const startTimestamp = Timestamp.fromDate(startdate);
     const endTimestamp = Timestamp.fromDate(enddate);
@@ -758,7 +851,7 @@ export class FirebaseService {
             const data: any = doc.data();
             const matgroup = data.matgroup; // Field to group by
             const price = data.matprice || 0; // Field to sum, default to 0 if undefined
-// console.log(data);
+            // console.log(data);
 
             // Initialize the group if not present
             if (!groupedData[matgroup]) {

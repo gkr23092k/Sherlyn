@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SummaryComponent } from './summary/summary.component';
+import { CreditmainComponent } from './creditmain/creditmain.component';
 
 const routes: Routes = [
   {
-    path: 'main', component: SummaryComponent
+    path: 'main', component: CreditmainComponent
   },
   {
     path: '**', redirectTo: 'main'
@@ -15,4 +15,4 @@ const routes: Routes = [
   imports: [RouterModule.forChild(routes)],
   exports: [RouterModule]
 })
-export class SummaryRoutingModule { }
+export class CreditcardRoutingModule { }

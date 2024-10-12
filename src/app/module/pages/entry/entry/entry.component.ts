@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { NgForm } from '@angular/forms';
@@ -11,6 +11,7 @@ import * as _ from 'lodash';
 })
 export class EntryComponent implements OnInit {
   balance: any;
+  creditcardlist: any=[];
 
   constructor(private fb: FirebaseService, private spinner: NgxSpinnerService) { }
   @ViewChild('entry') entry!: NgForm
@@ -22,7 +23,9 @@ export class EntryComponent implements OnInit {
   isbilloncard: boolean = false;
   ismaterialdropdown: boolean = false
   selectedChip: string | null = 'New Material';
-  dateentry = new Date()
+  dateentry = new Date();
+  cardname: string = ''
+  cardeventcatcher: boolean = false
   dropdownSettings = {
     singleSelection: true,
     idField: 'item_id',
@@ -33,6 +36,23 @@ export class EntryComponent implements OnInit {
     allowSearchFilter: true,
     closeDropDownOnSelection: true
   };
+
+  selectedchipcc: string | null = null;
+
+
+  billoncard(event: any) {
+    // console.log(event.source.value,event);
+    this.cardeventcatcher = event.selected
+    if (event.source.value == "Credit Card") {
+      this.isoncard = false
+      this.isbilloncard = true
+    }
+    else if (event.source.value == "CCRepay") {
+      this.isoncard = true
+      this.isbilloncard = false
+    }
+  }
+
 
 
   chipSelectionChange(event: any) {
@@ -59,10 +79,14 @@ export class EntryComponent implements OnInit {
   ngOnInit() {
     // console.log('startted')
     this.keepbalancelive()
-    this.fb.emitbalance().subscribe((val)=>{
+    this.fb.emitbalance().subscribe((val) => {
       // console.log('emitted new balance',val)
       this.keepbalancelive()
     })
+    this.fb.getAllCreditcards().subscribe((el: any) => {
+      this.creditcardlist = el
+    })
+
   }
   onPriceChange(newPrice: number): void {
     // Check if the new price is 0
@@ -85,13 +109,15 @@ export class EntryComponent implements OnInit {
     this.entry.form.patchValue({
       ...data,
       matname: this.material,
-      balance: this.balance
+      balance: this.balance,
+      cardname:this.cardname
     });
     const enteredvalues = {
       ...data.value,
       matname: (typeof this.material == 'string') ? this.material : this.material[0].item_text,
       balance: this.balance,
-      iscreditcard: this.isbilloncard
+      iscreditcard: this.isbilloncard,
+      cardname:this.cardname
     }
 
     console.log(data.value, enteredvalues, this.isbilloncard);
@@ -131,12 +157,6 @@ export class EntryComponent implements OnInit {
     console.log(items);
   }
 
-  billoncard() {
-    this.isbilloncard = !this.isbilloncard
-  }
-  oncard() {
-    this.isoncard = !this.isoncard
-  }
 
   keepbalancelive() {
     this.fb.getBalance().subscribe((val: number) => {
@@ -149,14 +169,13 @@ export class EntryComponent implements OnInit {
   }
 
   onInputChange(event: any) {
-    console.log(event);
-
+    // console.log(event);
     this.materialdropdown = []
     this.fb.getAllpreviousentries(event).subscribe((val: any) => {
 
       this.materialdropdown = this.getUniqueRecords(val);
-
-      console.log(this.materialdropdown, 'materialdropdown');
+      this.materialdropdown.sort((a: any, b: any) => a.item_text.localeCompare(b.item_text)); // Ascending sort
+      // console.log(this.materialdropdown, 'materialdropdown');
     })
 
   }
