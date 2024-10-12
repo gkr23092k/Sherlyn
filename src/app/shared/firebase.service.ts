@@ -735,7 +735,7 @@ export class FirebaseService {
   getmatgroupAllItems(startdate: Date = subDays(new Date(), 10), enddate: Date = new Date()): Observable<any[]> {
     const startTimestamp = Timestamp.fromDate(startdate);
     const endTimestamp = Timestamp.fromDate(enddate);
-    console.log(startdate,startTimestamp,enddate,endTimestamp);
+    // console.log(startdate,startTimestamp,enddate,endTimestamp);
 
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
@@ -758,7 +758,7 @@ export class FirebaseService {
             const data: any = doc.data();
             const matgroup = data.matgroup; // Field to group by
             const price = data.matprice || 0; // Field to sum, default to 0 if undefined
-console.log(data);
+// console.log(data);
 
             // Initialize the group if not present
             if (!groupedData[matgroup]) {
