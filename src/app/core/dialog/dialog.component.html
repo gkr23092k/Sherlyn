@@ -1,21 +1,24 @@
-<!-- <h1 mat-dialog-title>Hi User</h1> -->
 <div mat-dialog-content>
-    <p>Credited</p>
-    <div class="d-flex justify-content-center flex-column">
-        <mat-form-field class="me-sm-1 example-full-width">
-            <mat-label>Add Balance</mat-label>
-            <input matInput [type]="'number'" placeholder="Ex. 1000" [(ngModel)]="data.newaccbalance">
-        </mat-form-field>
+    <h1 class="text-center">Credited Inflow</h1>
+    <form #entry="ngForm" class="container  vh-50" >
 
-        <mat-form-field class="example-full-width ">
-            <mat-label>Leave a comment</mat-label>
-            <textarea matInput [(ngModel)]="data.comment" placeholder="Ex. surprise gift..."></textarea>
-        </mat-form-field>
-    </div>
-    <div>
-        <div mat-dialog-actions class="d-flex justify-content-center">
-            <button  class="btn btn-sm btn-success mx-2" [mat-dialog-close]="data" cdkFocusInitial>ADD</button>
-            <button class="btn btn-sm btn-danger mx-2" (click)="onNoClick()">Cancel</button>
+        <div class="d-flex justify-content-center flex-column">
+            <mat-form-field class="me-sm-1 example-full-width">
+                <mat-label>Add Balance</mat-label>
+                <input matInput [type]="'number'" name="balance" ngModel placeholder="Ex. 1000" [(ngModel)]="data.newaccbalance" required>
+            </mat-form-field>
+
+            <mat-form-field class="example-full-width">
+                <mat-label>Leave a comment</mat-label>
+                <textarea matInput [(ngModel)]="data.comment" ngModel name="comment" placeholder="Ex. surprise gift..." required></textarea>
+            </mat-form-field>
         </div>
-    </div>
+        <div>
+            <div mat-dialog-actions class="d-flex justify-content-center">
+                <input type="submit" class="btn btn-sm btn-success mx-2" [mat-dialog-close]="data" cdkFocusInitial
+                    [disabled]="entry.invalid">
+                <button class="btn btn-sm btn-danger mx-2" (click)="onNoClick()">Cancel</button>
+            </div>
+        </div>
+    </form>
 </div>

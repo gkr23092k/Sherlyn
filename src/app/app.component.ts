@@ -22,8 +22,8 @@ export class AppComponent {
   openDialog(): void {
     const dialogRef = this.dialog.open(DialogComponent, {
       data: { name: this.addbalance },
-      height: '310px',
-      width: '400px'
+      height: '50vh',
+      width: '50%'
     });
   
     dialogRef.afterClosed().subscribe(result => {
