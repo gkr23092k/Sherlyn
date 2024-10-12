@@ -28,7 +28,7 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
   monthNames: string[] = moment.monthsShort();
   currentYear: any = moment().year();
   selectedMonthval: any = moment().month();
-  selectedMonth: any;
+  selectedMonth: any = moment().month() ;
   selectedYear: any = this.currentYear;
 
   selectMonth(event: any) {
@@ -47,7 +47,7 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
     const lastDate = moment().year(this.selectedYear).month(this.selectedMonth).endOf('month');
     this.lastDateOfMonth = lastDate.toDate();
     this.startdateofmonth = new Date(this.selectedYear, this.selectedMonth, 1)
-    // console.log('Selected Date:', 'pass', this.startdateofmonth, this.lastDateOfMonth);
+    console.log('Selected Date:', 'pass', this.startdateofmonth, this.lastDateOfMonth);
 
     forkJoin({
       allocations: this.fb.getAllAllocation(),
@@ -68,14 +68,15 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
     this.selectedMonthval = this.monthNames[Number(now.month())]
 
     this.selectedYear = now.year(); // Current year
-    const date = moment().month(Number(now.month() + 1) - 1).year(this.selectedYear).startOf('month');
-    let finalperiod = date.format('MMMM YYYY'); // Format the date as "January 2024"
-    // console.log(finalperiod, 'selectedmonth');
+    const date = new Date(this.selectedYear, this.selectedMonth, 1)
+    const lastDate = moment().year(this.selectedYear).month(this.selectedMonth).endOf('month');
+    this.lastDateOfMonth = lastDate.toDate();
+    console.log(date, this.lastDateOfMonth, 'selectedmonth');
 
 
     forkJoin({
       allocations: this.fb.getAllAllocation(),
-      materials: this.fb.getmatgroupAllItems()
+      materials: this.fb.getmatgroupAllItems(date, this.lastDateOfMonth)
     }).subscribe(({ allocations, materials }) => {
       // this.data1 = allocations;
       this.data1 = _.sortBy(allocations, 'category');

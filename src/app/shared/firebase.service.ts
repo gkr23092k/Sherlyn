@@ -735,7 +735,7 @@ export class FirebaseService {
   getmatgroupAllItems(startdate: Date = subDays(new Date(), 10), enddate: Date = new Date()): Observable<any[]> {
     const startTimestamp = Timestamp.fromDate(startdate);
     const endTimestamp = Timestamp.fromDate(enddate);
-    console.log(startTimestamp,endTimestamp);
+    console.log(startdate,startTimestamp,enddate,endTimestamp);
 
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
@@ -744,7 +744,7 @@ export class FirebaseService {
         citiesRef,
         where("matgroup", "not-in", ["Liability Give", "Liability Get"]),
         where("usercode", "==", this.usercode),
-        where("dateentry", ">", startTimestamp), // Use Timestamp for start date
+        where("dateentry", ">=", startTimestamp), // Use Timestamp for start date
         where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
         orderBy("dateentry", "asc")
       );
@@ -758,6 +758,7 @@ export class FirebaseService {
             const data: any = doc.data();
             const matgroup = data.matgroup; // Field to group by
             const price = data.matprice || 0; // Field to sum, default to 0 if undefined
+console.log(data);
 
             // Initialize the group if not present
             if (!groupedData[matgroup]) {
