@@ -175,7 +175,7 @@ export class FirebaseService {
       // where("matgroup", "!=", "Liability Give"),
       // where("matgroup", "!=", "Liability Get"),
       // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
-      // where("usercode", "==", this.usercode),
+      where("usercode", "==", this.usercode),
       // orderBy("dateentry", "asc")
     );
     return from(getDocs(q)).pipe(
