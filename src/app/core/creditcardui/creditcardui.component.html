@@ -1,15 +1,16 @@
-<div class="credit-card">
-    <div class="card-header">
-        <h1>{{carddetails.cardname}}</h1>
+<div class="credit-card text-center">
+    <div class="card-header d-flex justify-content-center">
+        <h1 (click)="notifyParent()">{{carddetails.cardname}}</h1>
+            <mat-icon class="mx-2 mt-1" (click)="notifyParent()"> table_chart</mat-icon> 
     </div>
     <div class="card-body">
-        <div class="d-flex justify-content-between">
+        <div *ngIf="carddetails.cardnumber" class="d-flex justify-content-between">
             <p>{{carddetails.cardholder}}</p>
             <p>**** **** **** {{ carddetails.cardnumber }}</p>
         </div>
-        <div class="d-flex justify-content-between">
-            <p> VD {{ carddetails.expirydate }}</p>
-            <p class="me-5"> CVV {{ carddetails.cvv }}</p>
+        <div *ngIf="carddetails.expirydate" class="d-flex justify-content-between">
+            <p> Valid : {{ carddetails.expirydate }}</p>
+            <p class="me-5"> CVV : {{ carddetails.cvv }}</p>
         </div>
         <div class="d-flex justify-content-between">
             <p class="my-auto"> {{carddetails.utilised}}/{{carddetails.totallimit}}</p>
@@ -17,9 +18,15 @@
                 [ngClass]="(carddetails.utilised / carddetails.totallimit) * 100 < 30 ? 'text-success' : 'text-danger'">
                 {{ (carddetails.utilised / carddetails.totallimit) * 100 | number: '1.2-2' }}%
             </span>
-            <img style="height:5vh; width: 9vh;" [src]="'assets/images/'+carddetails.type+'.png'"
-                alt="type.logo">
-                <!-- <img style="height:5vh; width: 9vh;" [src]="'assets/images/'+carddetails.type+'.png'" alt=""> -->
+            <img *ngIf="carddetails.type" style=" height:5vh; width: 9vh;"
+                [src]="'assets/images/'+carddetails.type+'.png'" alt="type.logo">
         </div>
     </div>
+    <ng-container *ngIf="!carddetails.type">
+        <img class="mt-3 mx-1" style=" height:5vh; width: 9vh;" [src]="'assets/images/visa.png'" alt="type.logo">
+        <img class="mt-3 mx-1" style=" height:5vh; width: 9vh;" [src]="'assets/images/master.png'" alt="type.logo">
+        <img class="mt-3 mx-1" style=" height:5vh; width: 9vh;" [src]="'assets/images/rupay.png'" alt="type.logo">
+    </ng-container>
 </div>
+
+<!-- <img style="height:5vh; width: 9vh;" [src]="'assets/images/'+carddetails.type+'.png'" alt=""> -->

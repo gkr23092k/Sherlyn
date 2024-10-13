@@ -12,14 +12,16 @@ import { MatIconModule } from '@angular/material/icon';
 import { CreditmainComponent } from './creditmain/creditmain.component';
 import { CreditcarduiComponent } from 'src/app/core/creditcardui/creditcardui.component';
 import { NgxSpinnerModule } from "ngx-spinner";
+import { CreditgridComponent } from './creditgrid/creditgrid.component';
+import { AgGridModule } from 'ag-grid-angular';
 
 
 @NgModule({
-  declarations: [CreditmainComponent,CreditcarduiComponent],
+  declarations: [CreditmainComponent,CreditcarduiComponent, CreditgridComponent],
   imports: [
     CommonModule,
     CreditcardRoutingModule,
-    MatButtonModule,MatFormFieldModule, MatInputModule,MatNativeDateModule,
+    MatButtonModule,MatFormFieldModule, MatInputModule,MatNativeDateModule,AgGridModule,
     FormsModule,ReactiveFormsModule,MatIconModule,MatSelectModule,MatOptionModule,NgxSpinnerModule
   ]
 })

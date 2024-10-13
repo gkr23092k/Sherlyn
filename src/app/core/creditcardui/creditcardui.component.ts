@@ -1,18 +1,18 @@
-import { Component, Input, OnChanges, SimpleChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-creditcardui',
   templateUrl: './creditcardui.component.html',
   styleUrls: ['./creditcardui.component.scss']
 })
-export class CreditcarduiComponent implements OnChanges {
+export class CreditcarduiComponent  {
 
   
   @Input('Creditcards') carddetails:any;
-  
-  ngOnChanges(changes: SimpleChanges): void {
+  @Output() buttonClicked = new EventEmitter<void>();
 
+  notifyParent() {
+    this.buttonClicked.emit();
   }
-
 
 }

@@ -3,6 +3,7 @@ import { NgForm } from '@angular/forms';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { forkJoin, map, switchMap } from 'rxjs';
 import { FirebaseService } from 'src/app/shared/firebase.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-creditmain',
@@ -13,9 +14,15 @@ export class CreditmainComponent implements OnInit {
   isnewentry: boolean = false
   cardnumber: any;
   data: any = []
+  summary: any = []
+  creditcardgrid: any = []
+  ismain:boolean=true
   constructor(private fb: FirebaseService, private spinner: NgxSpinnerService) { }
   ngOnInit(): void {
     this.refreshcarddata()
+    this.fb.getAllCCrepayItems().subscribe((el: any) => {
+      this.creditcardgrid = el
+    })
   }
 
   @ViewChild('creditcard') creditcard!: NgForm
@@ -74,7 +81,8 @@ export class CreditmainComponent implements OnInit {
           return matchingLendItem ? { ...card, ...matchingLendItem } : card;
         });
 
-        console.log(this.data);
+        this.summary = { cardname: 'OverAll Report', totallimit: _.sumBy(this.data, 'totallimit'), utilised: _.sumBy(this.data, 'utilised') }
+        console.log(this.summary);
         this.spinner.hide(); // Hide the spinner after processing data
 
       }, (error: any) => {

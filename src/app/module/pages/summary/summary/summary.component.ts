@@ -26,6 +26,7 @@ export class SummaryComponent {
   griddata: any;
   TotalSpendreport: any = [];
   TotalInvestreport: any=[];
+  creditgriddata: any=[];
   constructor(private fb: FirebaseService) { }
   ngOnInit() {
     this.fb.getAllspendItems().subscribe((res: any) => {
@@ -41,6 +42,10 @@ export class SummaryComponent {
       // this.summarizespend(this.griddata)
     })
 
+    this.fb.getAllcreditItems().subscribe((res: any) => {
+      this.creditgriddata = res
+      // this.summarizespend(this.griddata)
+    })
   }
 
 

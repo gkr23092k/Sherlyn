@@ -537,7 +537,7 @@ export class FirebaseService {
         return querySnapshot.docs.map(doc => {
           const data: any = doc.data();
           const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)), datecr: this.formatDate(new Date(data.datecr?.seconds * 1000)) };
         });
       })
     );

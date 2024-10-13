@@ -1,11 +1,13 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CreditmainComponent } from './creditmain/creditmain.component';
+import { CreditgridComponent } from './creditgrid/creditgrid.component';
 
 const routes: Routes = [
   {
     path: 'main', component: CreditmainComponent
   },
+
   {
     path: '**', redirectTo: 'main'
   }

@@ -1,10 +1,11 @@
 <div class="d-flex justify-content-center my-2">
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='MARGIN'">OVERVIEW</button>
-    <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='GRID'">GRID LIST</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='SGRID'">SPEND GRID</button>
+    <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='CGRID'">CREDIT GRID</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='ALLOCATION'">ALLOCATION</button>
 </div>
 
-<div *ngIf="iscard=='MARGIN'" class="container" >
+<div *ngIf="iscard=='MARGIN'" class="container">
 
     <mat-tab-group animationDuration="1000ms" class="mx-5">
         <mat-tab label="Spend">
@@ -49,6 +50,7 @@
 
 </div>
 
-<app-grid [Spendlist]="griddata" *ngIf="iscard=='GRID'"></app-grid>
+<app-grid [Iscredit]="false" [Spendlist]="griddata" *ngIf="iscard=='SGRID'"></app-grid>
+<app-grid [Iscredit]="true" [Spendlist]="creditgriddata" *ngIf="iscard=='CGRID'"></app-grid>
 
 <app-allocate-chart *ngIf="iscard=='ALLOCATION'"></app-allocate-chart>
