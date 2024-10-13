@@ -41,16 +41,17 @@ export class EntryComponent implements OnInit {
 
 
   billoncard(event: any) {
-    // console.log(event.source.value,event);
     this.cardeventcatcher = event.selected
     if (event.source.value == "Credit Card") {
       this.isoncard = false
       this.isbilloncard = true
     }
-    else if (event.source.value == "CCRepay") {
+    else if (event.source.value == "Credit Card Repay") {
       this.isoncard = true
       this.isbilloncard = false
     }
+    console.log(event.source.value, this.isoncard,
+      this.isbilloncard);
   }
 
 

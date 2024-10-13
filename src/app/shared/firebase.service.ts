@@ -107,7 +107,7 @@ export class FirebaseService {
     const endTimestamp = Timestamp.fromDate(enddate);
     // console.log(startTimestamp,endTimestamp);
 
-    const collections = ['SpendList', 'CCLendList'];
+    const collections = [ 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
@@ -185,6 +185,73 @@ export class FirebaseService {
           const id = doc.id;
           return { id, ...data };
         });
+      })
+    );
+  }
+
+  getAllCreditcardRepayments(startdate: Date = subDays(new Date(), 100), enddate: Date = new Date()): Observable<any[]> {
+
+    // Convert startdate and enddate to Firestore Timestamps
+    const startTimestamp = Timestamp.fromDate(startdate);
+    const endTimestamp = Timestamp.fromDate(enddate);
+    // console.log(startTimestamp,endTimestamp);
+
+    const collections = ['CCRepayList'];
+    const observables = collections.map(collectionName => {
+      const citiesRef = collection(this.db, collectionName);
+      const q = query(
+        citiesRef,
+        where("matgroup", "not-in", ["Liability Give", "Liability Get"]),
+        where("usercode", "==", this.usercode),
+        where("dateentry", ">", startTimestamp), // Use Timestamp for start date
+        where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
+        orderBy("dateentry", "asc")
+      );
+
+      return from(getDocs(q)).pipe(
+        map((querySnapshot) => {
+          const groupedData: { [key: string]: number } = {};
+
+          querySnapshot.docs.forEach(doc => {
+            const data: any = doc.data();
+            const matgroup = data.cardname;
+            const price = data.matprice || 0;
+
+            // Initialize the group if not present
+            if (!groupedData[matgroup]) {
+              groupedData[matgroup] = 0;
+            }
+            // Sum the amount for the matgroup
+            groupedData[matgroup] += price;
+          });
+
+          return Object.keys(groupedData).map(key => ({
+            cardname: key,
+            totalPrice: groupedData[key]
+          }));
+        })
+      );
+    });
+
+    return forkJoin(observables).pipe(
+      map(results => {
+        const finalGroupedData: { [key: string]: number } = {};
+
+        results.forEach(groupedArray => {
+          groupedArray.forEach(item => {
+            const { cardname, totalPrice } = item;
+
+            if (!finalGroupedData[cardname]) {
+              finalGroupedData[cardname] = 0;
+            }
+            finalGroupedData[cardname] += totalPrice;
+          });
+        });
+
+        return Object.keys(finalGroupedData).map(key => ({
+          cardname: key,
+          repaidtotal: finalGroupedData[key]
+        }));
       })
     );
   }

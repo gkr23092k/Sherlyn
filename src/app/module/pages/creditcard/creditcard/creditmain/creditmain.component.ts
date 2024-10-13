@@ -43,26 +43,45 @@ export class CreditmainComponent implements OnInit {
 
     forkJoin({
       creditcards: this.fb.getAllCreditcards(),
-      lendItems: this.fb.getAllLenditems()
-    }).subscribe(({ creditcards, lendItems }) => {
-      // Assuming creditcards is an array
-      this.data = creditcards.map((card: any) => {
-        // Find the matching lend item based on cardname
-        const matchingLendItem = lendItems.find((item: any) => item.cardname === card.cardname);
+      lendItems: this.fb.getAllLenditems(),
+      repayeditems: this.fb.getAllCreditcardRepayments()
 
-        // If there's a match, merge the data
-        card.utilised = card.utilised ? card.utilised : 0
-        return matchingLendItem ? { ...card, ...matchingLendItem } : card;
+    })
+      .subscribe(({ creditcards, lendItems, repayeditems }) => {
+        // Assuming creditcards is an array
+
+        lendItems = lendItems.map((lend: any) => {
+          repayeditems.find((repaid: any) => {
+            console.log(lend, repaid);
+
+            if (repaid.cardname === lend.cardname) {
+              lend.utilised = lend.utilised - repaid.repaidtotal
+            }
+          })
+          return lend
+        })
+        // console.log(creditcards, lendItems, repayeditems);
+
+        this.data = creditcards.map((card: any) => {
+
+          // Find the matching lend item based on cardname
+          let matchingLendItem = lendItems.find((item: any) => item.cardname === card.cardname);
+
+          // If there's a match, merge the data
+          card.utilised = card.utilised ? card.utilised : 0
+
+
+          return matchingLendItem ? { ...card, ...matchingLendItem } : card;
+        });
+
+        console.log(this.data);
+        this.spinner.hide(); // Hide the spinner after processing data
+
+      }, (error: any) => {
+        console.error('Error fetching data:', error);
+        this.spinner.hide(); // Hide the spinner on error
       });
 
-      console.log(this.data);
-      this.spinner.hide(); // Hide the spinner after processing data
 
-    }, (error: any) => {
-      console.error('Error fetching data:', error);
-      this.spinner.hide(); // Hide the spinner on error
-    });
   }
-
-
 }
