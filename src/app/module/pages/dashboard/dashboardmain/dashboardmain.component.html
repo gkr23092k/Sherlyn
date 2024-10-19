@@ -6,7 +6,12 @@
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IMONTH'">MONTH INVEST</button>
 </div>
 <donut-chart (dataEmitter)="receiveData($event)" *ngIf="ischart=='GROUP'" [Spendlist]="groupeddata"></donut-chart>
-<line-chart *ngIf="ischart=='SDAY'" [colorcode]="'red'" [Idtoken]="1" [Spendlist]="data"></line-chart>
-<line-chart *ngIf="ischart=='SMONTH'" [colorcode]="'red'"[Idtoken]="2" [Spendlist]="groupeddatamonthly"></line-chart>
-<line-chart *ngIf="ischart=='IDAY'" [colorcode]="'green'" [Idtoken]="3"[Spendlist]="investdata"></line-chart>
-<line-chart *ngIf="ischart=='IMONTH'" [colorcode]="'green'" [Idtoken]="4"[Spendlist]="groupeddatamonthlyinv"></line-chart>
+<!-- <line-chart *ngIf="ischart=='SDAY'" [colorcode]="'red'" [Idtoken]="1" [Spendlist]="data"></line-chart> -->
+<app-bar-line *ngIf="ischart=='SDAY'" [Idtoken]="1" [colorcode]="'red'" [Spendlist]="data" [zoomRange]="'days'"></app-bar-line>
+<app-bar-line *ngIf="ischart=='SMONTH'" [Idtoken]="2" [colorcode]="'red'" [Spendlist]="groupeddatamonthly" [zoomRange]="'months'"></app-bar-line>
+<!-- <line-chart *ngIf="ischart=='SMONTH'" [colorcode]="'red'" [Idtoken]="2" [Spendlist]="groupeddatamonthly"></line-chart> -->
+<!-- <line-chart *ngIf="ischart=='IDAY'" [colorcode]="'green'" [Idtoken]="3" [Spendlist]="investdata"></line-chart> -->
+<app-bar-line *ngIf="ischart=='IDAY'" [Idtoken]="3" [colorcode]="'green'" [Spendlist]="investdata" [zoomRange]="'days'"></app-bar-line>
+<app-bar-line *ngIf="ischart=='IMONTH'" [Idtoken]="4" [colorcode]="'green'" [Spendlist]="groupeddatamonthlyinv" [zoomRange]="'months'"></app-bar-line>
+
+<!-- <line-chart *ngIf="ischart=='IMONTH'" [colorcode]="'green'" [Idtoken]="4"  [Spendlist]="groupeddatamonthlyinv"></line-chart> -->

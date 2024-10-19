@@ -12,15 +12,17 @@ import { LineChartComponent } from './line-chart/line-chart.component';
 import { FormsModule } from '@angular/forms';
 import { BreakdowndonutComponent } from './donut-chart/breakdowndonut/breakdowndonut.component';
 import {MatSidenavModule} from '@angular/material/sidenav';
+import { BarLineComponent } from './bar-line/bar-line.component';
+import { NgxSpinnerModule } from 'ngx-spinner';
 
 
 @NgModule({
   declarations: [
-    DashboardmainComponent,DonutChartComponent,LineChartComponent, BreakdowndonutComponent, 
+    DashboardmainComponent,DonutChartComponent,LineChartComponent, BreakdowndonutComponent, BarLineComponent, 
   ],
   imports: [
     CommonModule,
-    DashboardRoutingModule,
+    DashboardRoutingModule,NgxSpinnerModule,
     
     //material
     MatFormFieldModule,MatInputModule,MatDatepickerModule,MatNativeDateModule,FormsModule,

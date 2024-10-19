@@ -51,7 +51,9 @@ export class BreakdowndonutComponent implements OnChanges {
   private initializeChart() {
     // Check if the chart is already initialized
     this.chart = am4core.create('subdonut-chartdiv', am4charts.PieChart3D); // Unique container ID
-    this.chart.innerRadius = am4core.percent(55);
+    this.chart.hiddenState.properties.opacity=0;
+
+    // this.chart.innerRadius = am4core.percent(55);
 
     // Add data (replace this with your actual data)
     this.chart.data = this.groupedData
@@ -62,7 +64,7 @@ export class BreakdowndonutComponent implements OnChanges {
     series.dataFields.category = 'matgroup';
 
     // Add labels
-    series.labels.template.text = '';
+    // series.labels.template.text = '';
     // series.labels.template.fill = am4core.color('red');
 
     // series.colors.list = this.colorlist

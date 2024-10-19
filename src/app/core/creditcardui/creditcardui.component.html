@@ -1,7 +1,8 @@
 <div class="credit-card text-center">
     <div class="card-header d-flex justify-content-center">
         <h1 (click)="notifyParent()">{{carddetails.cardname}}</h1>
-            <mat-icon class="mx-2 mt-1" *ngIf="!carddetails.cardnumber" (click)="notifyParent()"> table_chart</mat-icon> 
+            <mat-icon class="mx-2 mt-1" *ngIf="!
+            carddetails.cardnumber" (click)="notifyParent()"> table_chart</mat-icon> 
     </div>
     <div class="card-body">
         <div *ngIf="carddetails.cardnumber" class="d-flex justify-content-between">

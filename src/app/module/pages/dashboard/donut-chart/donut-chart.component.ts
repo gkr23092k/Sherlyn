@@ -41,11 +41,11 @@ export class DonutChartComponent implements OnChanges, OnInit {
     this.initializeChart()
   }
   ngOnInit() {
-    this.fb.getmatnamespendItems('Investment').subscribe((res: any) => {
-      this.matnamedata = res
-      console.log(res, 'group spend items');
+    // this.fb.getmatnamespendItems('Investment').subscribe((res: any) => {
+    //   this.matnamedata = res
+    //   console.log(res, 'group spend items');
 
-    })
+    // })
   }
 
 
@@ -60,24 +60,25 @@ export class DonutChartComponent implements OnChanges, OnInit {
   private initializeChart() {
     // Check if the chart is already initialized
     this.chart = am4core.create('donut-chartdiv', am4charts.PieChart3D); // Unique container ID
-    this.chart.innerRadius = am4core.percent(55);
+    // this.chart.innerRadius = am4core.percent(55);
 
     // Add data (replace this with your actual data)
     this.chart.data = this.groupedData
 
     // Add series
     const series = this.chart.series.push(new am4charts.PieSeries3D());
+    this.chart.hiddenState.properties.opacity = 0;
     series.dataFields.value = 'totalPrice';
     series.dataFields.category = 'matgroup';
 
     // Add labels
-    series.labels.template.text = '';
+    // series.labels.template.text = `${series.dataFields.category}`;
     // series.labels.template.fill = am4core.color('red');
-
     // series.colors.list = this.colorlist
 
     this.chart.legend = new am4charts.Legend();
-
+    this.matnamedata = undefined
+    this.selectedgroup = undefined
     series.slices.template.events.on("hit", (ev: any) => {
       const clickedSlice = ev.target;
 

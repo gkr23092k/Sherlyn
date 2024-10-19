@@ -700,7 +700,7 @@ export class FirebaseService {
         }, {} as { [key: string]: { totalMatPrice: number; month: number; year: number } });
 
         return Object.values(groupedData).map(({ month, year, totalMatPrice }) => ({
-          date: `${month < 10 ? `0${month}` : month}-01-${year}`,
+          date: `${month < 10 ? `0${month}` : month}/01/${year}`,
           matprice: totalMatPrice
         }));
       })
