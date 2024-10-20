@@ -49,7 +49,7 @@ export class DashboardmainComponent {
     console.log(selecteddaterange);
     this.fb.getmatgroupspendItems(selecteddaterange.startdate,selecteddaterange.enddate).subscribe((res: any) => {
       this.groupeddata = res
-
+      this.groupeddata=_.orderBy(this.groupeddata,'totalPrice','desc')
       // console.log(res);
 
     })
