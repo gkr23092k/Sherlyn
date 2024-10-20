@@ -70,6 +70,9 @@ export class BreakdowndonutComponent implements OnChanges {
     // series.colors.list = this.colorlist
 
     this.chart.legend = new am4charts.Legend();
+    this.chart.legend.scrollable = true;
+    this.chart.legend.maxHeight = 80; 
+
 
     series.slices.template.events.on("hit", (ev: any) => {
       console.log(ev.target.dataItem.category)

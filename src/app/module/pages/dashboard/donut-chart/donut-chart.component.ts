@@ -77,6 +77,9 @@ export class DonutChartComponent implements OnChanges, OnInit {
     // series.colors.list = this.colorlist
 
     this.chart.legend = new am4charts.Legend();
+    this.chart.legend.scrollable = true;
+    this.chart.legend.maxHeight = 80;
+
     this.matnamedata = undefined
     this.selectedgroup = undefined
     series.slices.template.events.on("hit", (ev: any) => {
@@ -93,6 +96,8 @@ export class DonutChartComponent implements OnChanges, OnInit {
       this.selectedgroup = ev.target.dataItem.category
       this.fb.getmatnamespendItems(ev.target.dataItem.category, this.startdaterange, this.enddaterange).subscribe((res: any) => {
         this.matnamedata = res
+        this.matnamedata=_.orderBy(this.matnamedata,'totalPrice','desc')
+
         console.log(res, 'group spend items');
       })
     });

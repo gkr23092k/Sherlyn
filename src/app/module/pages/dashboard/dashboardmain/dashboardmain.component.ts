@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { FirebaseService } from 'src/app/shared/firebase.service';
+import * as _ from 'lodash';
 
 @Component({
   selector: 'app-dashboardmain',
@@ -21,13 +22,14 @@ export class DashboardmainComponent {
     })
     this.fb.getmatgroupspendItems().subscribe((res: any) => {
       this.groupeddata = res
-
+      this.groupeddata=_.orderBy(this.groupeddata,'totalPrice','desc')
+      // console.log(res,'monthly');
       // console.log(res,'group spend items');
 
     })
     this.fb.getAllSpendItemsMonthly().subscribe((res: any) => {
       this.groupeddatamonthly = res
-      // console.log(res,'monthly');
+   
 
     })
     this.fb.getAllinvestItems().subscribe((res: any) => {
