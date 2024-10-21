@@ -1,0 +1,111 @@
+.custom-drawer-container {
+    height: 100vh;
+  }
+  
+  .custom-drawer {
+    width: 250px;
+    background-color: #f4f4f4;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+  }
+  
+  .drawer-content {
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .drawer-button {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    font-size: 16px;
+    text-transform: none;
+    color: #003153;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    margin-bottom: 5px;
+  }
+  
+  .drawer-button mat-icon {
+    margin-right: 10px;
+    color: #003153;
+  }
+  
+  .drawer-button:hover {
+    background-color: #e0e0e0;
+    border-radius: 5px;
+  }
+  
+  .toggle-button {
+    margin: 10px;
+  }
+  
+  .drawer-content-root {
+    background-color: white; /* Set background color to white */
+    min-height: 100vh; /* Ensure it covers the entire content height */
+  }
+  
+  .header-bar {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #003153;
+    color: aliceblue;
+    border-radius: 10px;
+    margin: 15px;
+  }
+  
+  .header-bar h1 {
+    margin: 0;
+    font-size: 1.5rem;
+  }
+  
+  .user-info {
+    background-color: #ffc107;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 1rem;
+  }
+  
+  .custom-drawer {
+    width: 250px;
+    background-color: #f8f9fa;
+    padding-top: 10px;
+}
+
+.drawer-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.drawer-button, .drawer-sub-button {
+    display: flex;
+    align-items: center;
+    padding: 9px;
+    width: 100%;
+    text-align: left;
+    background: none;
+    border: none;
+    cursor: pointer;
+}
+
+.drawer-sub-button{
+    padding-left: 25px !important;
+    background-color: rgba(215, 214, 213, 0.5);
+}
+
+.drawer-button:hover, .drawer-sub-button:hover {
+    background-color: #0ca6d9;
+    color: white;
+    padding-left: 20px !important;
+}
+
+.header-bar {
+    background-color: #003153;
+    color: aliceblue;
+    padding: 0.5rem 1rem;
+}

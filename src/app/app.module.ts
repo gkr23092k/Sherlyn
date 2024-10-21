@@ -21,6 +21,8 @@ import {MatMenuModule} from '@angular/material/menu';
 import { DialogComponent } from './core/dialog/dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
+import {MatSidenavModule} from '@angular/material/sidenav';
+import { MatSelectModule } from '@angular/material/select';
 
 @NgModule({
   declarations: [
@@ -38,7 +40,7 @@ import { FormsModule } from '@angular/forms';
 
 
     // material
-    MatButtonModule,MatInputModule,MatIconModule,MatMenuModule,MatDialogModule,FormsModule
+    MatButtonModule,MatInputModule,MatIconModule,MatMenuModule,MatDialogModule,FormsModule,MatSidenavModule,MatSelectModule
   ],
   providers: [],
   bootstrap: [AppComponent]

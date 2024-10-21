@@ -1,51 +1,112 @@
-<div *ngIf="canAccess" class="d-flex justify-content-between align-items-center container my-3 border border-5 rounded-5"
-    style="background-color: #003153; color: aliceblue;">
-    <h1 class="mx-auto my-auto">GORA 80-80 </h1>
-    <!-- <button mat-icon-button class="me-2 mb-1" ><img src='./assets/images/logout.png' style='width: 2rem; height: 2rem' /></button> -->
-    <span class="my-auto me-2 px-2 bg-warning rounded rounded-4" >
-        {{loggeduser}}
-    </span>
-    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
-        <mat-icon>menu</mat-icon> </button>
-    <mat-menu class="text-center" #menu="matMenu" #beforeMenu="matMenu" xPosition="before">
+<mat-drawer-container class="custom-drawer-container" [hasBackdrop]="false">
+    <mat-drawer #drawer class="custom-drawer" [mode]="'side'">
+        <div class="drawer-content">
+            <img src="../assets/images/404animation.gif" alt="">
+            <span class="user-info text-center mb-2">
+                {{ loggeduser }}
+            </span>
 
-        <button mat-menu-item [routerLink]="'../entry'">
-            <mat-icon>fiber_new</mat-icon>
-            <span>New Entry</span>
-        </button>
-        <button mat-menu-item [routerLink]="'../dashboard'">
-            <mat-icon>dashboard</mat-icon>
-            <span>Dashboard</span>
-        </button>
-        <button mat-menu-item [routerLink]="'../summary'">
-            <mat-icon> notes</mat-icon>
-            <span>Summary</span>
-        </button>
-        <button mat-menu-item [routerLink]="'../credit'">
-            <mat-icon>credit_card</mat-icon>
-            <span>Credit Card</span>
-        </button>
-        <button mat-menu-item (click)="openDialog()">
-            <mat-icon> monetization_on</mat-icon>
-            <span>Add Balance</span>
-        </button>
-        <!-- <button mat-menu-item>
-            <mat-icon>cached</mat-icon>
-            <span>Switch Balance</span>
-        </button> -->
-        <!-- <button mat-menu-item>
-            <mat-icon>favorite</mat-icon>
-            <span>Favorite</span>
-        </button> -->
-        <!-- <button mat-menu-item>
-            <mat-icon>spa</mat-icon>
-            <span>ExpenseAllocation</span>
-        </button> -->
-        <button mat-menu-item (click)="logout()">
-            <mat-icon>exit_to_app</mat-icon>
-            <span>Logout</span>
-        </button>
-    </mat-menu>
-</div>
+            <!-- Main "New Entry" Button with Expand/Collapse Icon -->
+            <button class="drawer-button" [routerLink]="'../entry'" >
+                <mat-icon>fiber_new</mat-icon>
+                <span>New Entry</span>
+            </button>
 
-<router-outlet></router-outlet>
+
+
+            <!-- Other Main Menu Items -->
+            <button class="drawer-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('SDAY'); toggleMenu('dashboard')">
+                <mat-icon>dashboard</mat-icon>
+                <span>Dashboard</span>
+                <mat-icon (click)="isdashboard=!isdashboard">{{ isdashboard ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+
+            </button>
+
+
+            <!-- Sub-menu Items for "New Entry" -->
+            <div *ngIf="isdashboard">
+                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('SDAY')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Day Spends</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('SMONTH')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Month Spends</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('IDAY')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Day Invest</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('IMONTH')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Month Invest</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('GROUP')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Group Flow</span>
+                </button>
+            </div>
+
+           <button class="drawer-button" [routerLink]="'../summary/main'" (click)="closeDrawer('MARGIN'); toggleMenu('summary')">
+                <mat-icon >notes</mat-icon>
+                <span>Summary</span>
+                <mat-icon (click)="issummary=!issummary">{{ issummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+
+            </button>
+            <div *ngIf="issummary">
+                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('MARGIN')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Overview</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('SGRID')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Spend Grid</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('CGRID')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Credit Grid</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('ALLOCATION')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Allocation</span>
+                </button>
+        
+            </div>
+
+           <button class="drawer-button" [routerLink]="'../credit'" (click)="closeDrawer('VIEW'); toggleMenu('credit')">
+                <mat-icon>credit_card</mat-icon>
+                <span>Credit Card</span>
+                <mat-icon (click)="iscrdit=!iscrdit">{{ iscrdit ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+
+            </button>
+            <div *ngIf="iscrdit">
+                <button class="drawer-sub-button" [routerLink]="'../credit'" (click)="closeDrawer('VIEW')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Overview</span>
+                </button>
+                <button class="drawer-sub-button" [routerLink]="'../credit'" (click)="closeDrawer('GRID')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Repaid Grid</span>
+                </button>
+        
+            </div>
+
+           <button class="drawer-button" (click)="openDialog(); closeDrawer('')">
+                <mat-icon>monetization_on</mat-icon>
+                <span>Add Balance</span>
+            </button> 
+            <button class="drawer-button" (click)="logout();">
+                <mat-icon>exit_to_app</mat-icon>
+                <span>Logout</span>
+            </button> 
+        </div>
+    </mat-drawer>
+
+    <mat-drawer-content class="drawer-content-root">
+        <div *ngIf="canAccess " class="header-bar d-flex align-items-center">
+            <mat-icon *ngIf="canAccess" class="toggle-button me-auto" (click)="drawer.toggle()">menu</mat-icon>
+            <h1 class="text-center flex-grow-1">GORA 80-80</h1>
+        </div>
+        <router-outlet></router-outlet>
+    </mat-drawer-content>
+</mat-drawer-container>

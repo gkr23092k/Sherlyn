@@ -64,10 +64,32 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field *ngIf="!ismaterialdropdown" appearance="fill" class="example-full-width inputbox ">
+  <!-- <mat-form-field *ngIf="!ismaterialdropdown" appearance="fill" class="example-full-width inputbox ">
     <mat-label>Material</mat-label>
     <input matInput required placeholder="spent on" ngModel name="matname" [(ngModel)]="material">
-  </mat-form-field>
+  </mat-form-field> -->
+
+  <form class="example-form example-full-width" class="d-flex">
+    <mat-form-field appearance="fill" *ngIf="!ismaterialdropdown" class="example-full-width inputbox">
+      <mat-label>Material</mat-label>
+      <input type="text"
+             placeholder="Spent on"
+             aria-label="text"
+             matInput
+             [(ngModel)]="material"
+             [formControl]="myControl"
+             [matAutocomplete]="auto" required
+             >
+      <mat-autocomplete #auto="matAutocomplete">
+        <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+  </form>
+  
+
+
 
   <div class="row">
 

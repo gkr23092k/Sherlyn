@@ -15,6 +15,7 @@ import {MatMenuModule} from '@angular/material/menu';
 import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import { NgxSpinnerModule } from "ngx-spinner";
+import {MatAutocompleteModule} from '@angular/material/autocomplete';
 
 @NgModule({
   declarations: [EntryComponent],
@@ -23,7 +24,8 @@ import { NgxSpinnerModule } from "ngx-spinner";
     EntryRoutingModule,
     // material
     MatButtonModule,MatFormFieldModule, MatInputModule,MatDatepickerModule,MatNativeDateModule,
-    FormsModule,ReactiveFormsModule,MatChipsModule,MatMenuModule,MatIconModule,MatSelectModule
+    FormsModule,ReactiveFormsModule,MatChipsModule,MatMenuModule,MatIconModule,MatSelectModule,
+    MatAutocompleteModule
 
     ,NgMultiSelectDropDownModule,NgxSpinnerModule
   ],

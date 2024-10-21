@@ -7,11 +7,11 @@
 }
 
 ::ng-deep .mdc-tab__text-label {
-    color: rgb(236, 235, 235) !important;
+    color: rgb(94, 92, 92) !important;
 }
 
 ::ng-deep .mdc-tab {
-    background-color: rgb(175, 222, 154) !important;
-    border: 2px solid  rgb(254, 237, 215) !important;
-    border-radius: 10px !important;
+    // background-color: rgb(216, 235, 208) !important;
+    border-bottom: 1.5px solid  rgb(180, 180, 180,0.5) !important;
+    // border-radius: 10px !important;
 }

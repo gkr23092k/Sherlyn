@@ -1,10 +1,10 @@
-<div class="d-flex justify-content-center my-2">
+<!-- <div class="d-flex justify-content-center my-2">
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='SDAY'">DAY SPENDS</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='SMONTH'">MONTH SPENDS</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='GROUP'">GROUP</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IDAY'">DAY INVEST</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="ischart='IMONTH'">MONTH INVEST</button>
-</div>
+</div> -->
 <donut-chart (dataEmitter)="receiveData($event)" *ngIf="ischart=='GROUP'" [Spendlist]="groupeddata"></donut-chart>
 <!-- <line-chart *ngIf="ischart=='SDAY'" [colorcode]="'red'" [Idtoken]="1" [Spendlist]="data"></line-chart> -->
 <app-bar-line *ngIf="ischart=='SDAY'" [Idtoken]="1" [colorcode]="'red'" [Spendlist]="data" [zoomRange]="'days'"></app-bar-line>

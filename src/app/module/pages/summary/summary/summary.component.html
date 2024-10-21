@@ -1,13 +1,13 @@
-<div class="d-flex justify-content-center my-2">
+<!-- <div class="d-flex justify-content-center my-2">
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='MARGIN'">OVERVIEW</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='SGRID'">SPEND GRID</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='CGRID'">CREDIT GRID</button>
     <button class="btn btn-sm btn-info mx-1 text-white" (click)="iscard='ALLOCATION'">ALLOCATION</button>
-</div>
+</div> -->
 
 <div *ngIf="iscard=='MARGIN'" class="container">
 
-    <mat-tab-group animationDuration="1000ms" class="mx-5">
+    <mat-tab-group mat-stretch-tabs="false" mat-align-tabs="center" animationDuration="1000ms" class="mx-5">
         <mat-tab label="Spend">
             <h1 class="text-center mt-4">Spend Margin</h1>
 

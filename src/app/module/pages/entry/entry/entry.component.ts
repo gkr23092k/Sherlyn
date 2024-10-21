@@ -1,8 +1,11 @@
 import { ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { NgForm } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import * as _ from 'lodash';
+import { map, startWith } from 'rxjs/operators';
+import { Observable } from 'rxjs';
+import { MatAutocomplete } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-entry',
@@ -38,6 +41,21 @@ export class EntryComponent implements OnInit {
   };
 
   selectedchipcc: string | null = null;
+
+
+  myControl = new FormControl('');
+  options: string[] = [''];
+  filteredOptions!: Observable<string[]>;
+
+  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete| any;
+
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.options.filter(option => option.toLowerCase().includes(filterValue));
+  }
+
 
 
   billoncard(event: any) {
@@ -79,6 +97,14 @@ export class EntryComponent implements OnInit {
   }
   ngOnInit() {
     // console.log('startted')
+// autocomplete
+    this.filteredOptions = this.myControl.valueChanges.pipe(
+      startWith(''),
+      map(value => this._filter(value || '')),
+    );
+
+
+
     this.keepbalancelive()
     this.fb.emitbalance().subscribe((val) => {
       // console.log('emitted new balance',val)
@@ -113,6 +139,9 @@ export class EntryComponent implements OnInit {
       balance: this.balance,
       cardname:this.cardname
     });
+
+    console.log(this.material,data,'autocomplete');
+    
     const enteredvalues = {
       ...data.value,
       matname: (typeof this.material == 'string') ? this.material : this.material[0].item_text,
@@ -176,7 +205,11 @@ export class EntryComponent implements OnInit {
 
       this.materialdropdown = this.getUniqueRecords(val);
       this.materialdropdown.sort((a: any, b: any) => a.item_text.localeCompare(b.item_text)); // Ascending sort
-      // console.log(this.materialdropdown, 'materialdropdown');
+      this.options=[]
+      this.materialdropdown.forEach((element:any) => {
+        this.options.push(element.item_text)
+      });
+      console.log(this.options, 'materialdropdown');
     })
 
   }
@@ -190,4 +223,21 @@ export class EntryComponent implements OnInit {
       return false; // Filter out duplicates
     });
   };
+
+
+
+  // onKeyDown(event: KeyboardEvent) {
+  //   if (event.key === 'Enter') {
+  //     const inputValue = this.myControl.value;
+  //     // Check if the entered text is not in the options list
+  //     if (inputValue && !this.options.includes(inputValue)) {
+  //       this.options.push(inputValue); // Add the new option
+  //        // Set the control value to the newly added option
+  //     }
+  //     this.myControl.setValue(inputValue);
+  //     this.matAutocomplete.closePanel(); // Close the autocomplete panel
+  //   }
+  // }
+
+
 }

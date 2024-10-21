@@ -29,6 +29,12 @@ export class SummaryComponent {
   creditgriddata: any=[];
   constructor(private fb: FirebaseService) { }
   ngOnInit() {
+
+    this.fb.emitViewTokem().subscribe((res: any) => {
+      this.iscard = res
+    })
+
+
     this.fb.getAllspendItems().subscribe((res: any) => {
       this.data = res
       this.summarizespend(this.data)

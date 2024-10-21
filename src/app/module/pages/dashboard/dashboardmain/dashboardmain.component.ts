@@ -16,20 +16,26 @@ export class DashboardmainComponent {
   groupeddatamonthlyinv: any;
   constructor(private fb: FirebaseService) { }
   ngOnInit() {
+
+    this.fb.emitViewTokem().subscribe((res: any) => {
+      this.ischart = res
+    })
+
+
     this.fb.getAllspendItems().subscribe((res: any) => {
       this.data = res
       // console.log(this.data, 'ssl')
     })
     this.fb.getmatgroupspendItems().subscribe((res: any) => {
       this.groupeddata = res
-      this.groupeddata=_.orderBy(this.groupeddata,'totalPrice','desc')
+      this.groupeddata = _.orderBy(this.groupeddata, 'totalPrice', 'desc')
       // console.log(res,'monthly');
       // console.log(res,'group spend items');
 
     })
     this.fb.getAllSpendItemsMonthly().subscribe((res: any) => {
       this.groupeddatamonthly = res
-   
+
 
     })
     this.fb.getAllinvestItems().subscribe((res: any) => {
@@ -45,11 +51,11 @@ export class DashboardmainComponent {
   }
 
 
-  receiveData(selecteddaterange:any){
+  receiveData(selecteddaterange: any) {
     console.log(selecteddaterange);
-    this.fb.getmatgroupspendItems(selecteddaterange.startdate,selecteddaterange.enddate).subscribe((res: any) => {
+    this.fb.getmatgroupspendItems(selecteddaterange.startdate, selecteddaterange.enddate).subscribe((res: any) => {
       this.groupeddata = res
-      this.groupeddata=_.orderBy(this.groupeddata,'totalPrice','desc')
+      this.groupeddata = _.orderBy(this.groupeddata, 'totalPrice', 'desc')
       // console.log(res);
 
     })

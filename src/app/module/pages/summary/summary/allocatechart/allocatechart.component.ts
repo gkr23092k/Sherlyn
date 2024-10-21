@@ -131,6 +131,7 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
     series.dataFields.valueY = value;
     series.dataFields.categoryX = 'category';
     series.name = name;
+    series
     // series.tooltipText = '{first}/{second} Rs in {valueY}';
 
     series.events.on('hidden', this.arrangeColumns.bind(this));

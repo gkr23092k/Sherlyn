@@ -37,6 +37,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
   @Output() dataEmitter = new EventEmitter<any>();
   ngOnChanges() {
     this.groupedData = this.spendlist
+   
     console.log(this.spendlist)
     this.initializeChart()
   }
@@ -78,7 +79,11 @@ export class DonutChartComponent implements OnChanges, OnInit {
 
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.scrollable = true;
-    this.chart.legend.maxHeight = 80;
+   
+    // const colorList = this.generateAmChartsHexColors(this.spendlist.length);
+    // series.colors.list = colorList.map(color => am4core.color(color));
+    // console.log(this.chart.colors);
+    
 
     this.matnamedata = undefined
     this.selectedgroup = undefined
@@ -96,7 +101,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
       this.selectedgroup = ev.target.dataItem.category
       this.fb.getmatnamespendItems(ev.target.dataItem.category, this.startdaterange, this.enddaterange).subscribe((res: any) => {
         this.matnamedata = res
-        this.matnamedata=_.orderBy(this.matnamedata,'totalPrice','desc')
+        this.matnamedata = _.orderBy(this.matnamedata, 'totalPrice', 'desc')
 
         console.log(res, 'group spend items');
       })
@@ -113,4 +118,56 @@ export class DonutChartComponent implements OnChanges, OnInit {
       console.warn('Chart was not initialized before disposal.');
     }
   }
+
+ 
+  
+   generateAmChartsHexColors(n: number): string[] {
+    const colors: string[] = [];
+    const hueStep = 360 / n;
+
+    for (let i = 0; i < n; i++) {
+        const hue = i * hueStep;
+        const saturation = 70 + Math.random() * 20; // Vary saturation for contrast
+        const lightness = 40 + Math.random() * 20;  // Vary lightness for contrast
+
+        const color = this.hslToHex(hue, saturation, lightness);
+        colors.push(color);
+    }
+
+    return colors;
+}
+
+ hslToHex(h: number, s: number, l: number): string {
+    s /= 100;
+    l /= 100;
+
+    let c = (1 - Math.abs(2 * l - 1)) * s;
+    let x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    let m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+
+    if (0 <= h && h < 60) {
+        r = c; g = x; b = 0;
+    } else if (60 <= h && h < 120) {
+        r = x; g = c; b = 0;
+    } else if (120 <= h && h < 180) {
+        r = 0; g = c; b = x;
+    } else if (180 <= h && h < 240) {
+        r = 0; g = x; b = c;
+    } else if (240 <= h && h < 300) {
+        r = x; g = 0; b = c;
+    } else if (300 <= h && h < 360) {
+        r = c; g = 0; b = x;
+    }
+
+    r = Math.round((r + m) * 255);
+    g = Math.round((g + m) * 255);
+    b = Math.round((b + m) * 255);
+
+    return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
+}
+
+
+
+
 }

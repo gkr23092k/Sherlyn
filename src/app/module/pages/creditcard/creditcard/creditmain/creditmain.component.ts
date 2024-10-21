@@ -16,9 +16,14 @@ export class CreditmainComponent implements OnInit {
   data: any = []
   summary: any = []
   creditcardgrid: any = []
-  ismain:boolean=true
+  ismain: string = 'VIEW'
   constructor(private fb: FirebaseService, private spinner: NgxSpinnerService) { }
   ngOnInit(): void {
+
+    this.fb.emitViewTokem().subscribe((res: any) => {
+      this.ismain = res
+    })
+
     this.refreshcarddata()
     this.fb.getAllCCrepayItems().subscribe((el: any) => {
       this.creditcardgrid = el

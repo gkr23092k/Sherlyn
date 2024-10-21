@@ -1,4 +1,4 @@
-<ng-container *ngIf="ismain">
+<ng-container *ngIf="ismain=='VIEW'">
 
     <span class="d-flex justify-content-center mb-2" (click)="isnewentry=!isnewentry" *ngIf="isnewentry">
         <span class="my-auto">
@@ -6,7 +6,7 @@
         </span>
     </span>
     <div class="container d-flex flex-wrap gap-3 justify-content-center mb-3">
-        <app-creditcardui (buttonClicked)="ismain=!ismain" [Creditcards]="summary"></app-creditcardui>
+        <app-creditcardui (buttonClicked)="ismain='GRID'" [Creditcards]="summary"></app-creditcardui>
     </div>
     <div *ngIf="!isnewentry" class="container d-flex flex-wrap gap-3 justify-content-center">
 
@@ -99,7 +99,7 @@
 
 </ng-container>
 
-<ng-container *ngIf="!ismain">
+<ng-container *ngIf="ismain=='GRID'">
     <app-creditgrid [Spendlist]="creditcardgrid"></app-creditgrid>
 
 </ng-container>

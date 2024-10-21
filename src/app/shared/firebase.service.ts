@@ -21,12 +21,23 @@ export class FirebaseService {
   usercode: string | null;
 
   public canaccess: BehaviorSubject<boolean> = new BehaviorSubject(false)
+  public viewToken: BehaviorSubject<string> = new BehaviorSubject('SDAY')
 
   emitcanaccess() {
     return this.canaccess
   }
   public getcurrentbalance: BehaviorSubject<any> = new BehaviorSubject('')
 
+
+  
+  emitViewTokem() {
+    return this.viewToken.asObservable(); // Return an observable for subscriptions
+  }
+  
+  updateViewTokem(viewtoken:string) {
+    this.viewToken.next(viewtoken)
+  }
+  
 
   emitbalance() {
     return this.getcurrentbalance.asObservable(); // Return an observable for subscriptions
@@ -65,6 +76,8 @@ export class FirebaseService {
       // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
       // orderBy("dateentry", "asc")
     );
+    this.usercode = localStorage.getItem('usercode');
+
     return from(getDocs(q)).pipe(
       map((querySnapshot) => {
         return querySnapshot.docs.map(doc => {
