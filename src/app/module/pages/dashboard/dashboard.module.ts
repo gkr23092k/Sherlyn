@@ -14,7 +14,7 @@ import { BreakdowndonutComponent } from './donut-chart/breakdowndonut/breakdownd
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { BarLineComponent } from './bar-line/bar-line.component';
 import { NgxSpinnerModule } from 'ngx-spinner';
-
+import { SplitterModule } from 'primeng/splitter';
 
 @NgModule({
   declarations: [
@@ -26,7 +26,10 @@ import { NgxSpinnerModule } from 'ngx-spinner';
     
     //material
     MatFormFieldModule,MatInputModule,MatDatepickerModule,MatNativeDateModule,FormsModule,
-    MatSidenavModule
+    MatSidenavModule,
+
+    //primeng
+    SplitterModule
   ]
 })
 export class DashboardModule { }

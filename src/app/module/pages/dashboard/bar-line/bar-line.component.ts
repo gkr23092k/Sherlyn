@@ -105,6 +105,7 @@ export class BarLineComponent implements OnInit, OnDestroy, OnChanges, AfterView
       lineSeries.stroke = am4core.color(this.colorcode, 0.3);
       lineSeries.strokeWidth = 3;
       lineSeries.propertyFields.strokeDasharray = "lineDash";
+      // lineSeries.smoothing = 'monotoneX'; // Use curveSmooth for smooth lines
 
       if (lineSeries.tooltip) {
         lineSeries.tooltip.label.textAlign = "middle";

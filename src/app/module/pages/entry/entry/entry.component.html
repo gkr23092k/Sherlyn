@@ -78,8 +78,12 @@
              matInput
              [(ngModel)]="material"
              [formControl]="myControl"
-             [matAutocomplete]="auto" required
+             [matAutocomplete]="auto"
+             (keydown)="onEnterPress($event)" required
              >
+             <button  matSuffix mat-icon-button aria-label="Clear" (click)="addMaterial($event)">
+              <mat-icon>add</mat-icon>
+            </button>
       <mat-autocomplete #auto="matAutocomplete">
         <mat-option *ngFor="let option of filteredOptions | async" [value]="option">
           {{ option }}

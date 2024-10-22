@@ -1,6 +1,6 @@
 
 
-import { Component, OnInit, OnDestroy, Input, OnChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
@@ -15,7 +15,7 @@ am4core.useTheme(am4themes_animated);
   templateUrl: './breakdowndonut.component.html',
   styleUrls: ['./breakdowndonut.component.scss']
 })
-export class BreakdowndonutComponent implements OnChanges {
+export class BreakdowndonutComponent implements OnChanges,AfterViewInit {
   private chart!: am4charts.PieChart3D;
   dataarrayobj: any = [];
   content: string = '';
@@ -38,7 +38,9 @@ export class BreakdowndonutComponent implements OnChanges {
     this.initializeChart()
   }
 
-
+  ngAfterViewInit() {
+    this.initializeChart();
+  }
 
   onDateRangeChanged() {
     console.log('Start Date:', this.startdaterange);
@@ -62,6 +64,7 @@ export class BreakdowndonutComponent implements OnChanges {
     const series = this.chart.series.push(new am4charts.PieSeries3D());
     series.dataFields.value = 'totalPrice';
     series.dataFields.category = 'matgroup';
+    series.labels.template.fontSize = 12;
 
     // Add labels
     // series.labels.template.text = '';
@@ -72,6 +75,7 @@ export class BreakdowndonutComponent implements OnChanges {
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.scrollable = true;
     this.chart.legend.maxHeight = 80; 
+    this.chart.legend.fontSize = 14;
 
 
     series.slices.template.events.on("hit", (ev: any) => {

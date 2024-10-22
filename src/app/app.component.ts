@@ -96,4 +96,18 @@ export class AppComponent {
   }
 
 
+
+
+  isFullScreen(): boolean {
+    return document.fullscreenElement != null;
+  }
+
+  toggleFullScreen(): void {
+    if (this.isFullScreen()) {
+      document.exitFullscreen();
+    } else {
+      document.documentElement.requestFullscreen();
+    }
+  }
+
 }

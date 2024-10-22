@@ -109,3 +109,13 @@
     color: aliceblue;
     padding: 0.5rem 1rem;
 }
+
+.fullscreentoggle{
+  position: absolute;
+  right: 0px;
+  bottom:2%;
+  background-color: #0ca6d9;
+  z-index: 10000;
+  color: white;
+  border-radius: 12px 12px 0px 12px;
+}

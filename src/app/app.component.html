@@ -1,7 +1,7 @@
 <mat-drawer-container class="custom-drawer-container" [hasBackdrop]="false">
     <mat-drawer #drawer class="custom-drawer" [mode]="'side'">
         <div class="drawer-content">
-            <mat-icon *ngIf="canAccess" class="position-absolute text-dark bg-danger top-0 toggle-button me-auto" (click)="drawer.toggle()">close</mat-icon>
+            <mat-icon *ngIf="canAccess" class="position-absolute  bg-danger top-0 toggle-button me-auto" (click)="drawer.toggle()">close</mat-icon>
 
             <img src="./assets/images/404animation.gif" alt="">
             <span class="user-info text-center mb-2">
@@ -112,3 +112,6 @@
         <router-outlet></router-outlet>
     </mat-drawer-content>
 </mat-drawer-container>
+
+
+  <mat-icon class="fullscreentoggle "  (click)="toggleFullScreen()">fullscreen</mat-icon>

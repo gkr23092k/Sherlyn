@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, Input, OnChanges, EventEmitter, Output } from '@angular/core';
+import { Component, OnInit, OnDestroy, Input, OnChanges, EventEmitter, Output, AfterViewInit } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
@@ -14,7 +14,7 @@ am4core.useTheme(am4themes_animated);
   templateUrl: './donut-chart.component.html',
   styleUrls: ['./donut-chart.component.css']
 })
-export class DonutChartComponent implements OnChanges, OnInit {
+export class DonutChartComponent implements OnChanges, OnInit, AfterViewInit {
   private chart!: am4charts.PieChart3D;
   dataarrayobj: any = [];
   content: string = '';
@@ -27,7 +27,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
   startdaterange: Date = subDays(new Date(), 30);
   groupeddata: any;
   matnamedata: any;
-  selectedgroup: any;
+  selectedgroup: any=false;
   showFiller = false;
 
   // daterange: MatDateRange<Date> | null = null;
@@ -37,9 +37,13 @@ export class DonutChartComponent implements OnChanges, OnInit {
   @Output() dataEmitter = new EventEmitter<any>();
   ngOnChanges() {
     this.groupedData = this.spendlist
-   
+
     console.log(this.spendlist)
     this.initializeChart()
+  }
+
+  ngAfterViewInit() {
+    this.initializeChart();
   }
   ngOnInit() {
     // this.fb.getmatnamespendItems('Investment').subscribe((res: any) => {
@@ -71,7 +75,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
     this.chart.hiddenState.properties.opacity = 0;
     series.dataFields.value = 'totalPrice';
     series.dataFields.category = 'matgroup';
-
+    series.labels.template.fontSize = 12;
     // Add labels
     // series.labels.template.text = `${series.dataFields.category}`;
     // series.labels.template.fill = am4core.color('red');
@@ -80,12 +84,13 @@ export class DonutChartComponent implements OnChanges, OnInit {
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.scrollable = true;
     this.chart.legend.maxHeight = 80;
+    this.chart.legend.fontSize = 14;
 
-   
+
     // const colorList = this.generateAmChartsHexColors(this.spendlist.length);
     // series.colors.list = colorList.map(color => am4core.color(color));
     // console.log(this.chart.colors);
-    
+
 
     this.matnamedata = undefined
     this.selectedgroup = undefined
@@ -121,25 +126,25 @@ export class DonutChartComponent implements OnChanges, OnInit {
     }
   }
 
- 
-  
-   generateAmChartsHexColors(n: number): string[] {
+
+
+  generateAmChartsHexColors(n: number): string[] {
     const colors: string[] = [];
     const hueStep = 360 / n;
 
     for (let i = 0; i < n; i++) {
-        const hue = i * hueStep;
-        const saturation = 70 + Math.random() * 20; // Vary saturation for contrast
-        const lightness = 40 + Math.random() * 20;  // Vary lightness for contrast
+      const hue = i * hueStep;
+      const saturation = 70 + Math.random() * 20; // Vary saturation for contrast
+      const lightness = 40 + Math.random() * 20;  // Vary lightness for contrast
 
-        const color = this.hslToHex(hue, saturation, lightness);
-        colors.push(color);
+      const color = this.hslToHex(hue, saturation, lightness);
+      colors.push(color);
     }
 
     return colors;
-}
+  }
 
- hslToHex(h: number, s: number, l: number): string {
+  hslToHex(h: number, s: number, l: number): string {
     s /= 100;
     l /= 100;
 
@@ -149,17 +154,17 @@ export class DonutChartComponent implements OnChanges, OnInit {
     let r = 0, g = 0, b = 0;
 
     if (0 <= h && h < 60) {
-        r = c; g = x; b = 0;
+      r = c; g = x; b = 0;
     } else if (60 <= h && h < 120) {
-        r = x; g = c; b = 0;
+      r = x; g = c; b = 0;
     } else if (120 <= h && h < 180) {
-        r = 0; g = c; b = x;
+      r = 0; g = c; b = x;
     } else if (180 <= h && h < 240) {
-        r = 0; g = x; b = c;
+      r = 0; g = x; b = c;
     } else if (240 <= h && h < 300) {
-        r = x; g = 0; b = c;
+      r = x; g = 0; b = c;
     } else if (300 <= h && h < 360) {
-        r = c; g = 0; b = x;
+      r = c; g = 0; b = x;
     }
 
     r = Math.round((r + m) * 255);
@@ -167,7 +172,7 @@ export class DonutChartComponent implements OnChanges, OnInit {
     b = Math.round((b + m) * 255);
 
     return `#${((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1).toUpperCase()}`;
-}
+  }
 
 
 

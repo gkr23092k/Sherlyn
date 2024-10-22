@@ -5,7 +5,7 @@ import { FormControl, NgForm } from '@angular/forms';
 import * as _ from 'lodash';
 import { map, startWith } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { MatAutocomplete } from '@angular/material/autocomplete';
+import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 @Component({
   selector: 'app-entry',
@@ -47,8 +47,19 @@ export class EntryComponent implements OnInit {
   options: string[] = [''];
   filteredOptions!: Observable<string[]>;
 
-  @ViewChild('auto', { static: false }) matAutocomplete: MatAutocomplete| any;
+  @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
+  addMaterial(event:Event) {
+    event.stopPropagation(); // Prevent the input from being focused
+    this.autocompleteTrigger.closePanel(); 
+  }
+
+  onEnterPress(event: KeyboardEvent) {
+    if (event.key === 'Enter') {
+      event.preventDefault(); // Prevent form submission or default behavior
+      this.autocompleteTrigger.closePanel();
+    }
+  }
 
   private _filter(value: string): string[] {
     const filterValue = value.toLowerCase();
@@ -201,6 +212,7 @@ export class EntryComponent implements OnInit {
   onInputChange(event: any) {
     // console.log(event);
     this.materialdropdown = []
+    this.material=''
     this.fb.getAllpreviousentries(event).subscribe((val: any) => {
 
       this.materialdropdown = this.getUniqueRecords(val);
