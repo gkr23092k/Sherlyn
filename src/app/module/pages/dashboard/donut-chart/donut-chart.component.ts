@@ -79,6 +79,8 @@ export class DonutChartComponent implements OnChanges, OnInit {
 
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.scrollable = true;
+    this.chart.legend.maxHeight = 80;
+
    
     // const colorList = this.generateAmChartsHexColors(this.spendlist.length);
     // series.colors.list = colorList.map(color => am4core.color(color));
