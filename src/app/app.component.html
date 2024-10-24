@@ -107,6 +107,7 @@
     <mat-drawer-content class="drawer-content-root">
         <div *ngIf="canAccess " class="header-bar d-flex align-items-center">
             <mat-icon *ngIf="!drawer.opened" class="toggle-button me-auto" (click)="drawer.toggle()">menu</mat-icon>
+            <mat-icon class="ms-2"  (click)="toggleFullScreen()">fullscreen</mat-icon>
             <h1 class="text-center flex-grow-1">GORA 80-80</h1>
         </div>
         <router-outlet></router-outlet>
@@ -114,4 +115,3 @@
 </mat-drawer-container>
 
 
-  <mat-icon class="fullscreentoggle "  (click)="toggleFullScreen()">fullscreen</mat-icon>

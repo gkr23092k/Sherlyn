@@ -114,6 +114,11 @@ export class FirebaseService {
       })
     );
   }
+
+  updateAllocation(id: string, data: any): Promise<void> {
+    return this.firestore.collection('AllocationList').doc(id).update(data);
+  }
+
   getAllLenditems(startdate: Date = subDays(new Date(), 100), enddate: Date = new Date()): Observable<any[]> {
     // Convert startdate and enddate to Firestore Timestamps
     const startTimestamp = Timestamp.fromDate(startdate);

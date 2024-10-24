@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, OnInit } from '@angular/core';
+import { Component, AfterViewInit, ElementRef, ViewChild, OnDestroy, OnInit, SimpleChanges, OnChanges } from '@angular/core';
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
@@ -14,10 +14,10 @@ const moment = _moment;
   styleUrls: ['./allocatechart.component.scss']
 })
 
-export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('chartdiv', { static: true }) chartDiv!: ElementRef;
+export class AllocateChartComponent implements OnInit, OnDestroy {
+  @ViewChild('chartdiv', { static: false }) chartDiv!: ElementRef;
 
-  private chart!: am4charts.XYChart;
+  private chart!: am4charts.XYChart | any;
   data1: any[] = [];
   data2: any[] = [];
   formattedDate: any;
@@ -28,9 +28,9 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
   monthNames: string[] = moment.monthsShort();
   currentYear: any = moment().year();
   selectedMonthval: any = moment().month();
-  selectedMonth: any = moment().month() ;
+  selectedMonth: any = moment().month();
   selectedYear: any = this.currentYear;
-
+  iseditmode: boolean = false
   selectMonth(event: any) {
     this.selectedMonth = this.monthNames.indexOf(event);
     this.emitDate();
@@ -88,8 +88,14 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
     });
   }
 
-  ngAfterViewInit(): void {
-    // Chart creation is handled in ngOnInit after data is fetched
+  edimodefunction() {
+    this.iseditmode = !this.iseditmode
+    if (!this.iseditmode) {
+      this.chart.dispose();
+      setTimeout(() => {
+        this.createChart()
+      }, 10);
+    }
   }
 
   private mergeData() {
@@ -121,10 +127,21 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.chart.data = this.data1;
 
+    // Set default zoom to the first 50% of the categories
+    this.chart.events.on("ready", () => {
+      const totalDataPoints = this.chart.data.length;
+      if (totalDataPoints > 0) {
+        const midPoint = Math.floor(totalDataPoints * 0.5); // Get the midpoint for 50%
+        xAxis.zoomToIndexes(0, 6); // Adjust for zero-indexing
+      }
+      console.log(this.chart.events, xAxis);
+
+    });
+
     this.createSeries('first', 'Allocated');
     this.createSeries('second', 'Utilised');
-    // this.createSeries('third', 'The Third');
   }
+
 
   private createSeries(value: string, name: string) {
     const series = this.chart.series.push(new am4charts.ColumnSeries());
@@ -164,7 +181,7 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
       const middle = this.chart.series.length / 2;
       let newIndex = 0;
 
-      this.chart.series.each((s) => {
+      this.chart.series.each((s: any) => {
         if (!s.isHidden && !s.isHiding) {
           s.dummyData = newIndex;
           newIndex++;
@@ -176,7 +193,19 @@ export class AllocateChartComponent implements OnInit, AfterViewInit, OnDestroy 
       const visibleCount = newIndex;
       const newMiddle = visibleCount / 2;
 
-      this.chart.series.each((s) => {
+      // Enable cursor for zooming
+      this.chart.cursor = new am4charts.XYCursor();
+      this.chart.cursor.behavior = "zoomX"; // Enable zooming in X direction
+      this.chart.cursor.lineX.disabled = true;
+      this.chart.cursor.lineY.disabled = true;
+
+      // Enable scrollbar
+      this.chart.scrollbarX = new am4core.Scrollbar();
+      this.chart.scrollbarX.marginBottom = 30;
+
+
+
+      this.chart.series.each((s: any) => {
         const trueIndex = this.chart.series.indexOf(s);
         const newIndex = s.dummyData;
         const dx = (newIndex - trueIndex + middle - newMiddle) * delta;

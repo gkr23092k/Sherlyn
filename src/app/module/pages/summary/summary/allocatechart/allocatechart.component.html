@@ -1,22 +1,32 @@
-<div class="d-flex justify-content-center">
+<ng-container>
 
-    <mat-form-field class="example-full-width inputbox mx-1">
-        <mat-label>Select Month</mat-label>
-        <mat-select required (ngModelChange)="selectMonth($event)" [(ngModel)]="selectedMonthval">
-            <mat-option *ngFor="let month of monthNames" [value]="month">{{ month
+    
+    <div class="d-flex justify-content-center" *ngIf="!iseditmode">
+        
+        <mat-form-field class="example-full-width inputbox mx-1 hide-subscript">
+            <mat-label>Select Month</mat-label>
+            <mat-select required (ngModelChange)="selectMonth($event)" [(ngModel)]="selectedMonthval">
+                <mat-option *ngFor="let month of monthNames" [value]="month">{{ month
                 }}</mat-option>
-        </mat-select>
-    </mat-form-field>
+            </mat-select>
+        </mat-form-field>
+        
+        <mat-form-field class="example-full-width inputbox mx-1 hide-subscript">
+            <mat-label>Select Year</mat-label>
+            <mat-select required (ngModelChange)="setYear($event)" [(ngModel)]="selectedYear">
+                <mat-option *ngFor="let year of [].constructor(10); let i = index" [value]="currentYear - i">
+                    {{ currentYear - i }}
+                </mat-option>
+            </mat-select>
+        </mat-form-field>
+        <mat-icon class="bg-dark mt-4" (click)="edimodefunction()">edit</mat-icon>
+        
+    </div>
+    
+    <div *ngIf="!iseditmode" class="shadow-lg p-2 mx-2" #chartdiv style="width: 99%; height:80vh;"></div>
+</ng-container>
+<span class="d-flex justify-content-end">
 
-    <mat-form-field class="example-full-width inputbox mx-1">
-        <mat-label>Select Year</mat-label>
-        <mat-select required (ngModelChange)="setYear($event)" [(ngModel)]="selectedYear">
-            <mat-option *ngFor="let year of [].constructor(10); let i = index" [value]="currentYear - i">
-                {{ currentYear - i }}
-            </mat-option>
-        </mat-select>
-    </mat-form-field>
-
-</div>
-
-<div class="shadow-lg p-2 mx-2" #chartdiv style="width: 99%; height:75vh;"></div>
+    <mat-icon *ngIf="iseditmode" class="bg-dark me-3 " (click)="edimodefunction()">exit_to_app</mat-icon>
+</span>
+<app-edit-progress *ngIf="iseditmode"></app-edit-progress>

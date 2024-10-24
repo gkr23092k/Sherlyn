@@ -18,6 +18,8 @@ import {MatNativeDateModule} from '@angular/material/core';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import {MatFormFieldModule} from '@angular/material/form-field';
 import {MatTabsModule} from '@angular/material/tabs';
+import { EditProgressComponent } from 'src/app/core/edit-progress/edit-progress.component';
+import { CustomformModule } from 'src/app/core/customform/customform.module';
 
 
 @NgModule({
@@ -26,10 +28,10 @@ import {MatTabsModule} from '@angular/material/tabs';
     SummarycardComponent,
     GridComponent,
     AllocateChartComponent,
-    
+    EditProgressComponent
   ],
   imports: [
-    CommonModule,
+    CommonModule,CustomformModule,
     SummaryRoutingModule,AgGridAngular,
 
     //material

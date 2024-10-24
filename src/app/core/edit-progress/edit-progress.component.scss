@@ -1,0 +1,46 @@
+.form-scrollable-container {
+    height: 85vh; /* 95% of the viewport height */
+    width: 100%;
+    overflow-y: auto; /* Enable vertical scrolling */
+    padding: 25px;
+    border-radius: 8px; /* Smooth corners */
+    border: 1px solid #e0e0e0; /* Light, subtle border */
+    background-color: #ffffff; /* White background for a clean look */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    scrollbar-width: thin; /* Thin scrollbar for Firefox */
+    scrollbar-color: #bdbdbd #f1f1f1; /* Color of scrollbar and track */
+      justify-content: center; /* Center the form horizontally */
+
+  }
+  
+  .form-scrollable-container::-webkit-scrollbar {
+    width: 8px; /* Thin scrollbar for WebKit browsers */
+  }
+  
+  .form-scrollable-container::-webkit-scrollbar-track {
+    background: #f1f1f1; /* Light background for scrollbar track */
+    border-radius: 8px;
+  }
+  
+  .form-scrollable-container::-webkit-scrollbar-thumb {
+    background-color: #bdbdbd; /* Subtle grey for scrollbar thumb */
+    border-radius: 8px; /* Smooth corners for scrollbar */
+  }
+  
+  .form-item {
+    margin-bottom: 20px; /* Space between each item */
+    
+  }
+  
+  .submit-container {
+    text-align: center;
+    margin-top: 20px; /* Space above the submit button */
+  }
+  
+
+  .divider {
+    margin-top: 20px; /* Space above the divider */
+    border: 0; /* Remove default border */
+    height: 1.5px; /* Set height for the divider */
+    background: #b0aeae; /* Color of the divider */
+}

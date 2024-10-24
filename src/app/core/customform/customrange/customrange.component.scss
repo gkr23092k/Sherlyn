@@ -1,0 +1,62 @@
+.slider-container {
+    position: relative; /* Positioning context for the range input */
+    width: 100%; /* Full width for the container */
+}
+
+.custom-range {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    width: 75%; /* Set width of the range input */
+    height: 12px; /* Increased height of the slider track for better visibility */
+    background: #c8e6c9; /* Light green track background */
+    border-radius: 5px; /* Rounded corners for the track */
+    outline: none; /* Remove outline */
+    opacity: 0.9; /* Slightly transparent */
+    transition: background 0.3s ease; /* Smooth transition for background */
+}
+
+/* Handle styling */
+.custom-range::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Remove default styling */
+    appearance: none; /* Remove default styling */
+    width: 24px; /* Increased width of the thumb */
+    height: 24px; /* Increased height of the thumb */
+    background: #4CAF50; /* Green color for the thumb */
+    border-radius: 50%; /* Round shape for the thumb */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.custom-range::-moz-range-thumb {
+    width: 24px; /* Increased width of the thumb */
+    height: 24px; /* Increased height of the thumb */
+    background: #4CAF50; /* Green color for the thumb */
+    border-radius: 50%; /* Round shape for the thumb */
+    cursor: pointer; /* Change cursor to pointer on hover */
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3); /* Subtle shadow for depth */
+}
+
+.custom-range:focus {
+    outline: none; /* Remove outline on focus */
+    background: #b2dfdb; /* Slightly darker green when focused */
+}
+
+/* Styles for the text and button */
+.text-dark {
+    font-weight: bold; /* Bold text for current value */
+}
+
+.btn-success {
+    transition: background 0.3s ease; /* Smooth transition for button */
+}
+
+.btn-success:hover {
+    background: #45a049; /* Darker green on hover */
+}
+
+.divider {
+    margin-top: 20px; /* Space above the divider */
+    border: 0; /* Remove default border */
+    height: 1px; /* Set height for the divider */
+    background: #e0e0e0; /* Color of the divider */
+}
