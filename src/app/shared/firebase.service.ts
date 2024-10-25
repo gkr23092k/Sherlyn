@@ -29,15 +29,22 @@ export class FirebaseService {
   public getcurrentbalance: BehaviorSubject<any> = new BehaviorSubject('')
 
 
-  
+  constructor(private firestore: AngularFirestore) {
+    this.usercode = localStorage.getItem('usercode');
+    this.db = getFirestore(); // Use the modular SDK approach
+    const storedToken = localStorage.getItem('currentToken') || 'SDAY';
+    this.viewToken = new BehaviorSubject(storedToken);
+  }
+
+
   emitViewTokem() {
-    return this.viewToken.asObservable(); // Return an observable for subscriptions
+    return this.viewToken.asObservable();
   }
-  
-  updateViewTokem(viewtoken:string) {
-    this.viewToken.next(viewtoken)
+
+  updateViewTokem(viewToken: string) {
+    localStorage.setItem('currentToken', viewToken);
+    this.viewToken.next(viewToken);
   }
-  
 
   emitbalance() {
     return this.getcurrentbalance.asObservable(); // Return an observable for subscriptions
@@ -57,14 +64,16 @@ export class FirebaseService {
     });
   }
 
-  constructor(private firestore: AngularFirestore) {
-    this.usercode = localStorage.getItem('usercode');
-    this.db = getFirestore(); // Use the modular SDK approach
 
-  }
   adduser(data: any) {
     return this.firestore.collection('UserList').add(data);
   }
+
+  addAllocation(data: any) {
+    return this.firestore.collection('AllocationList').add({ ...data, datecr: new Date(), usercode: this.usercode });
+  }
+
+
 
   getAllusers(user: any, key: any): Observable<any[]> {
     const citiesRef = collection(this.db, "UserList");
@@ -88,12 +97,56 @@ export class FirebaseService {
       })
     );
   }
+
+  getAllMaterialGroup(): Observable<any[]> {
+    const citiesRef = collection(this.db, "GroupDetails");
+    const q = query(
+      citiesRef,
+    );
+    this.usercode = localStorage.getItem('usercode');
+
+    return from(getDocs(q)).pipe(
+      map((querySnapshot) => {
+        return querySnapshot.docs.map(doc => {
+          const data: any = doc.data();
+          const id = doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
+
+  getLoggedusersDetails(): Observable<any[]> {
+    const citiesRef = collection(this.db, "UserDetails");
+    this.usercode = localStorage.getItem('usercode');
+    const q = query(
+      citiesRef,
+      where("usercode", "==", this.usercode)
+
+    );
+
+    return from(getDocs(q)).pipe(
+      map((querySnapshot) => {
+        return querySnapshot.docs.map(doc => {
+          const data: any = doc.data();
+          const id = doc.id;
+          return { id, ...data };
+        });
+      })
+    );
+  }
+
   getAllItems(): Observable<any[]> {
     return this.firestore.collection('SpendList', ref =>
       ref)
       .snapshotChanges();
   }
-  getAllAllocation(): Observable<any[]> {
+  getAllAllocation(startdate: any): Observable<any[]> {
+    // console.log(startdate);
+     
+    const startTimestamp = Timestamp.fromDate(startdate);
+
     const citiesRef = collection(this.db, "AllocationList");
     const q = query(
       citiesRef,
@@ -101,7 +154,8 @@ export class FirebaseService {
       // where("matgroup", "!=", "Liability Give"),
       // where("matgroup", "!=", "Liability Get"),
       // where("matgroup", "not-in", ["Investment", "Liability Give", "Liability Get"]),
-      // where("usercode", "==", this.usercode),
+      where("usercode", "==", this.usercode),
+      where("allocateddate", "==", startTimestamp), // Use Timestamp for start date
       // orderBy("dateentry", "asc")
     );
     return from(getDocs(q)).pipe(
@@ -125,7 +179,7 @@ export class FirebaseService {
     const endTimestamp = Timestamp.fromDate(enddate);
     // console.log(startTimestamp,endTimestamp);
 
-    const collections = [ 'CCLendList'];
+    const collections = ['CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(

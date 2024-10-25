@@ -1,7 +1,7 @@
 <ng-container>
 
     
-    <div class="d-flex justify-content-center" *ngIf="!iseditmode">
+    <div class="d-flex justify-content-center" >
         
         <mat-form-field class="example-full-width inputbox mx-1 hide-subscript">
             <mat-label>Select Month</mat-label>
@@ -19,7 +19,7 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-icon class="bg-dark mt-4" (click)="edimodefunction()">edit</mat-icon>
+        <mat-icon class="bg-dark mt-4" (click)="edimodefunction()">{{icon}}</mat-icon>
         
     </div>
     
@@ -27,6 +27,6 @@
 </ng-container>
 <span class="d-flex justify-content-end">
 
-    <mat-icon *ngIf="iseditmode" class="bg-dark me-3 " (click)="edimodefunction()">exit_to_app</mat-icon>
+    <!-- <mat-icon *ngIf="iseditmode" class="bg-dark me-3 " (click)="edimodefunction()">exit_to_app</mat-icon> -->
 </span>
-<app-edit-progress *ngIf="iseditmode"></app-edit-progress>
+<app-edit-progress *ngIf="iseditmode" [Datetopass]="startdateofmonth" [Norecord]="'No Allocations to Show'"></app-edit-progress>

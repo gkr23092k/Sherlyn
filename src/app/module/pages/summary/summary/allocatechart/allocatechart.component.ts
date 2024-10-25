@@ -23,6 +23,8 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
   formattedDate: any;
   lastDateOfMonth: any;
   startdateofmonth: any;
+  icon: any = 'edit';
+  startdate: any='';
   constructor(private fb: FirebaseService) { }
 
   monthNames: string[] = moment.monthsShort();
@@ -50,7 +52,7 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
     console.log('Selected Date:', 'pass', this.startdateofmonth, this.lastDateOfMonth);
 
     forkJoin({
-      allocations: this.fb.getAllAllocation(),
+      allocations: this.fb.getAllAllocation(this.startdateofmonth),
       materials: this.fb.getmatgroupAllItems(this.startdateofmonth, this.lastDateOfMonth)
     }).subscribe(({ allocations, materials }) => {
       // this.data1 = allocations;
@@ -68,15 +70,15 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
     this.selectedMonthval = this.monthNames[Number(now.month())]
 
     this.selectedYear = now.year(); // Current year
-    const date = new Date(this.selectedYear, this.selectedMonth, 1)
+    this.startdateofmonth = new Date(this.selectedYear, this.selectedMonth, 1)
     const lastDate = moment().year(this.selectedYear).month(this.selectedMonth).endOf('month');
     this.lastDateOfMonth = lastDate.toDate();
-    console.log(date, this.lastDateOfMonth, 'selectedmonth');
+    console.log(this.startdateofmonth, this.lastDateOfMonth, 'selectedmonth');
 
 
     forkJoin({
-      allocations: this.fb.getAllAllocation(),
-      materials: this.fb.getmatgroupAllItems(date, this.lastDateOfMonth)
+      allocations: this.fb.getAllAllocation(this.startdateofmonth),
+      materials: this.fb.getmatgroupAllItems(this.startdateofmonth, this.lastDateOfMonth)
     }).subscribe(({ allocations, materials }) => {
       // this.data1 = allocations;
       this.data1 = _.sortBy(allocations, 'category');
@@ -90,6 +92,8 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
 
   edimodefunction() {
     this.iseditmode = !this.iseditmode
+    this.icon = (!this.iseditmode) ? 'edit' : 'exit_to_app'
+
     if (!this.iseditmode) {
       this.chart.dispose();
       setTimeout(() => {
