@@ -1,0 +1,22 @@
+.container {
+    background-color: #f8f9fa; /* Light background */
+    border-radius: 8px; /* Rounded corners */
+    padding: 2px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+}
+
+
+
+
+button {
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+button:hover {
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+}
+
+input[type="number"] {
+    border: 1px solid #ced4da; /* Custom border for input */
+    border-radius: 4px; /* Rounded corners */
+}

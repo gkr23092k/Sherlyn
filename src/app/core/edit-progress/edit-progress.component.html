@@ -1,29 +1,30 @@
-<div class="form-scrollable-container">
-    <form [formGroup]="form" class="d-flex flex-column justify-content-center">
+<div *ngIf="allocationdata.length > 0; else Errmsg" class="form-scrollable-container">
+  <form [formGroup]="form" class="d-flex flex-column justify-content-center">
       <div class="row">
-        <div *ngFor="let el of allocationdata" class="col-sm-12 col-md-4">
-          <div>
-            <label class="text-dark">Group Name: {{ el.category }}</label>
-            <app-customrange [max]="el.first * 1.25" [formControlName]="el.category"></app-customrange>
-            <span class="d-flex justify-content-end pe-5">
-                <p-toast></p-toast>
-                
-                <button [ngClass]="{
-                    'btn btn-sm mt-2': true,
-                    'btn-success': saveButtonEnabled[el.category], 
-                    'btn-secondary': !saveButtonEnabled[el.category] 
-                  }" 
-                  [disabled]="!saveButtonEnabled[el.category]" 
-                  (click)="updateAllocation(el.category)">
-              Save
-            </button>
-            </span>
-            <hr class="divider" />
+          <div *ngFor="let el of allocationdata" class="col-sm-12 col-md-4 mb-3">
+              <div class="card p-3 shadow-sm">
+                  <label class="text-dark font-weight-bold">Group Name: {{ el.category }}</label>
+                  <app-customrange [max]="el.first * 1.25" [formControlName]="el.category"></app-customrange>
+                  <span class="d-flex justify-content-end pe-5 mt-2">
+                      <p-toast></p-toast>
+                      <button  *ngIf="!el.isupdated"
+                          [ngClass]="{
+                              'btn btn-sm': true,
+                              'btn-success': saveButtonEnabled[el.category], 
+                              'btn-secondary': !saveButtonEnabled[el.category]
+                          }" 
+                          [disabled]="!saveButtonEnabled[el.category]" 
+                          (click)="updateAllocation(el.category)">
+                          Save
+                      </button>
+                  </span>
+                  <hr class="divider" />
+              </div>
           </div>
-        </div>
-        <!-- <div class="col-sm-12 col-md-6"></div> -->
       </div>
-   
-    </form>
-  </div>
-  
+  </form>
+</div>
+
+<ng-template #Errmsg >
+  <div class="text-center text-danger mt-3">{{ Norecord }}</div>
+</ng-template>

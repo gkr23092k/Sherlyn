@@ -1,0 +1,57 @@
+<div class="container p-2 my-5 text-center d-flex justify-content-center flex-column">
+    <h1 class="">Available Limit</h1>
+    <h2 class="text-dark">{{availlimit}}</h2>
+
+</div>
+
+
+
+<h1 class="text-center">New Allocation Form</h1>
+
+<div class="d-flex justify-content-center flex-wrap mb-4">
+
+    <mat-form-field class="example-full-width mx-2">
+        <mat-label>Select Month</mat-label>
+        <mat-select required (ngModelChange)="selectMonth($event)" [(ngModel)]="selectedMonthval">
+            <mat-option *ngFor="let month of monthNames" [value]="month">{{ month }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="example-full-width mx-2">
+        <mat-label>Select Year</mat-label>
+        <mat-select required (ngModelChange)="setYear($event)" [(ngModel)]="selectedYear">
+            <mat-option *ngFor="let year of [].constructor(10); let i = index" [value]="currentYear - i">
+                {{ currentYear - i }}
+            </mat-option>
+        </mat-select>
+    </mat-form-field>
+    <mat-form-field class="example-full-width mx-2">
+        <mat-label>Material Group</mat-label>
+        <mat-select  [(ngModel)]="selectedgroup">
+            <mat-option *ngFor="let group of matgroup" [value]="group">{{ group }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+</div>
+
+<div class="container d-flex flex-column align-items-center">
+    <form class=" p-3 rounded " [formGroup]="form" (ngSubmit)="submit(form)">
+        <app-customrange [max]="availlimit" formControlName="Rangevalue"></app-customrange>
+
+        <div class="text-center mt-4">
+            <button mat-raised-button 
+            color="primary" 
+            [ngClass]="{
+                'btn btn-sm w-100': true,
+                'btn-success': saveButtonEnabled && selectedgroup !== '', 
+                'btn-secondary': !saveButtonEnabled || selectedgroup === ''
+            }" 
+            [disabled]="!saveButtonEnabled || selectedgroup === ''" 
+            (click)="addAllocation()">
+        Save
+    </button>
+    
+        </div>
+    </form>
+</div>
+
+<p-toast></p-toast>
