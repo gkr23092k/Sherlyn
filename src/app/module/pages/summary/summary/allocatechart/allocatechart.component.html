@@ -19,8 +19,9 @@
                 </mat-option>
             </mat-select>
         </mat-form-field>
-        <mat-icon class="bg-dark mt-4" (click)="edimodefunction()">{{icon}}</mat-icon>
+        <mat-icon class="bg-dark mt-4 mx-2 rounded" (click)="edimodefunction()">{{icon}}</mat-icon>
         
+        <mat-icon class="bg-dark mt-4 mx-2 rounded" [routerLink]="'../summary'" (click)="closeDrawer('ADDALLOCATION')">fiber_new</mat-icon>
     </div>
     
     <div *ngIf="!iseditmode" class="shadow-lg p-2 mx-2" #chartdiv style="width: 99%; height:80vh;"></div>

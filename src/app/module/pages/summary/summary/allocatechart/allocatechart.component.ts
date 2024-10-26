@@ -220,6 +220,11 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
     }
   }
 
+  closeDrawer(token: string) {
+    this.fb.updateViewTokem(token)
+  }
+
+
   ngOnDestroy() {
     if (this.chart) {
       this.chart.dispose();

@@ -1,5 +1,8 @@
 <div class="container p-2 my-5 text-center d-flex justify-content-center flex-column">
-    <h1 class="">Available Limit</h1>
+    <span class="d-flex justify-content-center">
+        <h1 class="">Available Limit</h1>
+        <mat-icon class="bg-dark mx-2 rounded mt-1" [routerLink]="'../summary'" (click)="closeDrawer('ALLOCATION')">view_list</mat-icon>
+    </span>
     <h2 class="text-dark">{{availlimit}}</h2>
 
 </div>
@@ -27,7 +30,7 @@
     </mat-form-field>
     <mat-form-field class="example-full-width mx-2">
         <mat-label>Material Group</mat-label>
-        <mat-select  [(ngModel)]="selectedgroup">
+        <mat-select [(ngModel)]="selectedgroup">
             <mat-option *ngFor="let group of matgroup" [value]="group">{{ group }}</mat-option>
         </mat-select>
     </mat-form-field>
@@ -38,18 +41,14 @@
         <app-customrange [max]="availlimit" formControlName="Rangevalue"></app-customrange>
 
         <div class="text-center mt-4">
-            <button mat-raised-button 
-            color="primary" 
-            [ngClass]="{
+            <button mat-raised-button color="primary" [ngClass]="{
                 'btn btn-sm w-100': true,
                 'btn-success': saveButtonEnabled && selectedgroup !== '', 
-                'btn-secondary': !saveButtonEnabled || selectedgroup === ''
-            }" 
-            [disabled]="!saveButtonEnabled || selectedgroup === ''" 
-            (click)="addAllocation()">
-        Save
-    </button>
-    
+                'btn-secondary': !saveButtonEnabled || selectedgroup === '' ||availlimit <=0
+            }" [disabled]="!saveButtonEnabled || selectedgroup === '' || availlimit<=0" (click)="addAllocation()">
+                Save
+            </button>
+
         </div>
     </form>
 </div>

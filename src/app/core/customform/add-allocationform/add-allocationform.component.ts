@@ -24,13 +24,19 @@ export class AddAllocationformComponent implements OnInit {
   selectedMonth: any = moment().month();
   selectedYear: any = this.currentYear;
   allocatedvalue: number = 0
+
+  closeDrawer(token: string) {
+    this.fb.updateViewTokem(token)
+  }
+
   ngOnInit(): void {
     this.form.addControl('Rangevalue', this.formBuilder.control(0));
     const now = moment(); // Get current date and time
     this.selectedMonthval = this.monthNames[Number(now.month())]
     this.fb.getAllMaterialGroup().subscribe((res: any) => {
       // console.log(res);
-      this.matgroup = res[0].Groups
+      this.matgroup = res[0].Groups.filter((el: any) => el !== 'Liability Get' && el !== 'Liability Give') || [];
+      // console.log(this.matgroup);
     })
     this.fb.getLoggedusersDetails().subscribe((res: any) => {
       // console.log(res[0].inflowM);
@@ -56,13 +62,18 @@ export class AddAllocationformComponent implements OnInit {
     this.emitDate();
   }
 
+loggeduserdatails(){
+  const datetoadd = new Date(this.selectedYear, this.selectedMonth, 1)
+  this.fb.getLoggedusersDetails().subscribe((res: any) => {
+    // console.log(res[0].inflowM);
+    this.availlimit = res[0].inflowM
+  })
+}
+
 
   emitDate() {
     const datetoadd = new Date(this.selectedYear, this.selectedMonth, 1)
-    this.fb.getLoggedusersDetails().subscribe((res: any) => {
-      // console.log(res[0].inflowM);
-      this.availlimit = res[0].inflowM
-    })
+    this.loggeduserdatails()
     this.getAllallocation(datetoadd)
   }
   addAllocation() {
@@ -72,11 +83,13 @@ export class AddAllocationformComponent implements OnInit {
     else {
       const datetoadd = new Date(this.selectedYear, this.selectedMonth, 1)
       const datatoaddfb = { category: this.selectedgroup, allocateddate: datetoadd, first: this.allocatedvalue, isupdated: false }
-      console.log(datatoaddfb);
+      // console.log(datatoaddfb);
 
       this.fb.addAllocation(datatoaddfb).finally(() => {
         this.form.patchValue({ Rangevalue: 0 })
         this.selectedgroup = ''
+        this.availlimit=0
+        this.loggeduserdatails()
         this.getAllallocation(datetoadd)
 
         this.showSuccess(`Allocation added Successfully`)
@@ -93,7 +106,7 @@ export class AddAllocationformComponent implements OnInit {
   }
   getAllallocation(datevalue: any) {
     this.fb.getAllAllocation(datevalue).subscribe((res) => {
-      console.log(res);
+      // console.log(res);
 
       if (Array.isArray(res)) {
         const categoriesToRemove = res.map(item => item.category);

@@ -39,8 +39,16 @@ export class CustomrangeComponent implements ControlValueAccessor {
   }
 
   onInputChange(value: number): void {
+    if(value<=this.max){
     this.sliderValue = value;
     this.onChange(this.sliderValue);
+    }
+    else{
+      alert('Exceeds Limit');
+      this.sliderValue=0
+      this.onChange(this.sliderValue);
+
+    }
   }
 
   onBlur(): void {
