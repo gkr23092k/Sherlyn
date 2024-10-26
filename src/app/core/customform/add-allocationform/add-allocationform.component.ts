@@ -59,6 +59,10 @@ export class AddAllocationformComponent implements OnInit {
 
   emitDate() {
     const datetoadd = new Date(this.selectedYear, this.selectedMonth, 1)
+    this.fb.getLoggedusersDetails().subscribe((res: any) => {
+      // console.log(res[0].inflowM);
+      this.availlimit = res[0].inflowM
+    })
     this.getAllallocation(datetoadd)
   }
   addAllocation() {

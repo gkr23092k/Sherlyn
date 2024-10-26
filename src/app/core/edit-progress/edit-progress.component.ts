@@ -44,10 +44,11 @@ export class EditProgressComponent implements OnInit, OnChanges {
     const updatedValue = this.form.get(category)?.value;
     const id = this.findCategoryId(category);
 
-    this.fb.updateAllocation(id, { first: updatedValue })
+    this.fb.updateAllocation(id, { first: updatedValue, isupdated: true })
       .then(() => {
-        console.log('Allocation updated successfully');
+        // console.log('Allocation updated successfully');
         // Reset the button state after update
+        this.refreshEdit()
         this.saveButtonEnabled[category] = false;
         this.showSuccess('Allocation updated successfully')
       })
@@ -62,7 +63,7 @@ export class EditProgressComponent implements OnInit, OnChanges {
 
 
   refreshEdit() {
-    console.log('called', this.Datetopass);
+    // console.log('called', this.Datetopass);
 
     this.fb.getAllAllocation(this.Datetopass).subscribe((res: any) => {
       this.allocationdata = _.sortBy(res, 'category');

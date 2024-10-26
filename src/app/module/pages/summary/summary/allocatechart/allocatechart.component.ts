@@ -73,7 +73,7 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
     this.startdateofmonth = new Date(this.selectedYear, this.selectedMonth, 1)
     const lastDate = moment().year(this.selectedYear).month(this.selectedMonth).endOf('month');
     this.lastDateOfMonth = lastDate.toDate();
-    console.log(this.startdateofmonth, this.lastDateOfMonth, 'selectedmonth');
+    // console.log(this.startdateofmonth, this.lastDateOfMonth, 'selectedmonth');
 
 
     forkJoin({
@@ -136,9 +136,9 @@ export class AllocateChartComponent implements OnInit, OnDestroy {
       const totalDataPoints = this.chart.data.length;
       if (totalDataPoints > 0) {
         const midPoint = Math.floor(totalDataPoints * 0.5); // Get the midpoint for 50%
-        xAxis.zoomToIndexes(0, 6); // Adjust for zero-indexing
+        xAxis.zoomToIndexes(0, totalDataPoints<6? totalDataPoints:6); // Adjust for zero-indexing
       }
-      console.log(this.chart.events, xAxis);
+      // console.log(this.chart.events, xAxis);
 
     });
 
