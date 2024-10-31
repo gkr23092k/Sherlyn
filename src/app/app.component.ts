@@ -90,6 +90,7 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    // debugger
     this.router.navigate([`../${this.Tokenlive}`])
 
     this.fb.emitcanaccess().subscribe((res: boolean) => {

@@ -9,7 +9,7 @@ const routes: Routes = [
     path: 'user', component: LoginComponent
   },
   {
-    path: 'entry', loadChildren: () => import('./module/pages/entry/entry.module').then(m => m.EntryModule),
+    path: 'newentry', loadChildren: () => import('./module/pages/entry/entry.module').then(m => m.EntryModule),
     canActivate: [guardGuard]
   },
   {
@@ -25,7 +25,7 @@ const routes: Routes = [
     path: 'credit', loadChildren: () => import('./module/pages/creditcard/creditcard/creditcard.module').then(m => m.CreditcardModule),
     canActivate: [guardGuard]
   },
-  { path: '**', redirectTo: 'user' }  // Redirect to 'dashboard' path for any unknown routes
+  // { path: '**', redirectTo: 'user' }  // Redirect to 'dashboard' path for any unknown routes
 ];
 
 @NgModule({

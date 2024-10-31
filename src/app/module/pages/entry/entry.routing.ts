@@ -5,7 +5,7 @@ import { EntryComponent } from './entry/entry.component';
 
 const routes: Routes = [
   { path: '', component: EntryComponent },
-  { path: '**', redirectTo: 'entry', pathMatch: 'full' }
+  { path: '**', redirectTo: 'newentry', pathMatch: 'full' }
 ];
 
 @NgModule({

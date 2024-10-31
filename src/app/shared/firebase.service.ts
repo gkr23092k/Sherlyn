@@ -35,14 +35,14 @@ export class FirebaseService {
     this.usercode = localStorage.getItem('usercode');
     this.db = getFirestore(); // Use the modular SDK approach
     const storedToken = localStorage.getItem('currentToken') || 'NEWENTRY';
-    this.storedmainToken = localStorage.getItem('currentMainToken') || 'NEWENTRY';
+    this.storedmainToken = localStorage.getItem('currentMainToken') || 'newentry';
     // console.log(storedToken,'service initiate token');
     this.viewToken = new BehaviorSubject(storedToken);
   }
 
 
   emitViewTokem() {
-    this.storedmainToken = localStorage.getItem('currentMainToken') || 'NEWENTRY';
+    this.storedmainToken = localStorage.getItem('currentMainToken') || 'newentry';
     this.router.navigate([`../${this.storedmainToken}`])
     return this.viewToken.asObservable();
   }

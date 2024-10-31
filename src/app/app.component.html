@@ -10,7 +10,7 @@
             </span>
 
             <!-- Main "New Entry" Button with Expand/Collapse Icon -->
-            <button class="drawer-button"  [routerLink]="'../entry'"
+            <button class="drawer-button"  [routerLink]="'../newentry'"
                 (click)="closeDrawer('NEWENTRY'); toggleMenu('newentry')">
                 <mat-icon>fiber_new</mat-icon>
                 <span>New Entry</span>
@@ -20,12 +20,12 @@
 
             <div *ngIf="isnewentry">
                 <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='NEWENTRY'}"
-                    [routerLink]="'../entry'" (click)="closeDrawer('NEWENTRY')">
+                    [routerLink]="'../newentry'" (click)="closeDrawer('NEWENTRY')">
                     <mat-icon >subdirectory_arrow_right</mat-icon>
                     <span>Mono Entry</span>
                 </button>
                 <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='BNEWENTRY'}"
-                    [routerLink]="'../entry'" (click)="closeDrawer('BNEWENTRY')">
+                    [routerLink]="'../newentry'" (click)="closeDrawer('BNEWENTRY')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Bulk Entry</span>
                 </button>
