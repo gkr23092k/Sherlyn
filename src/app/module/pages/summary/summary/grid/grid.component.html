@@ -49,7 +49,15 @@
         <p *ngIf="mailmsg!='' && mailmsg!=undefined" class=" custompara mb-2">Mail To: {{mailmsg.Mailid}}</p>
     </div>
     <hr> -->
-<ag-grid-angular style="width: 99%; height: 88vh;" class="ag-theme-alpine m-2" [rowData]="rowData"
-    [columnDefs]="columnDefs" [pagination]="true" [gridOptions]="gridOptions"
-    [animateRows]="true" [defaultColDef]="defaultColDef" [rowGroupPanelShow]="rowGroupPanelShow">
+
+
+  
+<!-- <button (click)="toggleSourceColumn()">Toggle Source Column</button> -->
+<ag-grid-angular style="width: 99%; height: 86vh;" class="ag-theme-alpine m-2" 
+  [gridOptions]="gridOptions"
+  [rowData]="rowData"
+  [columnDefs]="columnDefs"
+  (gridReady)="onGridReady($event)"
+  [animateRows]="true" [pagination]="true" >
+  >
 </ag-grid-angular>

@@ -1,3 +1,5 @@
+
+<div *ngIf="isBulkentry=='NEWENTRY'">
 <form #entry="ngForm" class="container  vh-50" (ngSubmit)="addentry(entry)">
 
   <!-- <div *ngIf="isswitch==false"> -->
@@ -76,6 +78,7 @@
              placeholder="Spent on"
              aria-label="text"
              matInput
+             maxlength="20"
              [(ngModel)]="material"
              [formControl]="myControl"
              [matAutocomplete]="auto"
@@ -101,7 +104,7 @@
 
       <mat-form-field class="w-100 mt-1" appearance="fill">
         <mat-label>Price</mat-label>
-        <input matInput required placeholder="Price" ngModel name="matprice" type="number"
+        <input matInput required placeholder="Price" [(ngModel)]="price" ngModel name="matprice" type="number"
           (ngModelChange)="onPriceChange($event)">
       </mat-form-field>
 
@@ -134,7 +137,7 @@
 
   <mat-form-field class="example-full-width " appearance="fill">
     <mat-label>Leave a comment</mat-label>
-    <textarea matInput ngModel name="comments" placeholder="Ex. surprise gift..."></textarea>
+    <textarea matInput required ngModel name="comments" placeholder="Ex. surprise gift..."></textarea>
   </mat-form-field>
 
   <div class="d-flex justify-content-center align-items-center">
@@ -148,3 +151,7 @@
   [fullScreen]="true">
   <p style="color: white"> Loading... </p>
 </ngx-spinner>
+
+</div>
+
+<app-bulkentry *ngIf="isBulkentry=='BNEWENTRY'"></app-bulkentry>

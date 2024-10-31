@@ -41,6 +41,9 @@
     background: #b2dfdb; /* Slightly darker green when focused */
 }
 
+.custom-range:disabled{
+    cursor:not-allowed !important;
+}
 /* Styles for the text and button */
 .text-dark {
     font-weight: bold; /* Bold text for current value */

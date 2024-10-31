@@ -1,0 +1,96 @@
+<div class="d-flex">
+    <mat-form-field class="mx-1 example-full-width hide-subscript h-100" appearance="fill">
+        <mat-label>Date creation</mat-label>
+        <input matInput required [matDatepicker]="picker" [(ngModel)]="dateentry" ngModel name="dateentry"
+            class="example-full-width">
+        <!-- <mat-hint>MM/DD/YYYY</mat-hint> -->
+        <mat-datepicker-toggle matIconSuffix [for]="picker" class="example-full-width"></mat-datepicker-toggle>
+        <mat-datepicker #picker class="example-full-width"></mat-datepicker>
+    </mat-form-field>
+
+
+
+
+    <mat-form-field class="example-full-width hide-subscript h-100 mx-1" appearance="fill">
+        <mat-label>Filter entries</mat-label>
+        <input matInput type="text" placeholder="Filter entries..." [(ngModel)]="filterTerm"
+            (keydown)="onEnterPress($event)">
+        <button matSuffix mat-icon-button aria-label="search" (click)="getFilteredTodo()">
+            <mat-icon>search</mat-icon>
+            <!-- <mat-icon *ngIf="filterTerm!=''" (click)="filterTerm=''">clear</mat-icon> -->
+        </button>
+    </mat-form-field>
+
+
+    <mat-form-field *ngIf="cardeventcatcher " class="example-full-width mx-1 hide-subscript">
+        <mat-label>Used Card</mat-label>
+        <mat-select [(ngModel)]="cardname" [ngModelOptions]="{standalone: true}">
+            <mat-option *ngFor="let card of creditcardlist" [value]="card.cardname">{{card.cardname}}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    
+    
+
+    <button class="btn btn-success h-100 my-auto" (click)="addEntry()">Save</button>
+
+    <!-- <button class=" mx-2 btn btn-sm btn-info text-white" (click)="getFilteredTodo()"
+        style="margin-bottom: 10px;  padding: 5px; border: 1px solid #ccc; border-radius: 4px;">Filter</button>
+    <button class=" btn btn-sm btn-danger text-white" (click)="filterTerm=''; getFilteredTodo()"
+        style="margin-bottom: 10px;  padding: 5px; border: 1px solid #ccc; border-radius: 4px;">Clear</button> -->
+</div>
+<mat-form-field class="example-full-width w-100 p-3 hide-subscript" appearance="fill">
+    <mat-label>Leave a common comments for bulk data...</mat-label>
+    <textarea matInput [(ngModel)]="comments"   name="comments" placeholder="Ex. surprise gift..."></textarea>
+  </mat-form-field>
+<div cdkDropListGroup class="d-flex justify-content-center" style="height: 60vh; overflow: hidden;">
+    <div class="example-container" style="flex: 1; margin:10px 0px;">
+        <span class="d-flex justify-content-between">
+
+            <h1 class="mx-3 text-center">Previous Entries List </h1>
+            <h1 class="mx-3">{{todo.length}}/{{allEntries.length}}</h1>
+        </span>
+        <div cdkDropList [cdkDropListData]="todo" class="example-list" cdkDropListSortingDisabled
+            (cdkDropListDropped)="drop($event)"      [cdkDropListEnterPredicate]="noReturnPredicate"
+            style="max-height: 350px; overflow-y: auto;">
+            <div class="example-box" *ngFor="let item of todo; let i=index" cdkDrag (click)="toggleSelect(i)">
+                <label class="custom-checkbox">
+                    <!-- <input type="checkbox" [(ngModel)]="selectedItems[i]" /> -->
+                    <!-- <span class="checkmark"></span> -->
+                    {{item}}
+                </label>
+                <div class="example-handle">
+                    <svg width="24px" fill="currentColor" viewBox="0 0 24 24">
+                        <path
+                            d="M10 9h4V6h3l-5-5-5 5h3v3zm-1 1H6V7l-5 5 5 5v-3h3v-4zm14 2l-5-5v3h-3v4h3v3l5-5zm-9 3h-4v3H7l5 5 5-5h-3v-3z">
+                        </path>
+                        <path d="M0 0h24v24H0z" fill="none"></path>
+                    </svg>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="move-button-container">
+        <!-- <button class="move-button d-flex align-items-center justify-content-center">>></button> -->
+    </div>
+
+
+    <div class="example-container" style="flex: 1; margin: 10px;">
+        <span class="d-flex justify-content-between">
+
+            <h1 class="mx-3 text-center">New Entries List - {{originalBalance}}</h1>
+            <h1 class="mx-3">{{done.length}}</h1>
+          
+        </span>
+
+        <div cdkDropList cdkDropListSortingDisabled [cdkDropListData]="done" class="example-list" 
+        (cdkDropListDropped)="drop($event)"     
+            style="max-height: 350px; overflow-y: auto;">
+            <div class="example-box" *ngFor="let item of done;let i=index" cdkDrag>{{item}}
+                <input disabled="true" type="number" [(ngModel)]="balancelist[i]"  />
+                <input type="number"  [(ngModel)]="pricelist[i]" (focusout)="upddatebalance()">
+                <mat-icon (click)="upddatebalance()">add_circle</mat-icon>
+            </div>
+        </div>
+    </div>
+</div>

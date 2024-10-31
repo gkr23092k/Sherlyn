@@ -16,16 +16,18 @@ import {MatIconModule} from '@angular/material/icon';
 import {MatSelectModule} from '@angular/material/select';
 import { NgxSpinnerModule } from "ngx-spinner";
 import {MatAutocompleteModule} from '@angular/material/autocomplete';
+import { BulkEntryComponent } from './bulk-entry/bulk-entry.component';
+import {DragDropModule} from '@angular/cdk/drag-drop';
 
 @NgModule({
-  declarations: [EntryComponent],
+  declarations: [EntryComponent, BulkEntryComponent],
   imports: [
     CommonModule,
     EntryRoutingModule,
     // material
     MatButtonModule,MatFormFieldModule, MatInputModule,MatDatepickerModule,MatNativeDateModule,
     FormsModule,ReactiveFormsModule,MatChipsModule,MatMenuModule,MatIconModule,MatSelectModule,
-    MatAutocompleteModule
+    MatAutocompleteModule,DragDropModule
 
     ,NgMultiSelectDropDownModule,NgxSpinnerModule
   ],

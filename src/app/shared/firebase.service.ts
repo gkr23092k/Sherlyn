@@ -144,7 +144,7 @@ export class FirebaseService {
   }
   getAllAllocation(startdate: any): Observable<any[]> {
     // console.log(startdate);
-     
+
     const startTimestamp = Timestamp.fromDate(startdate);
 
     const citiesRef = collection(this.db, "AllocationList");
@@ -163,7 +163,7 @@ export class FirebaseService {
         return querySnapshot.docs.map(doc => {
           const data: any = doc.data();
           const id = doc.id;
-          return { id, ...data };
+          return { id, ...data, source: 'AllocationList' };
         });
       })
     );
@@ -332,6 +332,24 @@ export class FirebaseService {
     return this.firestore.collection('SpendList').add({ ...data, datecr: new Date(), usercode: this.usercode });
 
   }
+  async dataentryBulk(dataArray: any[]) {
+    const promises = dataArray.map(data => {
+      return this.firestore.collection('SpendList').add({
+        ...data,
+        datecr: new Date(),
+        usercode: this.usercode
+      });
+    });
+
+    try {
+      await Promise.all(promises);
+      console.log('All data added successfully');
+    } catch (error) {
+      console.error('Error adding data:', error);
+    }
+  }
+
+
   CreditCards(data: any) {
     return this.firestore.collection('CreditCards').add({ ...data, datecr: new Date(), usercode: this.usercode });
   }
@@ -367,7 +385,7 @@ export class FirebaseService {
         return querySnapshot.docs.map(doc => {
           const data: any = doc.data();
           const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+          return { id, ...data, source: 'CCRepayList', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
         });
       })
     );
@@ -390,7 +408,7 @@ export class FirebaseService {
             const id = doc.id;
             return {
               id,
-              ...data,
+              ...data, source: collectionName,
               date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) // Store as Date object
             };
           });
@@ -489,7 +507,7 @@ export class FirebaseService {
           return querySnapshot.docs.map(doc => {
             const data: any = doc.data();
             const id = doc.id;
-            return { id, ...data, iscreditcard: data.iscreditcard ? data.cardname : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+            return { id, ...data, source: collectionName, iscreditcard: data.iscreditcard ? data.cardname : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
           });
         })
       );
@@ -581,7 +599,7 @@ export class FirebaseService {
           return querySnapshot.docs.map(doc => {
             const data: any = doc.data();
             const id = doc.id;
-            return { id, ...data, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
+            return { id, ...data, source: collectionName, iscreditcard: data.iscreditcard ? 'Yes' : 'No', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)) };
           });
         })
       );
@@ -609,7 +627,7 @@ export class FirebaseService {
         return querySnapshot.docs.map(doc => {
           const data: any = doc.data();
           const id = doc.id;
-          return { id, ...data, date: this.formatDate(new Date(data.dateentry?.seconds * 1000)), datecr: this.formatDate(new Date(data.datecr?.seconds * 1000)) };
+          return { id, ...data, source: 'CreditList', date: this.formatDate(new Date(data.dateentry?.seconds * 1000)), datecr: this.formatDate(new Date(data.datecr?.seconds * 1000)) };
         });
       })
     );
@@ -704,13 +722,13 @@ export class FirebaseService {
   }
 
 
-  getAllpreviousentries(groupname: string): Observable<any[]> {
+  getAllpreviousentries(groupname1: string, condition1: any, groupname2: string = ''): Observable<any[]> {
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
-        where("matgroup", "==", groupname),
+        where("matgroup", condition1, [groupname1, groupname2]),
         where("usercode", "==", this.usercode),
         orderBy("dateentry", "asc")
       );
@@ -720,7 +738,7 @@ export class FirebaseService {
           return querySnapshot.docs.map(doc => {
             const data: any = doc.data();
             const id = doc.id;
-            return { id, item_id: id, item_text: data.matname };
+            return { id, item_id: id, item_text: data.matname, ...data };
           });
         })
       );

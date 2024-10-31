@@ -23,12 +23,15 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { FormsModule } from '@angular/forms';
 import {MatSidenavModule} from '@angular/material/sidenav';
 import { MatSelectModule } from '@angular/material/select';
+import {MatTooltipModule} from '@angular/material/tooltip';
+import { AgGridMenuComponent } from './core/gridaction/gridaction.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    DialogComponent,    
+    DialogComponent,AgGridMenuComponent
+       
   ],
   imports: [
     BrowserModule,
@@ -40,7 +43,8 @@ import { MatSelectModule } from '@angular/material/select';
 
 
     // material
-    MatButtonModule,MatInputModule,MatIconModule,MatMenuModule,MatDialogModule,FormsModule,MatSidenavModule,MatSelectModule
+    MatButtonModule,MatInputModule,MatIconModule,MatMenuModule,MatDialogModule,FormsModule,MatSidenavModule,MatSelectModule,
+    MatTooltipModule
   ],
   providers: [],
   bootstrap: [AppComponent]

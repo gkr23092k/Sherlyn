@@ -105,6 +105,13 @@ loggeduserdatails(){
     this.messageService.add({ severity: 'success', summary: 'Success', detail: msg });
   }
   getAllallocation(datevalue: any) {
+
+    this.fb.getAllMaterialGroup().subscribe((res: any) => {
+      // console.log(res);
+      this.matgroup = res[0].Groups.filter((el: any) => el !== 'Liability Get' && el !== 'Liability Give') || [];
+      // console.log(this.matgroup);
+    })
+
     this.fb.getAllAllocation(datevalue).subscribe((res) => {
       // console.log(res);
 

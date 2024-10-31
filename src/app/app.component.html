@@ -1,7 +1,8 @@
 <mat-drawer-container class="custom-drawer-container" [hasBackdrop]="false">
     <mat-drawer #drawer class="custom-drawer" [mode]="'side'">
         <div class="drawer-content">
-            <mat-icon *ngIf="canAccess" class="position-absolute  bg-danger top-0 toggle-button me-auto" (click)="drawer.toggle()">close</mat-icon>
+            <mat-icon *ngIf="canAccess" class="position-absolute  bg-danger top-0 toggle-button me-auto"
+                (click)="drawer.toggle()">close</mat-icon>
 
             <img src="./assets/images/404animation.gif" alt="">
             <span class="user-info text-center mb-2">
@@ -9,113 +10,144 @@
             </span>
 
             <!-- Main "New Entry" Button with Expand/Collapse Icon -->
-            <button class="drawer-button" [routerLink]="'../entry'" >
+            <button class="drawer-button"  [routerLink]="'../entry'"
+                (click)="closeDrawer('NEWENTRY'); toggleMenu('newentry')">
                 <mat-icon>fiber_new</mat-icon>
                 <span>New Entry</span>
+                <mat-icon (click)="isnewentry=!isnewentry">{{ isnewentry ? 'keyboard_arrow_up' :
+                    'keyboard_arrow_down' }}</mat-icon>
             </button>
 
+            <div *ngIf="isnewentry">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='NEWENTRY'}"
+                    [routerLink]="'../entry'" (click)="closeDrawer('NEWENTRY')">
+                    <mat-icon >subdirectory_arrow_right</mat-icon>
+                    <span>Mono Entry</span>
+                </button>
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='BNEWENTRY'}"
+                    [routerLink]="'../entry'" (click)="closeDrawer('BNEWENTRY')">
+                    <mat-icon>subdirectory_arrow_right</mat-icon>
+                    <span>Bulk Entry</span>
+                </button>
+            </div>
 
 
             <!-- Other Main Menu Items -->
-            <button class="drawer-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('SDAY'); toggleMenu('dashboard')">
+            <button class="drawer-button" [routerLink]="'../dashboard/main'"
+                (click)="closeDrawer('SDAY'); toggleMenu('dashboard')">
                 <mat-icon>dashboard</mat-icon>
                 <span>Dashboard</span>
-                <mat-icon (click)="isdashboard=!isdashboard">{{ isdashboard ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+                <mat-icon (click)="isdashboard=!isdashboard">{{ isdashboard ? 'keyboard_arrow_up' :
+                    'keyboard_arrow_down' }}</mat-icon>
 
             </button>
 
 
             <!-- Sub-menu Items for "New Entry" -->
             <div *ngIf="isdashboard">
-                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('SDAY')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='SDAY'}"
+                    [routerLink]="'../dashboard/main'" (click)="closeDrawer('SDAY')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Day Spends</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('SMONTH')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='SMONTH'}"
+                    [routerLink]="'../dashboard/main'" (click)="closeDrawer('SMONTH')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Month Spends</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('IDAY')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='IDAY'}"
+                    [routerLink]="'../dashboard/main'" (click)="closeDrawer('IDAY')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Day Invest</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('IMONTH')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='IMONTH'}"
+                    [routerLink]="'../dashboard/main'" (click)="closeDrawer('IMONTH')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Month Invest</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../dashboard/main'" (click)="closeDrawer('GROUP')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='GROUP'}"
+                    [routerLink]="'../dashboard/main'" (click)="closeDrawer('GROUP')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Group Flow</span>
                 </button>
             </div>
 
-           <button class="drawer-button" [routerLink]="'../summary/main'" (click)="closeDrawer('MARGIN'); toggleMenu('summary')">
-                <mat-icon >notes</mat-icon>
+            <button class="drawer-button" [routerLink]="'../summary/main'"
+                (click)="closeDrawer('MARGIN'); toggleMenu('summary')">
+                <mat-icon>notes</mat-icon>
                 <span>Summary</span>
-                <mat-icon (click)="issummary=!issummary">{{ issummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+                <mat-icon (click)="issummary=!issummary">{{ issummary ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                    }}</mat-icon>
 
             </button>
             <div *ngIf="issummary">
-                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('MARGIN')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='MARGIN'}"
+                    [routerLink]="'../summary'" (click)="closeDrawer('MARGIN')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Overview</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('SGRID')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='SGRID'}"
+                    [routerLink]="'../summary'" (click)="closeDrawer('SGRID')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Spend Grid</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('CGRID')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='CGRID'}"
+                    [routerLink]="'../summary'" (click)="closeDrawer('CGRID')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Credit Grid</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('ALLOCATION')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='ALLOCATION'}"
+                    [routerLink]="'../summary'" (click)="closeDrawer('ALLOCATION')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Allocation</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../summary'" (click)="closeDrawer('ADDALLOCATION')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='ADDALLOCATION'}"
+                    [routerLink]="'../summary'" (click)="closeDrawer('ADDALLOCATION')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>New Allocation</span>
                 </button>
-        
+
             </div>
 
-           <button class="drawer-button" [routerLink]="'../credit'" (click)="closeDrawer('VIEW'); toggleMenu('credit')">
+            <button class="drawer-button" [routerLink]="'../credit'"
+                (click)="closeDrawer('VIEW'); toggleMenu('credit')">
                 <mat-icon>credit_card</mat-icon>
                 <span>Credit Card</span>
-                <mat-icon (click)="iscrdit=!iscrdit">{{ iscrdit ? 'keyboard_arrow_up' : 'keyboard_arrow_down' }}</mat-icon>
+                <mat-icon (click)="iscrdit=!iscrdit">{{ iscrdit ? 'keyboard_arrow_up' : 'keyboard_arrow_down'
+                    }}</mat-icon>
 
             </button>
             <div *ngIf="iscrdit">
-                <button class="drawer-sub-button" [routerLink]="'../credit'" (click)="closeDrawer('VIEW')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='VIEW'}"
+                    [routerLink]="'../credit'" (click)="closeDrawer('VIEW')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Overview</span>
                 </button>
-                <button class="drawer-sub-button" [routerLink]="'../credit'" (click)="closeDrawer('GRID')">
+                <button class="drawer-sub-button" [ngClass]="{'lastselect':SubTokenlive=='GRID'}"
+                    [routerLink]="'../credit'" (click)="closeDrawer('GRID')">
                     <mat-icon>subdirectory_arrow_right</mat-icon>
                     <span>Repaid Grid</span>
                 </button>
-        
+
             </div>
 
-           <button class="drawer-button" (click)="openDialog(); closeDrawer('')">
+            <button class="drawer-button" (click)="openDialog(); closeDrawer('')">
                 <mat-icon>monetization_on</mat-icon>
                 <span>Add Balance</span>
-            </button> 
+            </button>
             <button class="drawer-button" (click)="logout();">
                 <mat-icon>exit_to_app</mat-icon>
                 <span>Logout</span>
-            </button> 
+            </button>
         </div>
     </mat-drawer>
 
     <mat-drawer-content class="drawer-content-root">
         <div *ngIf="canAccess " class="header-bar d-flex align-items-center">
             <mat-icon *ngIf="!drawer.opened" class="toggle-button me-auto" (click)="drawer.toggle()">menu</mat-icon>
-            <mat-icon class="ms-2"  (click)="toggleFullScreen()">fullscreen</mat-icon>
+            <mat-icon class="ms-2" (click)="toggleFullScreen()">fullscreen</mat-icon>
             <h1 class="text-center flex-grow-1">GORA 80-80</h1>
         </div>
         <router-outlet></router-outlet>
     </mat-drawer-content>
 </mat-drawer-container>
-
-

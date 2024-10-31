@@ -17,12 +17,18 @@ export class AppComponent {
   loggeduser: string | null | undefined;
   isdashboard: boolean = false;
   issummary: boolean = false
-  iscrdit:boolean=false
+  isnewentry: boolean = false
+
+  iscrdit: boolean = false
+  Tokenlive: string = '';
+  SubTokenlive: string;
 
   closeDrawer(token: string) {
     // this.drawer.close();
     // this.isdashboard = false; 
     this.fb.updateViewTokem(token)
+    this.Tokenlive = localStorage.getItem('currentMainToken') || 'newentry'
+    this.SubTokenlive = localStorage.getItem('currentToken') || 'NEWENTRY'
   }
 
   @ViewChild('drawer') drawer!: MatDrawer;
@@ -32,7 +38,8 @@ export class AppComponent {
 
 
   constructor(public dialog: MatDialog, private fb: FirebaseService, private router: Router) {
-
+    this.Tokenlive = localStorage.getItem('currentMainToken') || ''
+    this.SubTokenlive = localStorage.getItem('currentToken') || ''
   }
 
   openDialog(): void {
@@ -88,9 +95,13 @@ export class AppComponent {
       this.canAccess = res
       this.loggeduser = localStorage.getItem('usercode');
     })
+    this.toggleMenu(this.Tokenlive)
   }
   toggleMenu(menu: string): void {
+    console.log(menu);
+    localStorage.setItem('currentMainToken', menu)
     this.isdashboard = menu === 'dashboard' ? !this.isdashboard : false;
+    this.isnewentry = menu === 'newentry' ? !this.isnewentry : false;
     this.issummary = menu === 'summary' ? !this.issummary : false;
     this.iscrdit = menu === 'credit' ? !this.iscrdit : false;
   }

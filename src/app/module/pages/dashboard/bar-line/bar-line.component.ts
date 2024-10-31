@@ -30,7 +30,7 @@ export class BarLineComponent implements OnInit, OnDestroy, OnChanges, AfterView
     if (this.spendlist && this.Idtoken) {
       this.dataarrayobj = this.spendlist;
       this.chartdiv = 'chartdiv-' + this.Idtoken; // Create unique ID
-      console.log(this.spendlist, this.Idtoken, this.chartdiv);
+      // console.log(this.spendlist, this.Idtoken, this.chartdiv);
       this.chartCreated = false; // Reset to allow re-creation
       this.spinner.show(); // Show spinner on data change
     }

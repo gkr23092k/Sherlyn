@@ -29,6 +29,18 @@ export class EditProgressComponent implements OnInit, OnChanges {
       this.refreshEdit()
     }
   }
+  resetexistvalue(keyname: string) {
+    const allocation = this.allocationdata.find(el => el.category === keyname);
+    
+    if (allocation) {
+      this.form.patchValue({ [keyname]: allocation.first }); 
+    } else {
+      console.warn(`No allocation found for category: ${keyname}`);
+    }
+  
+    // console.log(this.form.controls);
+  }
+  
 
 
   submit(): void {

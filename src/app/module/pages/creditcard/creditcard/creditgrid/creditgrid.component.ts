@@ -3,6 +3,7 @@ import * as _ from 'lodash';
 import { NgxSpinnerService } from 'ngx-spinner';
 import * as XLSX from 'xlsx';
 import { ColDef, GridOptions } from 'ag-grid-community';
+import { AgGridMenuComponent } from 'src/app/core/gridaction/gridaction.component';
 @Component({
   selector: 'app-creditgrid',
   templateUrl: './creditgrid.component.html',
@@ -45,8 +46,17 @@ export class CreditgridComponent  {
   ngOnInit() {
 
     this.columnDefs = [
+      {
+        headerName: 'Action',
+        field: 'id',
+        pinned: 'left',
+        sortable: false,
+        filter: false,
+        minWidth: 60,
+        maxWidth: 80,
+        cellRenderer: AgGridMenuComponent
+      },
       // { headerName: 'Id', field: 'id', filter:'agTextColumnFilter', initialWidth: 100,minWidth: 160, maxWidth: 300 },
-      { headerName: 'Id', field: 'id', filter:'agTextColumnFilter', initialWidth: 100, minWidth: 160, maxWidth: 300 },
       {
         headerName: 'Material', cellStyle: (params: { value: string; }) => {
           if (params.value == 'Credit') {
@@ -104,7 +114,10 @@ export class CreditgridComponent  {
       { headerName: 'Date', field: 'date',  filter:'agDateColumnFilter', initialWidth: 200, minWidth: 150, maxWidth: 300 },
       { headerName: 'Oncard', field: 'cardname', filter:'agTextColumnFilter', initialWidth: 150, minWidth: 100, maxWidth: 300 },
       // { headerName: 'Offer', field: 'Offer', filter: true, initialWidth: 100, minWidth: 100, maxWidth: 300 },
-      { headerName: 'Comment', field: 'comments', filter:'agTextColumnFilter'}
+      { headerName: 'Comment', field: 'comments', filter:'agTextColumnFilter'},
+      { headerName: 'Source Collection', field: 'source', filter: 'agTextColumnFilter', initialWidth: 100, minWidth: 160, maxWidth: 300, hide: false }, // Hidden initially
+    { headerName: 'Id', field: 'id', filter: 'agTextColumnFilter', initialWidth: 100, minWidth: 160, maxWidth: 300 },
+   
     ];
 
     this.startdate = new Date()
@@ -130,7 +143,7 @@ public defaultColDef:ColDef={
   resizable:true,
   maxWidth:500,
   editable:false,
-  enableRowGroup:true,
+  // enableRowGroup:true,
   floatingFilter:true,
  
 }

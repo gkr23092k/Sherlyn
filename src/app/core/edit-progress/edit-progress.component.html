@@ -4,9 +4,10 @@
           <div *ngFor="let el of allocationdata" class="col-sm-12 col-md-4 mb-3">
               <div class="card p-3 shadow-sm">
                   <label class="text-dark font-weight-bold">Group Name: {{ el.category }}</label>
-                  <app-customrange [max]="el.first * 1.25" [formControlName]="el.category"></app-customrange>
+                  <app-customrange [max]="el.first * 1.25"[details]="el.isupdated" [formControlName]="el.category"></app-customrange>
                   <span class="d-flex justify-content-end pe-5 mt-2">
                       <p-toast></p-toast>
+                      <button *ngIf="!el.isupdated" [disabled]="!saveButtonEnabled[el.category]" class="btn btn-sm btn-danger mx-1" (click)="resetexistvalue(el.category)"> Reset</button>
                       <button  *ngIf="!el.isupdated"
                           [ngClass]="{
                               'btn btn-sm': true,

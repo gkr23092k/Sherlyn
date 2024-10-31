@@ -14,7 +14,8 @@ import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autoc
 })
 export class EntryComponent implements OnInit {
   balance: any;
-  creditcardlist: any=[];
+  creditcardlist: any = [];
+  isBulkentry: any = 'NEWENTRY';
 
   constructor(private fb: FirebaseService, private spinner: NgxSpinnerService) { }
   @ViewChild('entry') entry!: NgForm
@@ -29,6 +30,7 @@ export class EntryComponent implements OnInit {
   dateentry = new Date();
   cardname: string = ''
   cardeventcatcher: boolean = false
+  price: any | string = ''
   dropdownSettings = {
     singleSelection: true,
     idField: 'item_id',
@@ -49,9 +51,9 @@ export class EntryComponent implements OnInit {
 
   @ViewChild(MatAutocompleteTrigger) autocompleteTrigger!: MatAutocompleteTrigger;
 
-  addMaterial(event:Event) {
+  addMaterial(event: Event) {
     event.stopPropagation(); // Prevent the input from being focused
-    this.autocompleteTrigger.closePanel(); 
+    this.autocompleteTrigger.closePanel();
   }
 
   onEnterPress(event: KeyboardEvent) {
@@ -70,17 +72,32 @@ export class EntryComponent implements OnInit {
 
 
   billoncard(event: any) {
+    this.isoncard = false
+    this.isbilloncard = false
     this.cardeventcatcher = event.selected
-    if (event.source.value == "Credit Card") {
-      this.isoncard = false
-      this.isbilloncard = true
+
+    if (event.selected) {
+      if (event.source.value == "Credit Card") {
+        this.isoncard = false
+        this.isbilloncard = true
+
+      }
+      else if (event.source.value == "Credit Card Repay") {
+        this.isoncard = true
+        this.isbilloncard = false
+
+      }
+      else {
+        this.isoncard = false
+        this.isbilloncard = false
+      }
+      this.onPriceChange(this.price)
+    } else {
+
+      this.onPriceChange(this.price)
     }
-    else if (event.source.value == "Credit Card Repay") {
-      this.isoncard = true
-      this.isbilloncard = false
-    }
-    console.log(event.source.value, this.isoncard,
-      this.isbilloncard);
+    // console.log(event, event.source.value, this.isoncard,
+    //   this.isbilloncard);
   }
 
 
@@ -88,7 +105,7 @@ export class EntryComponent implements OnInit {
   chipSelectionChange(event: any) {
     if (event.source.selected) {
       // console.log('Selected:', event.source.value);
-      this.selectedChip = event.source.value;
+      this.selectedChip = event?.source?.value;
       this.ismaterialdropdown = this.selectedChip === 'Existing Material';
     } else {
       // console.log('Deselected:', event.source.value);
@@ -107,8 +124,13 @@ export class EntryComponent implements OnInit {
     this.material = ''
   }
   ngOnInit() {
-    // console.log('startted')
-// autocomplete
+    // autocomplete
+
+    this.fb.emitViewTokem().subscribe((res: any) => {
+      console.log('startted', res)
+      this.isBulkentry = res
+    })
+
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => this._filter(value || '')),
@@ -128,18 +150,22 @@ export class EntryComponent implements OnInit {
   }
   onPriceChange(newPrice: number): void {
     // Check if the new price is 0
+    // console.log('called',this.isbilloncard);
+
     if (!this.isbilloncard) {
       if (newPrice === 0) {
         this.balance = this.originalBalance; // Reset to original balance
         console.log('Balance reset to original:', this.balance);
       } else if (newPrice > 0) {
         this.balance = this.originalBalance - newPrice; // Subtract from original balance
-        console.log('New Price:', newPrice);
-        console.log('Updated Balance:', this.balance);
+        // console.log('New Price:', newPrice);
+        // console.log('Updated Balance:', this.balance);
       } else {
         this.balance = this.originalBalance;
         console.warn('Price cannot be negative');
       }
+    } else if (this.isbilloncard) {
+      this.balance = this.originalBalance
     }
   }
   addentry(data: any) {
@@ -148,20 +174,20 @@ export class EntryComponent implements OnInit {
       ...data,
       matname: this.material,
       balance: this.balance,
-      cardname:this.cardname
+      cardname: this.cardname
     });
 
-    console.log(this.material,data,'autocomplete');
-    
+    console.log(this.material, data, 'autocomplete');
+
     const enteredvalues = {
       ...data.value,
       matname: (typeof this.material == 'string') ? this.material : this.material[0].item_text,
       balance: this.balance,
       iscreditcard: this.isbilloncard,
-      cardname:this.cardname
+      cardname: this.cardname
     }
 
-    console.log(data.value, enteredvalues, this.isbilloncard);
+    console.log(data.value, enteredvalues, this.isoncard, this.isbilloncard);
     if (this.isoncard) {
       this.fb.Loandataentry(enteredvalues).finally(() => {
         this.keepbalancelive()
@@ -172,13 +198,19 @@ export class EntryComponent implements OnInit {
     }
 
     else if (this.isbilloncard) {
-      this.fb.LendDataentry(enteredvalues).finally(() => {
-        this.keepbalancelive()
-        this.entry.resetForm()
-        this.dateentry = new Date()
+      if (this.cardname) {
+        this.fb.LendDataentry(enteredvalues).finally(() => {
+          this.keepbalancelive()
+          this.entry.resetForm()
+          this.dateentry = new Date()
+          this.spinner.hide()
+        })
+        console.log('enterisbilloncard');
+      } else {
+        alert('Please select card for entry...');
         this.spinner.hide()
-      })
-      console.log('enterisbilloncard');
+
+      }
     }
     else {
       this.fb.dataentry(enteredvalues).finally(() => {
@@ -212,13 +244,13 @@ export class EntryComponent implements OnInit {
   onInputChange(event: any) {
     // console.log(event);
     this.materialdropdown = []
-    this.material=''
-    this.fb.getAllpreviousentries(event).subscribe((val: any) => {
+    this.material = ''
+    this.fb.getAllpreviousentries(event, "==").subscribe((val: any) => {
 
       this.materialdropdown = this.getUniqueRecords(val);
       this.materialdropdown.sort((a: any, b: any) => a.item_text.localeCompare(b.item_text)); // Ascending sort
-      this.options=[]
-      this.materialdropdown.forEach((element:any) => {
+      this.options = []
+      this.materialdropdown.forEach((element: any) => {
         this.options.push(element.item_text)
       });
       console.log(this.options, 'materialdropdown');

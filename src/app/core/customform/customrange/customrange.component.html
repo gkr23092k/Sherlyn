@@ -1,8 +1,8 @@
 <div class="slider-container d-flex justify-content-center">
-    <input class="custom-range" type="range" min="0" [max]="max" 
+    <input [disabled]="details" class="custom-range" type="range" min="0" [max]="max" 
            [(ngModel)]="sliderValue" (ngModelChange)="onSliderChange($event)" (blur)="onBlur()" />
 </div>
 <span>
     <p class="text-dark mt-2">Current Allocation: {{ sliderValue }}</p>
-    <input type="number" [(ngModel)]="sliderValue" (ngModelChange)="onInputChange($event)" (blur)="onBlur()" />
+    <input type="number" [disabled]="details" [(ngModel)]="sliderValue" (ngModelChange)="onInputChange($event)" (blur)="onBlur()" />
 </span>

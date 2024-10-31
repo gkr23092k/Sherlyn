@@ -16,6 +16,7 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class CustomrangeComponent implements ControlValueAccessor {
   sliderValue: number = 50;
   @Input() max: number = 0;
+  @Input() details: boolean = false;
 
   // These methods are placeholders for ControlValueAccessor
   private onChange = (value: number) => { };
