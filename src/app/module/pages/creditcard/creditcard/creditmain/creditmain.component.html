@@ -7,17 +7,18 @@
     </span>
     <div class="container d-flex flex-wrap gap-3 justify-content-center mb-3">
         <app-creditcardui (buttonClicked)="ismain='GRID'" [Creditcards]="summary"></app-creditcardui>
+        <span class="class-add d-flex justify-content-center mb-2" (click)="isnewentry=!isnewentry">
+            <span class="my-auto">
+                <button class="custombutton btn text-white" (click)="isnewentry=!isnewentry">+</button>
+            </span>
+        </span>
     </div>
     <div *ngIf="!isnewentry" class="container d-flex flex-wrap gap-3 justify-content-center">
 
 
 
         <ng-container *ngIf="data.length>0; else content">
-            <span class="class-add d-flex justify-content-center mb-2" (click)="isnewentry=!isnewentry">
-                <span class="my-auto">
-                    <button class="custombutton btn text-white" (click)="isnewentry=!isnewentry">+</button>
-                </span>
-            </span>
+            
             <ng-container *ngFor="let d of data">
                 <app-creditcardui [Creditcards]="d"></app-creditcardui>
             </ng-container>

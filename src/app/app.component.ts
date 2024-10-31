@@ -20,7 +20,7 @@ export class AppComponent {
   isnewentry: boolean = false
 
   iscrdit: boolean = false
-  Tokenlive: string = '';
+  Tokenlive: any = '';
   SubTokenlive: string;
 
   closeDrawer(token: string) {
@@ -38,8 +38,8 @@ export class AppComponent {
 
 
   constructor(public dialog: MatDialog, private fb: FirebaseService, private router: Router) {
-    this.Tokenlive = localStorage.getItem('currentMainToken') || ''
-    this.SubTokenlive = localStorage.getItem('currentToken') || ''
+    this.Tokenlive = localStorage.getItem('currentMainToken') || 'newentry'
+    this.SubTokenlive = localStorage.getItem('currentToken') || 'NEWENTRY'
   }
 
   openDialog(): void {
@@ -90,12 +90,14 @@ export class AppComponent {
   }
 
   ngOnInit() {
+    this.router.navigate([`../${this.Tokenlive}`])
 
     this.fb.emitcanaccess().subscribe((res: boolean) => {
       this.canAccess = res
       this.loggeduser = localStorage.getItem('usercode');
     })
     this.toggleMenu(this.Tokenlive)
+    this.closeDrawer(this.SubTokenlive)
   }
   toggleMenu(menu: string): void {
     console.log(menu);

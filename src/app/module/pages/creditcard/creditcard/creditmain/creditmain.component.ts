@@ -22,6 +22,8 @@ export class CreditmainComponent implements OnInit {
 
     this.fb.emitViewTokem().subscribe((res: any) => {
       this.ismain = res
+      console.log(res,'token credit');
+      
     })
 
     this.refreshcarddata()

@@ -6,6 +6,7 @@ import { getFirestore } from 'firebase/firestore'; // If you're using the modula
 import * as _ from 'lodash';
 import { groupBy, sumBy } from 'lodash';
 import { subDays } from 'date-fns';
+import { Router } from '@angular/router';
 
 
 
@@ -21,7 +22,8 @@ export class FirebaseService {
   usercode: string | null;
 
   public canaccess: BehaviorSubject<boolean> = new BehaviorSubject(false)
-  public viewToken: BehaviorSubject<string> = new BehaviorSubject('SDAY')
+  public viewToken: BehaviorSubject<string> = new BehaviorSubject('NEWENTRY')
+  storedmainToken: string='entry';
 
   emitcanaccess() {
     return this.canaccess
@@ -29,15 +31,19 @@ export class FirebaseService {
   public getcurrentbalance: BehaviorSubject<any> = new BehaviorSubject('')
 
 
-  constructor(private firestore: AngularFirestore) {
+  constructor(private firestore: AngularFirestore,private router:Router) {
     this.usercode = localStorage.getItem('usercode');
     this.db = getFirestore(); // Use the modular SDK approach
-    const storedToken = localStorage.getItem('currentToken') || 'SDAY';
+    const storedToken = localStorage.getItem('currentToken') || 'NEWENTRY';
+    this.storedmainToken = localStorage.getItem('currentMainToken') || 'NEWENTRY';
+    // console.log(storedToken,'service initiate token');
     this.viewToken = new BehaviorSubject(storedToken);
   }
 
 
   emitViewTokem() {
+    this.storedmainToken = localStorage.getItem('currentMainToken') || 'NEWENTRY';
+    this.router.navigate([`../${this.storedmainToken}`])
     return this.viewToken.asObservable();
   }
 
