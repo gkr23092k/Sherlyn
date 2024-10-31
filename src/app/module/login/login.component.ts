@@ -36,7 +36,7 @@ export class LoginComponent implements OnInit {
       if (el.length > 0) {
         localStorage.setItem('usercode', userdetails.name)
         localStorage.setItem('key', userdetails.key)
-        this.router.navigate(['../entry']);
+        this.router.navigate(['../newentry']);
       }
     })
   }
@@ -51,7 +51,7 @@ export class LoginComponent implements OnInit {
       this.Sfirebase.getAllusers(userdetails.name, userdetails.key).subscribe((el: any) => {
         console.log(el)
         if (el.length > 0) {
-          this.router.navigate(['../entry']);
+          this.router.navigate(['../newentry']);
         }
       })
     }

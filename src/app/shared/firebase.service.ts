@@ -23,7 +23,7 @@ export class FirebaseService {
 
   public canaccess: BehaviorSubject<boolean> = new BehaviorSubject(false)
   public viewToken: BehaviorSubject<string> = new BehaviorSubject('NEWENTRY')
-  storedmainToken: string='entry';
+  storedmainToken: string = 'entry';
 
   emitcanaccess() {
     return this.canaccess
@@ -31,7 +31,7 @@ export class FirebaseService {
   public getcurrentbalance: BehaviorSubject<any> = new BehaviorSubject('')
 
 
-  constructor(private firestore: AngularFirestore,private router:Router) {
+  constructor(private firestore: AngularFirestore, private router: Router) {
     this.usercode = localStorage.getItem('usercode');
     this.db = getFirestore(); // Use the modular SDK approach
     const storedToken = localStorage.getItem('currentToken') || 'NEWENTRY';
@@ -535,13 +535,14 @@ export class FirebaseService {
   }
 
 
-  getAllliabilitygive(): Observable<any[]> {
+  getAllliabilitygive(isnotacard: any = '', condition: any = '!='): Observable<any[]> {
     const collections = ['SpendList', 'CCLendList'];
     const observables = collections.map(collectionName => {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
         where("matgroup", "==", "Liability Give"),
+        where("iscreditcard", condition, isnotacard),
         where("usercode", "==", this.usercode),
         orderBy("dateentry", "asc")
       );
@@ -646,7 +647,7 @@ export class FirebaseService {
       this.getAllcreditItems().pipe(
         map(res => _.sumBy(res, 'matprice')) // Calculate total credit
       ),
-      this.getAllliabilitygive().pipe(
+      this.getAllliabilitygive(false,"==").pipe(
         map(res => _.sumBy(res, 'matprice')) // Calculate total credit
       ),
       this.getAllliabilityget().pipe(
@@ -661,7 +662,7 @@ export class FirebaseService {
     ]).pipe(
       map(([totalSpend, totalCredit, totalliablegive, totalliableget, totalinvestment, totalrepaid]) => {
         const balance = (totalCredit + totalliableget) - (totalSpend + totalliablegive + totalinvestment + totalrepaid); // Calculate the balance
-        // console.log(balance, 'total balance');
+        console.log(totalCredit , totalliableget,totalSpend , totalliablegive , totalinvestment , totalrepaid,balance, 'total balance');
         return balance; // Return the calculated balance
       })
     );
