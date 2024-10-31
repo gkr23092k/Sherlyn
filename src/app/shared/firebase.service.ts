@@ -190,7 +190,7 @@ export class FirebaseService {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
-        where("matgroup", "not-in", ["Liability Give", "Liability Get"]),
+        // where("matgroup", "not-in", []),
         where("usercode", "==", this.usercode),
         where("dateentry", ">", startTimestamp), // Use Timestamp for start date
         where("dateentry", "<=", endTimestamp), // Use Timestamp for end date
