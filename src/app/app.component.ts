@@ -1,4 +1,4 @@
-import { Component, inject, ViewChild } from '@angular/core';
+import { Component, HostBinding, inject, ViewChild } from '@angular/core';
 import { DialogComponent } from './core/dialog/dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { FirebaseService } from './shared/firebase.service';
@@ -12,12 +12,26 @@ import { MatDrawer } from '@angular/material/sidenav';
 })
 export class AppComponent {
   title = 'Sherlyn';
+  isDark: boolean = true;
+
+  @HostBinding('class')
+  get themeMode() {
+    return this.isDark ? 'theme-dark' : 'theme-light'
+  }
+
+  togglethememode() {
+    this.isDark = !this.isDark
+    this.fb.updateTheme(this.isDark)
+
+  }
+
   addbalance: any;
   canAccess: boolean = false;
   loggeduser: string | null | undefined;
   isdashboard: boolean = false;
   issummary: boolean = false
   isnewentry: boolean = false
+  isliability: boolean = false
 
   iscrdit: boolean = false
   Tokenlive: any = '';
@@ -91,6 +105,9 @@ export class AppComponent {
 
   ngOnInit() {
     // debugger
+
+
+
     this.router.navigate([`../${this.Tokenlive}`])
 
     this.fb.emitcanaccess().subscribe((res: boolean) => {
@@ -106,6 +123,7 @@ export class AppComponent {
     this.isdashboard = menu === 'dashboard' ? !this.isdashboard : false;
     this.isnewentry = menu === 'newentry' ? !this.isnewentry : false;
     this.issummary = menu === 'summary' ? !this.issummary : false;
+    this.isliability = menu === 'liability' ? !this.isliability : false;
     this.iscrdit = menu === 'credit' ? !this.iscrdit : false;
   }
 

@@ -242,10 +242,10 @@ export class EntryComponent implements OnInit {
   }
 
   onInputChange(event: any) {
-    // console.log(event);
+    console.log(event);
     this.materialdropdown = []
     this.material = ''
-    this.fb.getAllpreviousentries(event, "==").subscribe((val: any) => {
+    this.fb.getAllpreviousentries(event, "in").subscribe((val: any) => {
 
       this.materialdropdown = this.getUniqueRecords(val);
       this.materialdropdown.sort((a: any, b: any) => a.item_text.localeCompare(b.item_text)); // Ascending sort

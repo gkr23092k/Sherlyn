@@ -25,7 +25,11 @@ const routes: Routes = [
     path: 'credit', loadChildren: () => import('./module/pages/creditcard/creditcard/creditcard.module').then(m => m.CreditcardModule),
     canActivate: [guardGuard]
   },
-  // { path: '**', redirectTo: 'user' }  // Redirect to 'dashboard' path for any unknown routes
+  {
+    path: 'liability', loadChildren: () => import('./module/pages/liability/liability.module').then(m => m.LiabilityModule),
+    canActivate: [guardGuard]
+  },
+  { path: '**', redirectTo: 'user' }  // Redirect to 'dashboard' path for any unknown routes
 ];
 
 @NgModule({

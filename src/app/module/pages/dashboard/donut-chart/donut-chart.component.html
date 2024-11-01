@@ -25,14 +25,19 @@
 </div> -->
 <!-- <div id="donut-chartdiv" class="shadow-lg p-2 mx-1" style="width: 100%; height: 76vh;"></div> -->
 
-<p-splitter [panelSizes]="[selectedgroup?40:99, selectedgroup?60:1]" [style]="{ height: '80vh' }" >
+
+<p-splitter [panelSizes]="[selectedgroup ? 40 : 99, selectedgroup ? 60 : 1]"
+    [style]="{ height: '78vh', backgroundColor: '#495057' }"
+    [ngStyle]="{ backgroundColor: isDark ? '#303030' : '#fff' }">
     <ng-template pTemplate>
-        <div id="donut-chartdiv" class="shadow-lg p-2 mx-1" style=" width: 100%; height: 80vh;"></div>
+        <div id="donut-chartdiv" class="shadow-lg p-2 mx-1" style=" width: 100%; height: 77vh;"
+            [ngStyle]="{ backgroundColor: isDark ? '#303030' : '#fff' }"></div>
     </ng-template>
     <ng-template pTemplate>
         <span *ngIf="selectedgroup" style="width: 100%; height: 70vh;">
             <button class="btn btn-sm btn-danger closersub" (click)="selectedgroup=false">X</button>
             <marquee class="subheader">Drill Down {{selectedgroup}}</marquee>
-            <app-breakdowndonut [Spendlist]="matnamedata" [Chosengroup]="selectedgroup"></app-breakdowndonut>
-        </span>    </ng-template>
+            <app-breakdowndonut class="bg-dark" [Spendlist]="matnamedata"
+                [Chosengroup]="selectedgroup"></app-breakdowndonut>
+        </span> </ng-template>
 </p-splitter>

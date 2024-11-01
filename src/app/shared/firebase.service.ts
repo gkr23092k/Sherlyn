@@ -23,8 +23,18 @@ export class FirebaseService {
 
   public canaccess: BehaviorSubject<boolean> = new BehaviorSubject(false)
   public viewToken: BehaviorSubject<string> = new BehaviorSubject('NEWENTRY')
+  public thememode: BehaviorSubject<boolean> = new BehaviorSubject(true)
   storedmainToken: string = 'entry';
 
+  emitTheme() {
+    return this.thememode
+  }
+
+  updateTheme(isdark: boolean) {
+    console.log('update panre theme');
+    
+    this.thememode.next(isdark)
+  }
   emitcanaccess() {
     return this.canaccess
   }
@@ -647,7 +657,7 @@ export class FirebaseService {
       this.getAllcreditItems().pipe(
         map(res => _.sumBy(res, 'matprice')) // Calculate total credit
       ),
-      this.getAllliabilitygive(false,"==").pipe(
+      this.getAllliabilitygive(false, "==").pipe(
         map(res => _.sumBy(res, 'matprice')) // Calculate total credit
       ),
       this.getAllliabilityget().pipe(
@@ -662,7 +672,7 @@ export class FirebaseService {
     ]).pipe(
       map(([totalSpend, totalCredit, totalliablegive, totalliableget, totalinvestment, totalrepaid]) => {
         const balance = (totalCredit + totalliableget) - (totalSpend + totalliablegive + totalinvestment + totalrepaid); // Calculate the balance
-        console.log(totalCredit , totalliableget,totalSpend , totalliablegive , totalinvestment , totalrepaid,balance, 'total balance');
+        console.log(totalCredit, totalliableget, totalSpend, totalliablegive, totalinvestment, totalrepaid, balance, 'total balance');
         return balance; // Return the calculated balance
       })
     );
@@ -735,7 +745,7 @@ export class FirebaseService {
       const citiesRef = collection(this.db, collectionName);
       const q = query(
         citiesRef,
-        where("matgroup", condition1, [groupname1, groupname2]),
+        where("matgroup", condition1, [groupname1]),
         where("usercode", "==", this.usercode),
         orderBy("dateentry", "asc")
       );

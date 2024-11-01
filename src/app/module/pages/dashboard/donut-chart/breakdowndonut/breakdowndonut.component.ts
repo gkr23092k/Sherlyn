@@ -4,6 +4,7 @@ import { Component, OnInit, OnDestroy, Input, OnChanges, EventEmitter, Output, A
 import * as am4core from '@amcharts/amcharts4/core';
 import * as am4charts from '@amcharts/amcharts4/charts';
 import am4themes_animated from '@amcharts/amcharts4/themes/animated';
+import dark from '@amcharts/amcharts4/themes/dark';
 import * as _ from 'lodash';
 import { dataservice } from 'src/app/shared/data.service';
 import { FirebaseService } from 'src/app/shared/firebase.service';
@@ -15,7 +16,7 @@ am4core.useTheme(am4themes_animated);
   templateUrl: './breakdowndonut.component.html',
   styleUrls: ['./breakdowndonut.component.scss']
 })
-export class BreakdowndonutComponent implements OnChanges,AfterViewInit {
+export class BreakdowndonutComponent implements OnChanges, AfterViewInit, OnInit {
   private chart!: am4charts.PieChart3D;
   dataarrayobj: any = [];
   content: string = '';
@@ -26,8 +27,22 @@ export class BreakdowndonutComponent implements OnChanges,AfterViewInit {
   colorlist: any = [];
   enddaterange: Date = new Date()
   startdaterange: Date = subDays(new Date(), 30);
+  isDark: boolean = true;
   // daterange: MatDateRange<Date> | null = null;
   constructor(private data: dataservice, private fb: FirebaseService) { }
+  ngOnInit(): void {
+    this.fb.emitTheme().subscribe((res: any) => {
+      this.isDark = res
+      console.log(res, 'mode');
+      if (res) {
+        am4core.unuseAllThemes()
+        am4core.useTheme(dark);
+      } else {
+        am4core.unuseAllThemes()
+        am4core.useTheme(am4themes_animated);
+      }
+    })
+  }
 
   @Input('Spendlist') spendlist: any
   @Input('Chosengroup') selectedgroup: any
@@ -53,7 +68,7 @@ export class BreakdowndonutComponent implements OnChanges,AfterViewInit {
   private initializeChart() {
     // Check if the chart is already initialized
     this.chart = am4core.create('subdonut-chartdiv', am4charts.PieChart3D); // Unique container ID
-    this.chart.hiddenState.properties.opacity=0;
+    this.chart.hiddenState.properties.opacity = 0;
 
     // this.chart.innerRadius = am4core.percent(55);
 
@@ -74,7 +89,7 @@ export class BreakdowndonutComponent implements OnChanges,AfterViewInit {
 
     this.chart.legend = new am4charts.Legend();
     this.chart.legend.scrollable = true;
-    this.chart.legend.maxHeight = 80; 
+    this.chart.legend.maxHeight = 80;
     this.chart.legend.fontSize = 14;
 
 

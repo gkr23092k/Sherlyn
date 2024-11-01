@@ -5,8 +5,9 @@ import am4themes_animated from "@amcharts/amcharts4/themes/animated";
 import { dataservice } from 'src/app/shared/data.service';
 import { FirebaseService } from 'src/app/shared/firebase.service';
 import { NgxSpinnerService } from 'ngx-spinner';
+import am4themes_dark from "@amcharts/amcharts4/themes/dark";
 
-am4core.useTheme(am4themes_animated);
+
 
 @Component({
   selector: 'app-bar-line',
@@ -18,6 +19,7 @@ export class BarLineComponent implements OnInit, OnDestroy, OnChanges, AfterView
   dataarrayobj: any[] = [];
   chartdiv: string = '';
   private chartCreated = false;
+  isDark: boolean = true;
 
   constructor(private data: dataservice, private fb: FirebaseService, private ngZone: NgZone, private spinner: NgxSpinnerService) { }
 
@@ -42,6 +44,19 @@ export class BarLineComponent implements OnInit, OnDestroy, OnChanges, AfterView
       this.spinner.show(); // Show spinner initially
       this.createChart();
     }
+
+    this.fb.emitTheme().subscribe((res: any) => {
+      this.isDark = res
+      console.log(res, 'mode');
+
+      if (res) {
+        am4core.useTheme(am4themes_animated)
+      }else{
+        am4core.useTheme(am4themes_dark)
+       
+      
+      }
+    })
   }
 
   ngAfterViewChecked() {

@@ -21,7 +21,7 @@
     padding: 10px;
     font-size: 16px;
     text-transform: none;
-    color: #003153;
+    color: #e7e9ea;
     background: transparent;
     border: none;
     cursor: pointer;
@@ -31,7 +31,7 @@
   
   .drawer-button mat-icon {
     margin-right: 10px;
-    color: #003153;
+    color: #c2c3c3;
   }
   
   .drawer-button:hover {
@@ -44,7 +44,7 @@
   }
   
   .drawer-content-root {
-    background-color: white; /* Set background color to white */
+    // background-color: white; /* Set background color to white */
     min-height: 100vh; /* Ensure it covers the entire content height */
   }
   
@@ -74,7 +74,7 @@
   .custom-drawer {
     width: 250px;
     background-color: #f8f9fa;
-    padding-top: 10px;
+    padding-top: 8px;
 }
 
 .drawer-content {
@@ -85,7 +85,7 @@
 .drawer-button, .drawer-sub-button {
     display: flex;
     align-items: center;
-    padding: 9px;
+    padding: 8px;
     width: 100%;
     text-align: left;
     background: none;
