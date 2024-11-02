@@ -672,7 +672,7 @@ export class FirebaseService {
     ]).pipe(
       map(([totalSpend, totalCredit, totalliablegive, totalliableget, totalinvestment, totalrepaid]) => {
         const balance = (totalCredit + totalliableget) - (totalSpend + totalliablegive + totalinvestment + totalrepaid); // Calculate the balance
-        console.log(totalCredit, totalliableget, totalSpend, totalliablegive, totalinvestment, totalrepaid, balance, 'total balance');
+        // console.log(totalCredit, totalliableget, totalSpend, totalliablegive, totalinvestment, totalrepaid, balance, 'total balance');
         return balance; // Return the calculated balance
       })
     );
